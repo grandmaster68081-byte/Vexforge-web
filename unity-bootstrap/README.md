@@ -12,20 +12,27 @@ game.
 - Unity Editor: `6000.3.0f1`, matched to `unity/ProjectSettings/ProjectVersion.txt`.
 - Android application ID: `com.vexforge.bootstrap`, distinct from the official
   `com.vexforge.android`.
-- Stages 1–11 have passed. The full 76-file canonical C# source set is present;
-  Stage 11 brought the cumulative content inventory to 151/197 files.
-- Stage 10 was revalidated in Bootstrap run #16 on
-  `c5d5b81011cc2647533c0684055fb980bc19cec0`. Run #17 succeeded and produced
+- Stages 1–12 have passed. The full 76-file canonical C# source set is present;
+  Stage 12 brought the cumulative content inventory to 170/197 files.
+- Stage 11 passed in Bootstrap run #17 on
+  `c5d5b81011cc2647533c0684055fb980bc19cec0`. It produced
   `VEXFORGE-Unity-Bootstrap-APK-17` (ID `11679358725`). Its 45,827,437-byte APK
   SHA-256 is `0101f9b9af7960c6a74b5b4e538015a5f9baaba1e57dfe260fb79c040cc727b0`;
   the downloaded APK hash matches the report and APK ZIP/structure checks pass.
   Unity reported 0 warnings and 1 error with `BuildResult.Succeeded`; record the
   counter for review under the existing non-blocking rule.
-- Stage 11 restored the production configuration JSON, its canonical `.meta`,
-  and the Editor build validator (3/197 files, 1.5228%). All 18 validator paths
-  are present. Stage 12 is prepared with canonical `.meta`/GUID files for 19
-  already-migrated scripts (19/197, 9.6447%), bringing the planned cumulative
-  inventory to 170/197. After Stage 12, 27 tracked files remain; keep
+- Stage 12's canonical script GUID metadata passed in Bootstrap run #18 on
+  `9250fdcec1f7a61396a345d7ea67d5060ee13d58`. Artifact
+  `VEXFORGE-Unity-Bootstrap-APK-18` (ID `11680372661`) contains a
+  45,827,421-byte APK with SHA-256
+  `6625abf256d9dc266c24dba453e2ecd5a60fb1e56d9843af1e91f590f6169bcc`;
+  downloaded and reported hashes match, and artifact/APK ZIP and structure
+  checks pass. Unity reported 0 warnings and 1 error with
+  `BuildResult.Succeeded`; record the counter under the existing non-blocking
+  rule.
+- Stage 13 is prepared with canonical `.meta`/GUID files for 19 more scripts
+  already in Bootstrap (19/197, 9.6447%), bringing the planned cumulative
+  inventory to 189/197. Eight canonical paths remain after Stage 13; keep
   `unity/**` unchanged.
 - The successful historical APK #2 was a workflow smoke test using an empty
   generated scene. It proves neither migrated game content nor a cache restore.

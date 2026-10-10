@@ -130,18 +130,18 @@ it. The current game migration order is
   Unity reported warnings=0, errors=1 and `BuildReport.totalSize` 721,256,066;
   keep the counter for review. Runs #14–#16 used the same source SHA; #16 is
   verification of Stage 10, not a new content stage.
-- Stage 11 passed in Bootstrap run #17 on
-  `c5d5b81011cc2647533c0684055fb980bc19cec0`. Artifact
-  `VEXFORGE-Unity-Bootstrap-APK-17` (ID `11679358725`) contains a
-  45,827,437-byte APK whose SHA-256
-  `0101f9b9af7960c6a74b5b4e538015a5f9baaba1e57dfe260fb79c040cc727b0`
+- Stage 12 passed in Bootstrap run #18 on
+  `9250fdcec1f7a61396a345d7ea67d5060ee13d58`. Artifact
+  `VEXFORGE-Unity-Bootstrap-APK-18` (ID `11680372661`) contains a
+  45,827,421-byte APK whose SHA-256
+  `6625abf256d9dc266c24dba453e2ecd5a60fb1e56d9843af1e91f590f6169bcc`
   matches the report; APK ZIP/CRC and Android/Unity/ARM64 IL2CPP structure checks
   pass. Unity reported warnings=0/errors=1 with `BuildResult.Succeeded`; record
   the counter for later review under the existing non-blocking rule.
-- Stage 12 is prepared with 19 canonical `.meta`/GUID files for scripts already
-  present in Bootstrap (19/197, 9.6447%). After this slice, the cumulative
-  inventory will be 170/197, with 27 tracked files remaining. Preserve
-  `unity/**` unchanged.
+- Stage 13 is prepared with 19 canonical `.meta`/GUID files for additional
+  Tier1 and UI scripts already present in Bootstrap (19/197, 9.6447%). After
+  this slice, the cumulative inventory will be 189/197, with eight tracked
+  canonical paths remaining. Preserve `unity/**` unchanged.
 
 ## Active scope
 

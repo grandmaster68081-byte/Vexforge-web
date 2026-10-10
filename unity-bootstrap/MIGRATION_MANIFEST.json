@@ -1691,7 +1691,7 @@
     {
       "number": 12,
       "name": "Canonical script GUID metadata: backend, presentation, session, and Tier1",
-      "status": "prepared_for_build",
+      "status": "verified_build_success",
       "new_file_count": 19,
       "share_percent": 9.6447,
       "assets": [
@@ -1852,10 +1852,214 @@
         3
       ],
       "note": "This dependency-closed batch restores the canonical Unity GUID metadata for 19 scripts already present in Bootstrap: backend, presentation, session, and the first Tier1 runtime set. Every GUID is unique; none is referenced by serialized Bootstrap assets in the current inventory. The batch changes no C# source, gameplay, scenes, resources, or live Supabase state. This is 19/197 files (9.6447%), within the 19-file cap.",
+      "build": {
+        "workflow_run_id": 38079672475,
+        "workflow_run_number": 18,
+        "workflow_url": "https://github.com/grandmaster68081-byte/Vexforge-web/actions/runs/38079672475",
+        "commit": "9250fdcec1f7a61396a345d7ea67d5060ee13d58",
+        "branch": "main",
+        "result": "success",
+        "unity_editor": "6000.3.0f1",
+        "application_id": "com.vexforge.bootstrap",
+        "platform": "Android",
+        "scripting": "IL2CPP",
+        "architecture": "ARM64",
+        "warnings": 0,
+        "errors": 1,
+        "unity_build_report_total_size_bytes": 721258768,
+        "artifact_name": "VEXFORGE-Unity-Bootstrap-APK-18",
+        "artifact_id": 11680372661,
+        "artifact_size_bytes": 45168040,
+        "artifact_zip_sha256": "a1afd45aa85247d220bdb4f981360beba63ceb42bafeb9ffe8edffa07f6c42dd",
+        "apk_size_bytes": 45827421,
+        "apk_sha256": "6625abf256d9dc266c24dba453e2ecd5a60fb1e56d9843af1e91f590f6169bcc",
+        "downloaded_apk_hash_matches_report": true,
+        "artifact_zip_crc_valid": true,
+        "apk_zip_crc_valid": true,
+        "android_manifest_present": true,
+        "unity_data_present": true,
+        "arm64_il2cpp_library_present": true,
+        "validation_note": "Stage 12 canonical script metadata passed in a full Bootstrap APK. Unity BuildResult was Succeeded with 0 warnings and 1 BuildReport error; record the counter, but it does not alone block the next stage under the existing project instruction.",
+        "cache_restore": {
+          "result": "success_restore_key",
+          "exact_key_hit": false,
+          "restored_bytes": 2010396996,
+          "matched_key": "vexforge-bootstrap-library-Linux-X64-6000.3.0f1-22e1abe3b9cdf41e8bcbcf651e33a52bf0c41bf919753d850f1735ab8ee304d2-38077167276-1"
+        },
+        "cache_save": {
+          "result": "success",
+          "saved_key": "vexforge-bootstrap-library-Linux-X64-6000.3.0f1-9d1f354f1e410cea210bb27ab8292904483422cb15b20c4c1efba172bf23793e-38079672475-1"
+        }
+      }
+    },
+    {
+      "number": 13,
+      "name": "Remaining Tier1 and initial UI script GUID metadata",
+      "status": "prepared_for_build",
+      "new_file_count": 19,
+      "share_percent": 9.6447,
+      "assets": [
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1EncounterProfile.cs.meta",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1EncounterProfile.cs.meta",
+          "source_sha256": "f364241ce2de04ed741402475f1fd7d82631ecb8510e9ae421cdde06df4b1efc",
+          "destination_sha256": "f364241ce2de04ed741402475f1fd7d82631ecb8510e9ae421cdde06df4b1efc",
+          "kind": "meta",
+          "guid": "2bc0eb992731486ca3cadbb08b57684a"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1IdentityScope.cs.meta",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1IdentityScope.cs.meta",
+          "source_sha256": "54d75945c5fd89b2419c848067ec4a06d3052c8d41578aff64db48dad272da63",
+          "destination_sha256": "54d75945c5fd89b2419c848067ec4a06d3052c8d41578aff64db48dad272da63",
+          "kind": "meta",
+          "guid": "67bbbd8fd65d0e6e64c3b02d070a7e32"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1LegacyHudSuppressor.cs.meta",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1LegacyHudSuppressor.cs.meta",
+          "source_sha256": "2ff5a80c1a81f59979070d8509287b5e47ce9659bb6b04446bc9f832c1f62587",
+          "destination_sha256": "2ff5a80c1a81f59979070d8509287b5e47ce9659bb6b04446bc9f832c1f62587",
+          "kind": "meta",
+          "guid": "097340746e7348faa590fee361364e6d"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1LegacyRouteFrame.cs.meta",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1LegacyRouteFrame.cs.meta",
+          "source_sha256": "d739dfcd0dd901eb54b786dbcf6ab2b6c3c03254583cdca8bd8fb908194b2ba1",
+          "destination_sha256": "d739dfcd0dd901eb54b786dbcf6ab2b6c3c03254583cdca8bd8fb908194b2ba1",
+          "kind": "meta",
+          "guid": "c0dc6ef76e015f9daa48287c666fba9b"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1NavigationRail.cs.meta",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1NavigationRail.cs.meta",
+          "source_sha256": "5ee6e6f422aa589ce496a808d131566df55e586177d3d3606c6c18febd2d59c7",
+          "destination_sha256": "5ee6e6f422aa589ce496a808d131566df55e586177d3d3606c6c18febd2d59c7",
+          "kind": "meta",
+          "guid": "6a940abbe3a14a338203a2863d1f1d79"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1OperationJournal.cs.meta",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1OperationJournal.cs.meta",
+          "source_sha256": "33a9a63488eb1da53e2245f89b582f570010aacba4c82988610cfd0e4c6c6aca",
+          "destination_sha256": "33a9a63488eb1da53e2245f89b582f570010aacba4c82988610cfd0e4c6c6aca",
+          "kind": "meta",
+          "guid": "d81b604c81494d44bf63178f76453a14"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1PackRevealDirector.cs.meta",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1PackRevealDirector.cs.meta",
+          "source_sha256": "1ec33e0d6c6d29c3280b9438dc4fcebf405696b63c4175f83439bd34ce170eb1",
+          "destination_sha256": "1ec33e0d6c6d29c3280b9438dc4fcebf405696b63c4175f83439bd34ce170eb1",
+          "kind": "meta",
+          "guid": "f5a530818e3e4e56b99c346c99565322"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1QualityDirector.cs.meta",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1QualityDirector.cs.meta",
+          "source_sha256": "68b5b31b5effe57ee976675f2d2b914a371dc7b7047b4a4dec8af2cb72b961a0",
+          "destination_sha256": "68b5b31b5effe57ee976675f2d2b914a371dc7b7047b4a4dec8af2cb72b961a0",
+          "kind": "meta",
+          "guid": "ccab9cf1202140a4a46cbf759e754e74"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1RoomOrnamentDirector.cs.meta",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1RoomOrnamentDirector.cs.meta",
+          "source_sha256": "a5ece98887a6327c01591f98e4592cefd69badba9200f634465058d119554076",
+          "destination_sha256": "a5ece98887a6327c01591f98e4592cefd69badba9200f634465058d119554076",
+          "kind": "meta",
+          "guid": "73e9fa79908405c34211e54958a8153d"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1RouteChrome.cs.meta",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1RouteChrome.cs.meta",
+          "source_sha256": "dacaf7f41d80344cec725233741c177b9b2aa1e84e2b34b4cb361a3e8a7606da",
+          "destination_sha256": "dacaf7f41d80344cec725233741c177b9b2aa1e84e2b34b4cb361a3e8a7606da",
+          "kind": "meta",
+          "guid": "d8552ce4c6a948598cc551d4fb3d7f09"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1RouteSurface.cs.meta",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1RouteSurface.cs.meta",
+          "source_sha256": "d3e2a769377a621badc5ddc1284811c14d592a55cd7b11bc8178a472246a1e41",
+          "destination_sha256": "d3e2a769377a621badc5ddc1284811c14d592a55cd7b11bc8178a472246a1e41",
+          "kind": "meta",
+          "guid": "51fa2170be0248f0bbd1570010d84d99"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1StrategyDirector.cs.meta",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1StrategyDirector.cs.meta",
+          "source_sha256": "ce35b0ddbe63417fe51c2410d94df17534126c02227262823a1f06f865e38cfa",
+          "destination_sha256": "ce35b0ddbe63417fe51c2410d94df17534126c02227262823a1f06f865e38cfa",
+          "kind": "meta",
+          "guid": "99bd757468754d289f591aa9939c2659"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1TurnCombatGate.Pvp.cs.meta",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1TurnCombatGate.Pvp.cs.meta",
+          "source_sha256": "4e1d5cc352afd6463163cc3305a4b323e4e4beb13e9d4271b967f12becce26e6",
+          "destination_sha256": "4e1d5cc352afd6463163cc3305a4b323e4e4beb13e9d4271b967f12becce26e6",
+          "kind": "meta",
+          "guid": "ac6b6d5e1093478890cc6f3a1b77d295"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1TurnCombatGate.cs.meta",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1TurnCombatGate.cs.meta",
+          "source_sha256": "b63f34f5bc560d9550c5e08a5e7043f6efeec40d2a78233028cfaea94a3e8086",
+          "destination_sha256": "b63f34f5bc560d9550c5e08a5e7043f6efeec40d2a78233028cfaea94a3e8086",
+          "kind": "meta",
+          "guid": "d4c7bb580c1f4702b9eb7942081e9530"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1TutorialDirector.cs.meta",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1TutorialDirector.cs.meta",
+          "source_sha256": "63953213ea0f6d4be2933219547ebc122ca040a089e5e0d96225ef29b9ac34d6",
+          "destination_sha256": "63953213ea0f6d4be2933219547ebc122ca040a089e5e0d96225ef29b9ac34d6",
+          "kind": "meta",
+          "guid": "db49f1a50aee4e0c85be5216270206a3"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1VfxDirector.cs.meta",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1VfxDirector.cs.meta",
+          "source_sha256": "e0305947bd5f2a68e77a47b08e7e2d66ab644b8ec0f37b066f3750af6b7e727c",
+          "destination_sha256": "e0305947bd5f2a68e77a47b08e7e2d66ab644b8ec0f37b066f3750af6b7e727c",
+          "kind": "meta",
+          "guid": "98a8bffab0d347a293080e8af953f48e"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1VisualFoundation.cs.meta",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1VisualFoundation.cs.meta",
+          "source_sha256": "b10578ff881c70e6eff2fc347854c44f070e695dbf5563042da31c0c556761d5",
+          "destination_sha256": "b10578ff881c70e6eff2fc347854c44f070e695dbf5563042da31c0c556761d5",
+          "kind": "meta",
+          "guid": "0884f10ba77de460551fc887c7bcfdb6"
+        },
+        {
+          "source": "unity/Assets/Scripts/Tier1/VexforgeTier1WorldAtlasDirector.cs.meta",
+          "destination": "unity-bootstrap/Assets/Scripts/Tier1/VexforgeTier1WorldAtlasDirector.cs.meta",
+          "source_sha256": "3db49f756e6ba92475e68eb7bf4f0dd2103f79524370ba7027b220a1c5176f19",
+          "destination_sha256": "3db49f756e6ba92475e68eb7bf4f0dd2103f79524370ba7027b220a1c5176f19",
+          "kind": "meta",
+          "guid": "4d5edf3848a74daf88eda9a30a70c1fc"
+        },
+        {
+          "source": "unity/Assets/Scripts/UI/VexforgeAlphaHud.cs.meta",
+          "destination": "unity-bootstrap/Assets/Scripts/UI/VexforgeAlphaHud.cs.meta",
+          "source_sha256": "013ef09ba0d5ab886d47e5c0f313e67afa195191876684586afd9baf1a199c86",
+          "destination_sha256": "013ef09ba0d5ab886d47e5c0f313e67afa195191876684586afd9baf1a199c86",
+          "kind": "meta",
+          "guid": "b74c1b3cef2341d79d242e294234c452"
+        }
+      ],
+      "depends_on_stages": [
+        3
+      ],
+      "note": "This dependency-closed slice restores canonical Unity GUID metadata for 18 additional Tier1 scripts and the first UI script whose C# sources are already present in Bootstrap. All GUIDs are unique and unreferenced by serialized Bootstrap assets in the current inventory. No C# source or runtime behavior changes. This is 19/197 files (9.6447%), within the 19-file cap.",
       "build": null
     }
   ],
-  "next_stage": "Stage 11 passed in manual Bootstrap run #17 on commit c5d5b81011cc2647533c0684055fb980bc19cec0; the downloaded APK hash, ZIP integrity, Android manifest, Unity data, and ARM64 IL2CPP structure were verified. Stage 12 is prepared as a new 19-file dependency-closed batch restoring canonical script .meta/GUID files. Bootstrap will contain 170/197 canonical paths after this batch; 27 remain. Dispatch one full Bootstrap APK build from a new commit SHA, validate the artifact and APK, then select the following batch within the 19-file cap.",
+  "next_stage": "Stage 12 passed in manual Bootstrap run #18 on commit 9250fdcec1f7a61396a345d7ea67d5060ee13d58; the downloaded APK hash, ZIP integrity, Android manifest, Unity data, and ARM64 IL2CPP structure were verified. Stage 13 is prepared as a new 19-file dependency-closed batch restoring additional Tier1 and UI script .meta/GUID files. Bootstrap will contain 189/197 canonical paths after this batch; 8 remain. Dispatch one full Bootstrap APK build from a new commit SHA, validate the artifact and APK, then finish the remaining tracked paths within the 19-file cap.",
   "known_architecture_boundary": "The official code contains a reciprocal App/HUD cycle involving 31 files and 7,066 lines (41.6%). The user-directed stage 3 imports the full pinned runtime C# inventory together, so it does not split that source cycle. Stage 5 restores the app component in the official bootstrap scene; stage 6 adds the canonical audio cue set. Visual resources, remaining scenes, runtime behavior, and full-content parity still require later stages and separate verification. Any temporary compile seam must be recorded and removed before parity is claimed.",
   "scene_policy": "Stage 5 restores the canonical VexforgeBootstrap scene content and its already-matched scene metadata; the Bootstrap copy adds one final LF, and its VexforgeApp script GUID resolves through stage 4. unity/ remains the untouched source of truth. The restored scene is not device or gameplay verification."
 }

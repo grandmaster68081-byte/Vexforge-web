@@ -1,5 +1,24 @@
 # 25 — CONTINUITY CHANGELOG
 
+## 2026-10-10 — Bootstrap Stage 12 verified; Stage 13 prepared
+
+- Bootstrap run #18 passed on commit
+  `9250fdcec1f7a61396a345d7ea67d5060ee13d58`. Artifact
+  `VEXFORGE-Unity-Bootstrap-APK-18` (ID `11680372661`) and its 45,827,421-byte
+  APK passed hash, ZIP/CRC, Android manifest, Unity data, and ARM64 IL2CPP
+  checks. The downloaded APK hash
+  `6625abf256d9dc266c24dba453e2ecd5a60fb1e56d9843af1e91f590f6169bcc` matches
+  the build report. Unity reported `BuildResult.Succeeded`, warnings=0/errors=1;
+  the counter remains recorded for review.
+- The run restored 2,010,396,996 bytes from the compatible run #17 Unity Library
+  cache and saved a new cache. Stage 12's 19 canonical script GUID metadata
+  files are verified.
+- Stage 13 prepares 19 additional canonical script `.meta`/GUID files for
+  already-migrated Tier1 and UI sources. All GUIDs are unique and unreferenced
+  by serialized assets in the current Bootstrap inventory. This is 19/197 files
+  (9.6447%), within the per-stage cap; the planned cumulative inventory is
+  189/197, leaving eight canonical paths.
+
 ## 2026-10-10 — Bootstrap Stage 11 verified; Stage 12 prepared
 
 - Bootstrap run #17 passed on commit
