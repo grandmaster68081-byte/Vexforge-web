@@ -3,11 +3,13 @@
 ## Propósito y estado
 
 Este documento describe el método separado que se está probando para llevar
-gradualmente todo el juego Unity oficial a una APK completa en un proyecto
-hermano. La meta final es que el APK contenga el videojuego completo tal como lo
-define el código oficial, no solo una demo ni una base vacía. El proyecto
-experimental no sustituye ni modifica el original, y este documento no autoriza
-una compilación por sí solo.
+gradualmente todo el juego Unity oficial a APK completas en un proyecto
+hermano. Cada ejecución incorpora entre 5 % y 7 % de las líneas C# canónicas
+(medidas contra el inventario de código fijado en el manifiesto) y compila el
+APK completo del estado acumulado. Las APK intermedias pueden tener escenas o
+comportamientos incompletos; la compilación de Unity y la generación del APK sí
+deben terminar correctamente. La meta final es integrar y verificar el juego
+completo. El proyecto experimental no modifica el original.
 
 El repositorio oficial es `grandmaster68081-byte/Vexforge-web`, rama `main`.
 El proyecto de referencia sigue en `unity/`; el proyecto experimental está en
@@ -33,14 +35,15 @@ El proyecto de referencia sigue en `unity/`; el proyecto experimental está en
   Gradle, IL2CPP y ARM64.
 - El bootstrap no debe referenciar archivos mediante rutas dentro de `unity/`,
   usar enlaces a sus assets ni compilar el árbol original.
-- El builder no crea escenas predeterminadas ni contenido de relleno. Para una
-  APK de migración se requiere una escena real del juego oficial, copiada con su
-  `.meta`/GUID y su cierre de dependencias a `unity-bootstrap/`. La ausencia de
-  escena detiene el build antes de compilar.
+- El builder no crea escenas predeterminadas ni contenido de relleno. Durante
+  las etapas intermedias se permite conservar una copia oficial de la escena
+  sin componentes todavía no compilados; se documenta cada modificación y se
+  restaura la escena canónica cuando llegue su cierre de código. La ausencia
+  del archivo de escena sigue deteniendo el build.
 - La comprobación automatizada solo verifica que exista el archivo de escena
-  configurado; no puede certificar su procedencia oficial ni que el cierre de
-  dependencias esté completo. Revisar el origen y el diff contra `unity/` es
-  obligatorio antes de aceptar o compilar una porción.
+  configurado; no certifica procedencia, porcentaje, compatibilidad ni cierre
+  de dependencias. El manifiesto registra los archivos fuente, hashes, cambios
+  temporales de escena y porción porcentual de cada etapa.
 - La APK #2 descrita abajo fue una prueba técnica histórica del workflow; su
   escena predeterminada generada no cuenta como contenido migrado ni como primer
   hito del videojuego.
@@ -57,11 +60,15 @@ Secuencia para cada ampliación autorizada:
    descargado coincide con el informe, y registrar el run, commit, tamaño,
    application ID y estado real de la caché. No llamar “reutilizada” a una caché
    hasta que un run posterior muestre un hit de restauración.
-2. Inspeccionar el código y las dependencias oficiales en `unity/`; elegir una
-   pieza pequeña, coherente y con un cierre de compilación comprobable.
-3. Copiar solo su código, escenas, assets, configuraciones y dependencias
-   oficiales necesarias a `unity-bootstrap/`. Conservar los `.meta` y GUID.
-   No inventar gameplay, datos, escenas de relleno ni sustitutos aleatorios.
+2. Medir el código C# oficial y seleccionar una porción nueva de 5–7 % del
+   total fijado en `unity-bootstrap/MIGRATION_MANIFEST.json`. Resolver sus
+   dependencias con etapas previas o dentro de la misma porción; no importar un
+   cierre mayor que el límite por conveniencia.
+3. Copiar las fuentes oficiales seleccionadas a `unity-bootstrap/`, conservar
+   `.meta`/GUID existentes y registrar los GUID estables creados solo cuando la
+   fuente no tuviera metadata. Las escenas intermedias pueden quedar
+   intencionalmente desconectadas mientras falte código; no inventar gameplay,
+   datos ni assets sustitutos.
 4. Mantener la pieza y todas las anteriores. No copiar el proyecto entero ni
    reemplazar `unity-bootstrap/` por `unity/`; mantener independientes sus
    rutas, identidad y settings de instalación.
@@ -76,6 +83,13 @@ Secuencia para cada ampliación autorizada:
    la nueva caché se guardó. No continuar tras ningún fallo.
 8. Solo después de validar el hito elegir la siguiente pieza oficial y repetir
    hasta cubrir el juego completo.
+
+Una APK completa significa que Unity compiló el APK Android completo a partir
+del estado Bootstrap acumulado; no significa que esa APK intermedia sea
+jugable. No permitir errores de compilación C# como sustituto de un corte
+pequeño. Si una familia de código tiene referencias circulares, dividirla con
+límites de compilación temporales y registrados; quitar esos límites y restaurar
+el código/escena canónicos antes de afirmar paridad final.
 
 Mantener la identidad `com.vexforge.bootstrap` para que la APK experimental no
 reemplace ni actualice por accidente la app oficial. La identidad diferente no
@@ -107,6 +121,18 @@ escena de Unity con objetos predeterminados porque faltaba la escena del
 bootstrap. Por lo tanto acredita el funcionamiento técnico de esa compilación,
 pero no acredita una porción del juego oficial ni el método incremental de
 contenido. No repetir esa salida como hito de migración.
+
+## Porción acumulativa vigente
+
+`unity-bootstrap/MIGRATION_MANIFEST.json` es el registro operativo exacto:
+fija el commit fuente, el denominador de líneas C#, los hashes, los archivos
+incorporados y el siguiente corte previsto. La primera porción elegida es
+Autenticación/Sesión (1.095 líneas, 6,45 % del inventario de 16.988 líneas).
+La escena Bootstrap conserva su GUID oficial, pero su copia temporal omite
+`VexforgeApp` para que este módulo compile sin importar prematuramente el ciclo
+de UI/juego. `unity/**` permanece intacto. Antes de la siguiente compilación,
+verificar primero el éxito completo de este APK y anotar el resultado real de
+restauración de `unity-bootstrap/Library`.
 
 ## Workflow y ejecución
 

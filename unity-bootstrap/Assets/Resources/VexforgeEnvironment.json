@@ -1,0 +1,7 @@
+{
+  "supabaseUrl": "https://rscuzqnfccqvltkdcdny.supabase.co",
+  "supabaseAnonKey": "sb_publishable_3eGRSpvxptO09eQQzpxysQ_Imq8zi58",
+  "rulesVersion": "forge_formation_v6",
+  "environmentName": "development",
+  "allowNetwork": true
+}

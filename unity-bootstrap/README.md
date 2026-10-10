@@ -23,9 +23,15 @@ second source of truth and must never replace or modify the official game.
 ## Migration rules
 
 - Keep `unity/**` unchanged; inspect it as the canonical source.
-- Choose one small, coherent official scene/code/assets slice with its full
-  dependency closure. Copy original `.meta` files and preserve GUIDs. Do not
-  invent gameplay, data, scenes, art, or replacement assets.
+- Add exactly 5–7% of the pinned official C# line inventory per stage. Resolve
+  dependencies using prior stages or within the current slice, and record each
+  canonical path and hash in `MIGRATION_MANIFEST.json`. Preserve upstream `.meta`
+  files/GUIDs; assign stable metadata only where the official source has none.
+- Intermediate APKs are full Android builds of the accumulated project, but
+  their scenes/runtime behavior may be incomplete. The Unity compile and APK
+  build must still succeed. Temporary scene disconnects or compile seams must
+  be recorded and removed/replaced by canonical source before final parity.
+- Do not invent gameplay, data, scenes, art, or replacement assets.
 - Retain every previously accepted slice in `unity-bootstrap/`; each APK is a
   full build of the accumulated project, not a shard or partial package.
 - Keep the package ID, Unity version, and settings boundary described in
@@ -43,5 +49,6 @@ the Unity Editor, Hub state, licenses, and credentials are never cached.
 The documented conditional authorization permits sequential Bootstrap builds
 only after the previous APK passes all required checks. Stop on any failure;
 do not retry without fresh authorization. Do not dispatch the official Unity
-workflow or Unity Cloud Build. Follow the canonical workflow guide for the
-preflight, commit/push, build, APK hash, artifact, and cache evidence sequence.
+workflow or Unity Cloud Build. Follow the canonical workflow guide and
+`MIGRATION_MANIFEST.json` for the preflight, exact 5–7% source slice,
+commit/push, full APK build, artifact/hash, and cache evidence sequence.

@@ -1,0 +1,232 @@
+{
+  "schema_version": 1,
+  "repository": "https://github.com/grandmaster68081-byte/Vexforge-web.git",
+  "canonical_branch": "main",
+  "source_commit": "d8f92bb042acc9c81fca55eca5eb5a14301c655d",
+  "percentage_basis": {
+    "files": "unity/Assets/Scripts/**/*.cs",
+    "file_count": 76,
+    "line_count": 16988,
+    "method": "Count canonical runtime C# source lines at the pinned source commit; exclude .meta, scenes, resources and build helpers."
+  },
+  "per_build_target_percent": [
+    5.0,
+    7.0
+  ],
+  "cumulative_full_apk_policy": "Every stage builds a complete Android APK from the accumulated unity-bootstrap project. Each stage adds 5–7% of canonical runtime C# lines. Intermediate runtime behavior and scenes may be incomplete; Unity script compilation and APK build must succeed. Retain previous slices and stable metadata.",
+  "baseline": {
+    "workflow_run_id": 37904329210,
+    "workflow_run_number": 2,
+    "commit": "301979e500697c8b087b2fc384095bbcfd8003e1",
+    "apk_size_bytes": 26293265,
+    "apk_sha256": "c2163741bb6bd547e1a8b960acf4929dacfa922593bd88f1a29e08c2403697e8",
+    "downloaded_artifact_hash_matched_report": true,
+    "content_status": "pipeline smoke test only; no official game C# source was integrated",
+    "cache": "first Unity Library cache saved; run 2 had no earlier successful cache to restore; inspect the next run restore result"
+  },
+  "stages": [
+    {
+      "number": 1,
+      "name": "Supabase auth/session contracts and client",
+      "status": "prepared_pending_build",
+      "new_runtime_csharp_files": 8,
+      "new_runtime_csharp_lines": 1095,
+      "share_percent": 6.4457,
+      "source_files": [
+        {
+          "source": "unity/Assets/Scripts/Backend/ApiContracts.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Backend/ApiContracts.cs",
+          "source_sha256": "39e3d5f4dda18358e1342fef9f84396d1ee56c2fae0ebb81aed09da1613f779e",
+          "destination_sha256": "39e3d5f4dda18358e1342fef9f84396d1ee56c2fae0ebb81aed09da1613f779e",
+          "kind": "runtime_script",
+          "source_meta": null,
+          "generated_stable_meta_guid": "db598cbf7a6b94bf3c0e2ed127ef64ef",
+          "meta_sha256": "6787f502d5a1283b301c2af212134e0abc68d3406ae2b074e666b372786371b3"
+        },
+        {
+          "source": "unity/Assets/Scripts/Backend/SupabaseAuthService.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Backend/SupabaseAuthService.cs",
+          "source_sha256": "e66af4194f6e0c9859018f64c683c3e0173eb545d16d083e007c8a776e751235",
+          "destination_sha256": "e66af4194f6e0c9859018f64c683c3e0173eb545d16d083e007c8a776e751235",
+          "kind": "runtime_script",
+          "source_meta": null,
+          "generated_stable_meta_guid": "c0fe883e75233594ad91b750189a6ef2",
+          "meta_sha256": "766d7c4a30e5732383b84b7a27af2e8e11d8e898e8d7d43cabc3f5f8b7d6d9ec"
+        },
+        {
+          "source": "unity/Assets/Scripts/Backend/SupabaseClient.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Backend/SupabaseClient.cs",
+          "source_sha256": "7b1cca7b987b77907b7346dd32e253add4405aabd630f0c9ea59db5026bfa8ee",
+          "destination_sha256": "7b1cca7b987b77907b7346dd32e253add4405aabd630f0c9ea59db5026bfa8ee",
+          "kind": "runtime_script",
+          "source_meta": null,
+          "generated_stable_meta_guid": "46f8ba37bf10e76515e42ababfa382c7",
+          "meta_sha256": "56f7784144b4e7300a19cc5868d9dcd826bf1564c46af44f7d614a07c2a8480b"
+        },
+        {
+          "source": "unity/Assets/Scripts/Backend/UnityWebRequestAsync.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Backend/UnityWebRequestAsync.cs",
+          "source_sha256": "f442fde7216f745e4282dfd199b48f937bcbc0bc684f7a71573ff4817c3d6b04",
+          "destination_sha256": "f442fde7216f745e4282dfd199b48f937bcbc0bc684f7a71573ff4817c3d6b04",
+          "kind": "runtime_script",
+          "source_meta": null,
+          "generated_stable_meta_guid": "1d49345a03a673faef4bca8a6bf0c7e2",
+          "meta_sha256": "ccdc01a0dab759fe4ff80e5cee47247f51a623547e3931ed94ba9febc054450f"
+        },
+        {
+          "source": "unity/Assets/Scripts/Core/AppLogger.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Core/AppLogger.cs",
+          "source_sha256": "ca4c888fe920c84deba1ed8130332f0104a52e2cc0cfc082a7fd97f4cac868a1",
+          "destination_sha256": "ca4c888fe920c84deba1ed8130332f0104a52e2cc0cfc082a7fd97f4cac868a1",
+          "kind": "runtime_script",
+          "source_meta": null,
+          "generated_stable_meta_guid": "067ebf7123bfb53e2f09466361e7cb73",
+          "meta_sha256": "dcbbfd52ae752834a0f66aa8052f2ddcfe85b681aae029b33a43ca56c183f85e"
+        },
+        {
+          "source": "unity/Assets/Scripts/Core/RuntimeEnvironment.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Core/RuntimeEnvironment.cs",
+          "source_sha256": "3b05a4b8b0f7de7fa8b20e2b2fb5f2f0eba46438c363357c4d1dfeff7d4ae5c3",
+          "destination_sha256": "3b05a4b8b0f7de7fa8b20e2b2fb5f2f0eba46438c363357c4d1dfeff7d4ae5c3",
+          "kind": "runtime_script",
+          "source_meta": null,
+          "generated_stable_meta_guid": "21e00a6430cfbd514b449327f0e60bc7",
+          "meta_sha256": "bae624d1634ef7513755035983f5a64d13f8f4dfc0512be4c06b4345af76ce86"
+        },
+        {
+          "source": "unity/Assets/Scripts/Session/ISessionStore.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Session/ISessionStore.cs",
+          "source_sha256": "565d1dd85cf933e797a3083849f32f512d117adda07897ac99b103d68e8f99fd",
+          "destination_sha256": "565d1dd85cf933e797a3083849f32f512d117adda07897ac99b103d68e8f99fd",
+          "kind": "runtime_script",
+          "source_meta": "unity/Assets/Scripts/Session/ISessionStore.cs.meta",
+          "meta_sha256": "27d5a22c794bc7a3d093946a5f19ab78ef064cd145baccf0472aacb1d9ec885d"
+        },
+        {
+          "source": "unity/Assets/Scripts/Session/SessionService.cs",
+          "destination": "unity-bootstrap/Assets/Scripts/Session/SessionService.cs",
+          "source_sha256": "dd757fb5b49cfffc60b10eef5b87d866c1d4a05f73d9d87304900581b3cff81c",
+          "destination_sha256": "dd757fb5b49cfffc60b10eef5b87d866c1d4a05f73d9d87304900581b3cff81c",
+          "kind": "runtime_script",
+          "source_meta": null,
+          "generated_stable_meta_guid": "360c966e4fe6f4f47f273432ee5b03b5",
+          "meta_sha256": "758a76c6ee6fa295f580a58d910155acdff278651cf197db63f3ffe07a7d48da"
+        }
+      ],
+      "assets": [
+        {
+          "source": "unity/Assets/Resources/VexforgeEnvironment.json",
+          "destination": "unity-bootstrap/Assets/Resources/VexforgeEnvironment.json",
+          "source_sha256": "dd4d2e1bbb309edb832533d290dce5dc38453f455538df1218e3a6ed49b4f34f",
+          "destination_sha256": "dd4d2e1bbb309edb832533d290dce5dc38453f455538df1218e3a6ed49b4f34f",
+          "kind": "runtime_config",
+          "transformation": null
+        },
+        {
+          "source": "unity/Assets/Resources/VexforgeEnvironment.json.meta",
+          "destination": "unity-bootstrap/Assets/Resources/VexforgeEnvironment.json.meta",
+          "source_sha256": "88eb76c08198195198f4d3dfbbb74de01903a75da0b5988ca58c813c4464867f",
+          "destination_sha256": "88eb76c08198195198f4d3dfbbb74de01903a75da0b5988ca58c813c4464867f",
+          "kind": "meta"
+        },
+        {
+          "source": "unity/Assets/Scenes/VexforgeBootstrap.unity",
+          "destination": "unity-bootstrap/Assets/Scenes/VexforgeBootstrap.unity",
+          "source_sha256": "17cbaf382df6820aa47c9e33b0c762a480c0f1f28909fcd85c54f34d443b013e",
+          "destination_sha256": "992c7b062316fca5aa4b2f7a85558403d3c5ba7c624f0a82efcb1e56f76503e7",
+          "kind": "scene_without_unavailable_app_component",
+          "transformation": "Removed VexforgeApp component only in the bootstrap copy; restore exact official scene when VexforgeApp enters a compiled slice."
+        },
+        {
+          "source": "unity/Assets/Scenes/VexforgeBootstrap.unity.meta",
+          "destination": "unity-bootstrap/Assets/Scenes/VexforgeBootstrap.unity.meta",
+          "source_sha256": "d76c67f92bee91347608c4c20e966f980827949a2b2c5daa362704e995d2b4af",
+          "destination_sha256": "d76c67f92bee91347608c4c20e966f980827949a2b2c5daa362704e995d2b4af",
+          "kind": "meta"
+        },
+        {
+          "source": null,
+          "destination": "unity-bootstrap/Assets/Scripts.meta",
+          "kind": "generated_stable_folder_meta",
+          "guid": "c262342dfb1f58e0121473be589b58c2",
+          "destination_sha256": "6db99de29863e72cdb5ce0491e03f412b424816cdf3ccfa6ca764f6bf204f17f"
+        },
+        {
+          "source": null,
+          "destination": "unity-bootstrap/Assets/Scripts/Backend.meta",
+          "kind": "generated_stable_folder_meta",
+          "guid": "97f3029056e7067240d96888712b9fda",
+          "destination_sha256": "6ecb5ccc4237f1f6c1265c8d0d0ba91e71d25726a630351b272820e1aeb66ba8"
+        },
+        {
+          "source": null,
+          "destination": "unity-bootstrap/Assets/Scripts/Core.meta",
+          "kind": "generated_stable_folder_meta",
+          "guid": "3cf2dcb3222bd2fc823d292876179814",
+          "destination_sha256": "476ea108f616ceaac6872ef6df57bd8dd473232bc26fac5007778dc03aade453"
+        },
+        {
+          "source": null,
+          "destination": "unity-bootstrap/Assets/Scripts/Session.meta",
+          "kind": "generated_stable_folder_meta",
+          "guid": "9610ee3006302a08ed6b27ba0ff32cf7",
+          "destination_sha256": "2c87307f3849e6c16b19889bec2f9c806b7d4f5701ef6049d67ae10983d58e1f"
+        },
+        {
+          "source": null,
+          "destination": "unity-bootstrap/Assets/Scenes.meta",
+          "kind": "generated_stable_folder_meta",
+          "guid": "155931fa43360366a07fa2facca052df",
+          "destination_sha256": "01c1f4022dcdd8c237465cfcfc853dbbedf0aabcfa1b4913b457b43d97c2a654"
+        },
+        {
+          "source": null,
+          "destination": "unity-bootstrap/Assets/Resources.meta",
+          "kind": "generated_stable_folder_meta",
+          "guid": "68f45672162915ff35355519cb2cb892",
+          "destination_sha256": "7b7cf6bf40a49fc2f05dbf541163faa3d87a2d357ca0f627ab3f3370a34c59b4"
+        }
+      ],
+      "build": null
+    }
+  ],
+  "next_stage": {
+    "number": 2,
+    "name": "Card art resolver and pack reveal view foundations",
+    "new_runtime_csharp_lines": 1165,
+    "share_percent": 6.8578,
+    "source_files": [
+      {
+        "source": "unity/Assets/Scripts/Presentation/VexforgeCardArtResolver.cs",
+        "lines": 269,
+        "sha256": "e4d3fde29be5322fa17c248a4ba1de92300141b63959e27da1567374f8eddbb1"
+      },
+      {
+        "source": "unity/Assets/Scripts/Presentation/VexforgeTextureLruCache.cs",
+        "lines": 280,
+        "sha256": "6fe3d43a7277a90cb338409ef5d52eddba1b69593a2fdb926e7b178f6f1631e4"
+      },
+      {
+        "source": "unity/Assets/Scripts/Tier1/VexforgeTier1AssetRegistry.cs",
+        "lines": 80,
+        "sha256": "4013d08b057c4c95f7c0b7cfa9ce4f43026e4342e6808c7f4111315de87ebb1b"
+      },
+      {
+        "source": "unity/Assets/Scripts/Tier1/VexforgeTier1PackRevealView.cs",
+        "lines": 462,
+        "sha256": "b317589a975266562a8294bd6c29e5a6ade4a695761708d13cc8d7d168287dc5"
+      },
+      {
+        "source": "unity/Assets/Scripts/Tier1/VexforgeTier1Ui.cs",
+        "lines": 74,
+        "sha256": "2dc8c7cbc50de95df017046ed5fc981c2ba07ac899e1b657301f843687f9b9fb"
+      }
+    ],
+    "depends_on_stage_1": [
+      "Backend/ApiContracts.cs"
+    ],
+    "note": "Copy these official sources into unity-bootstrap/Assets/Scripts without replacing stage 1. The combined source set is dependency-closed."
+  },
+  "known_architecture_boundary": "Static source dependency analysis found a reciprocal App/HUD cycle involving 31 files and 7,066 lines (41.6%). Do not import it as one oversized stage. Keep VexforgeApp disconnected from the staged scene while absent; design and record small compile seams before staging that cycle. Temporary compile-only seams must be separately tracked and removed/replaced with canonical source before the final build.",
+  "scene_policy": "The bootstrap copy keeps the official VexforgeBootstrap scene GUID/settings but temporarily omits its VexforgeApp component while App is not compiled. unity/ remains untouched. Restore the exact official scene when VexforgeApp and its dependencies are added."
+}
