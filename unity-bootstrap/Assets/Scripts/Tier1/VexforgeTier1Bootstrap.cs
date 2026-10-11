@@ -33,12 +33,22 @@ namespace Vexforge.Tier1
 
         private IEnumerator Start()
         {
+            LockUprightPortrait();
             while(VexforgeApp.Instance==null)yield return null;
             var app=VexforgeApp.Instance;
             while(!app.IsInitialized)yield return null;
             yield return new WaitUntil(()=>Camera.main!=null);
             Build(app);
             yield return BindCanonicalPresentation(app);
+        }
+
+        private static void LockUprightPortrait()
+        {
+            Screen.autorotateToPortrait=true;
+            Screen.autorotateToPortraitUpsideDown=false;
+            Screen.autorotateToLandscapeLeft=false;
+            Screen.autorotateToLandscapeRight=false;
+            Screen.orientation=ScreenOrientation.Portrait;
         }
 
         private void Build(VexforgeApp app)

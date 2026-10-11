@@ -139,35 +139,35 @@ namespace Vexforge.Tier1
             backdrop.raycastTarget = false;
 
             var plaque = VexforgeTier1Ui.Panel(
-                canvas.transform, "CombatPlaque", new Color(.012f,.014f,.020f,.97f));
+                canvas.transform, "CombatPlaque", new Color(.012f,.014f,.020f,.34f));
             VexforgeTier1Ui.Anchor(plaque.rectTransform, .035f,.025f,.965f,.975f);
 
             titleLabel = VexforgeTier1Ui.Label(
                 plaque.transform, "Title", "V7 · ENTRENAMIENTO ESPEJO", 25,
                 VexforgeTier1Ui.Gold, TextAnchor.MiddleCenter);
-            VexforgeTier1Ui.Anchor(titleLabel.rectTransform, .055f,.91f,.945f,.975f);
+            VexforgeTier1Ui.Anchor(titleLabel.rectTransform, .055f,.93f,.945f,.98f);
 
             status = VexforgeTier1Ui.Label(
                 plaque.transform, "Status", "ESTADO AUTORITATIVO DEL SERVIDOR", 13,
                 VexforgeTier1Ui.Muted, TextAnchor.MiddleCenter);
-            VexforgeTier1Ui.Anchor(status.rectTransform, .055f,.86f,.945f,.91f);
+            VexforgeTier1Ui.Anchor(status.rectTransform, .055f,.885f,.945f,.925f);
 
             board = VexforgeTier1Ui.Label(
                 plaque.transform, "ConfirmedBoard", "ESPERANDO ESTADO CONFIRMADO", 12,
                 VexforgeTier1Ui.Text, TextAnchor.UpperLeft);
-            VexforgeTier1Ui.Anchor(board.rectTransform, .065f,.515f,.935f,.85f);
+            VexforgeTier1Ui.Anchor(board.rectTransform, .065f,.69f,.935f,.875f);
 
             eventLog = VexforgeTier1Ui.Label(
                 plaque.transform, "ConfirmedEvents", string.Empty, 11,
                 VexforgeTier1Ui.Muted, TextAnchor.UpperLeft);
-            VexforgeTier1Ui.Anchor(eventLog.rectTransform, .065f,.315f,.935f,.50f);
+            VexforgeTier1Ui.Anchor(eventLog.rectTransform, .065f,.605f,.935f,.68f);
 
             var scrollObject = new GameObject(
                 "LegalActionsViewport", typeof(RectTransform), typeof(Image), typeof(Mask), typeof(ScrollRect));
             scrollObject.transform.SetParent(plaque.transform, false);
-            VexforgeTier1Ui.Anchor(scrollObject.GetComponent<RectTransform>(), .065f,.12f,.935f,.30f);
+            VexforgeTier1Ui.Anchor(scrollObject.GetComponent<RectTransform>(), .065f,.12f,.935f,.28f);
             var viewportImage = scrollObject.GetComponent<Image>();
-            viewportImage.color = new Color(.025f,.029f,.037f,.95f);
+            viewportImage.color = new Color(.025f,.029f,.037f,.82f);
             var mask = scrollObject.GetComponent<Mask>();
             mask.showMaskGraphic = false;
             actionScroll = scrollObject.GetComponent<ScrollRect>();

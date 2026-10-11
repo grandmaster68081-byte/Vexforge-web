@@ -154,15 +154,15 @@ namespace Vexforge.Tier1
             var tex = assets == null ? null : assets.LoadTexture("VF_BATTLE_ARENA_CITADEL_A", "VF_NEXUS_CITADEL_HERO");
             if (tex != null)
             {
-                hero.sprite = Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(.5f, .5f), 100f);
+                hero.sprite = VexforgeTier1Ui.CreateCoverSprite(tex);
                 hero.type = Image.Type.Simple;
                 hero.preserveAspect = false;
             }
             hero.raycastTarget = false;
 
-            var veil = VexforgeTier1Ui.Panel(canvas.transform, "BattleVeil", new Color(.004f,.005f,.009f,.56f));
+            var veil = VexforgeTier1Ui.Panel(canvas.transform, "BattleVeil", new Color(.004f,.005f,.009f,.22f));
             VexforgeTier1Ui.Full(veil.rectTransform); veil.raycastTarget = false;
-            var plaque = VexforgeTier1Ui.Panel(canvas.transform, "GatePlaque", new Color(.012f,.014f,.020f,.90f));
+            var plaque = VexforgeTier1Ui.Panel(canvas.transform, "GatePlaque", new Color(.012f,.014f,.020f,.68f));
             VexforgeTier1Ui.Anchor(plaque.rectTransform, .05f,.10f,.95f,.88f);
             var title = VexforgeTier1Ui.Label(plaque.transform, "Title", "BATTLE GATE", 31, VexforgeTier1Ui.Gold, TextAnchor.MiddleCenter);
             VexforgeTier1Ui.Anchor(title.rectTransform, .07f,.88f,.67f,.96f);

@@ -27,10 +27,10 @@ namespace Vexforge.Tier1
         private void Build()
         {
             canvas=VexforgeTier1Ui.MakeCanvas("VexforgeTier1NavigationRail",72,4.0f);
-            var dock=VexforgeTier1Ui.Panel(canvas.transform,"RuneDock",new Color(.004f,.006f,.010f,.94f));
+            var dock=VexforgeTier1Ui.Panel(canvas.transform,"RuneDock",new Color(.004f,.006f,.010f,.78f));
             VexforgeTier1Ui.Anchor(dock.rectTransform,.045f,.015f,.955f,.082f);
             buttons=new Button[6];
-            for(var i=0;i<6;i++){var index=i;var button=VexforgeTier1Ui.Button(dock.transform,"Nav_"+i,labels[i],()=>Navigate(routes[index]),new Color(.055f,.050f,.046f,.94f),10);buttons[i]=button;VexforgeTier1Ui.Anchor(button.GetComponent<RectTransform>(),.008f+i*.165f,.12f,.158f+i*.165f,.88f);}
+            for(var i=0;i<6;i++){var index=i;var button=VexforgeTier1Ui.Button(dock.transform,"Nav_"+i,labels[i],()=>Navigate(routes[index]),new Color(.055f,.050f,.046f,.82f),10);buttons[i]=button;VexforgeTier1Ui.Anchor(button.GetComponent<RectTransform>(),.008f+i*.165f,.12f,.158f+i*.165f,.88f);}
             canvas.gameObject.SetActive(false);
         }
         private void Navigate(GameRoute route){if(battleLocked)return;if(app!=null&&app.Navigation!=null)app.Navigation.Navigate(route);}
@@ -41,7 +41,7 @@ namespace Vexforge.Tier1
             {
                 var c=buttons[i].colors;
                 var selected=i==Index(route);
-                c.normalColor=selected?new Color(.30f,.20f,.09f,.96f):new Color(.055f,.050f,.046f,.94f);
+                c.normalColor=selected?new Color(.30f,.20f,.09f,.88f):new Color(.055f,.050f,.046f,.82f);
                 c.highlightedColor=new Color(.42f,.29f,.12f,1f);
                 c.pressedColor=new Color(.18f,.12f,.07f,1f);
                 c.disabledColor=new Color(.055f,.050f,.046f,.45f);

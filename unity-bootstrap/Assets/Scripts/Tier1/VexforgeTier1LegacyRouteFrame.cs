@@ -33,7 +33,7 @@ namespace Vexforge.Tier1
         private void Build()
         {
             canvas = VexforgeTier1Ui.MakeCanvas("VexforgeTier1LegacyRouteFrame", -20, 5.6f);
-            var background = VexforgeTier1Ui.Panel(canvas.transform,"Background",new Color(.006f,.008f,.013f,.96f));
+            var background = VexforgeTier1Ui.Panel(canvas.transform,"Background",new Color(.006f,.008f,.013f,.20f));
             VexforgeTier1Ui.Full(background.rectTransform); background.raycastTarget=false;
             hero = VexforgeTier1Ui.Panel(canvas.transform,"Hero",new Color(.006f,.008f,.013f,1f));
             VexforgeTier1Ui.Anchor(hero.rectTransform,.018f,.08f,.982f,.965f); hero.raycastTarget=false;
@@ -72,7 +72,7 @@ namespace Vexforge.Tier1
             if(tex==null)return;
             var old=hero.sprite;
             hero.color=Color.white;
-            hero.sprite=Sprite.Create(tex,new Rect(0,0,tex.width,tex.height),new Vector2(.5f,.5f),100f);
+            hero.sprite=VexforgeTier1Ui.CreateCoverSprite(tex);
             hero.preserveAspect=false;
             hero.type=Image.Type.Simple;
             if(old!=null)Destroy(old);

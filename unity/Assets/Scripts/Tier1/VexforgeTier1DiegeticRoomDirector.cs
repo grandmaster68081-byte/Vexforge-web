@@ -76,11 +76,11 @@ namespace Vexforge.Tier1
         private void Build()
         {
             canvas=VexforgeTier1Ui.MakeCanvas("VexforgeTier1WorldRooms",44,4.8f);
-            var bg=VexforgeTier1Ui.Panel(canvas.transform,"Background",new Color(.008f,.009f,.014f,.96f));VexforgeTier1Ui.Full(bg.rectTransform);
+            var bg=VexforgeTier1Ui.Panel(canvas.transform,"Background",new Color(.008f,.009f,.014f,.22f));VexforgeTier1Ui.Full(bg.rectTransform);
             hero=VexforgeTier1Ui.Panel(canvas.transform,"SanctumHero",new Color(.006f,.008f,.013f,1f));VexforgeTier1Ui.Anchor(hero.rectTransform,.025f,.12f,.975f,.97f);
             hero.type=Image.Type.Simple;hero.preserveAspect=false;
-            var shade=VexforgeTier1Ui.Panel(hero.transform,"Veil",new Color(.006f,.008f,.012f,.45f));VexforgeTier1Ui.Full(shade.rectTransform);
-            var plaque=VexforgeTier1Ui.Panel(canvas.transform,"Plaque",new Color(.012f,.014f,.019f,.88f));VexforgeTier1Ui.Anchor(plaque.rectTransform,.065f,.14f,.935f,.67f);
+            var shade=VexforgeTier1Ui.Panel(hero.transform,"Veil",new Color(.006f,.008f,.012f,.22f));VexforgeTier1Ui.Full(shade.rectTransform);
+            var plaque=VexforgeTier1Ui.Panel(canvas.transform,"Plaque",new Color(.012f,.014f,.019f,.70f));VexforgeTier1Ui.Anchor(plaque.rectTransform,.065f,.14f,.935f,.67f);
             eyebrow=VexforgeTier1Ui.Label(plaque.transform,"Eyebrow","",12,VexforgeTier1Ui.GoldSoft,TextAnchor.UpperLeft);VexforgeTier1Ui.Anchor(eyebrow.rectTransform,.07f,.83f,.93f,.92f);
             title=VexforgeTier1Ui.Label(plaque.transform,"Title","",32,VexforgeTier1Ui.Gold,TextAnchor.MiddleLeft);VexforgeTier1Ui.Anchor(title.rectTransform,.07f,.69f,.93f,.82f);
             body=VexforgeTier1Ui.Label(plaque.transform,"Body","",15,VexforgeTier1Ui.Text,TextAnchor.UpperLeft);VexforgeTier1Ui.Anchor(body.rectTransform,.07f,.14f,.93f,.66f);
@@ -157,7 +157,7 @@ namespace Vexforge.Tier1
             var tex=assets==null?null:assets.LoadTexture(key,"VF_NEXUS_CITADEL_HERO");
             if(tex==null||hero==null)return;
             hero.color=Color.white;
-            var old=hero.sprite;hero.sprite=Sprite.Create(tex,new Rect(0,0,tex.width,tex.height),new Vector2(.5f,.5f),100f);if(old!=null)Destroy(old);
+            var old=hero.sprite;hero.sprite=VexforgeTier1Ui.CreateCoverSprite(tex);if(old!=null)Destroy(old);
         }
     }
 }

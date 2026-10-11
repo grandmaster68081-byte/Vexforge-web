@@ -32,7 +32,7 @@ namespace Vexforge.Tier1
             app = host;
             if (app != null && app.Navigation != null) app.Navigation.RouteChanged += HandleRouteChanged;
             canvas = VexforgeTier1Ui.MakeCanvas("VexforgeTier1BattleResult", 76, 4.1f);
-            veil = VexforgeTier1Ui.Panel(canvas.transform, "Veil", new Color(0.003f, 0.004f, 0.007f, 0.78f));
+            veil = VexforgeTier1Ui.Panel(canvas.transform, "Veil", new Color(0.003f, 0.004f, 0.007f, 0.56f));
             VexforgeTier1Ui.Full(veil.rectTransform);
             var plaque = VexforgeTier1Ui.Panel(canvas.transform, "ResultPlaque", VexforgeTier1Ui.BlackGlass);
             resultPlaque = plaque.gameObject;
@@ -70,7 +70,7 @@ namespace Vexforge.Tier1
             replay.gameObject.SetActive(result != null && result.events != null && result.events.Length > 0);
             resultPlaque.SetActive(true);
             playbackPanel.SetActive(false);
-            veil.color = new Color(0.003f, 0.004f, 0.007f, 0.78f);
+            veil.color = new Color(0.003f, 0.004f, 0.007f, 0.56f);
             canvas.gameObject.SetActive(true);
         }
 

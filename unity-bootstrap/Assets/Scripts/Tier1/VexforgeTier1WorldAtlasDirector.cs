@@ -52,13 +52,13 @@ namespace Vexforge.Tier1
             var veil = VexforgeTier1Ui.Panel(
                 canvas.transform,
                 "Veil",
-                new Color(.002f, .003f, .008f, .86f));
+                new Color(.002f, .003f, .008f, .24f));
             VexforgeTier1Ui.Full(veil.rectTransform);
 
             background = VexforgeTier1Ui.Panel(
                 canvas.transform,
                 "Atlas",
-                new Color(.006f, .008f, .013f, .98f));
+                new Color(.006f, .008f, .013f, .30f));
             VexforgeTier1Ui.Anchor(background.rectTransform, .035f, .07f, .965f, .93f);
 
             var aura = assets == null ? null : assets.LoadTexture("VF_BOSS_AURA");
@@ -77,7 +77,7 @@ namespace Vexforge.Tier1
             var shade = VexforgeTier1Ui.Panel(
                 background.transform,
                 "Shade",
-                new Color(.003f, .005f, .010f, .75f));
+                new Color(.003f, .005f, .010f, .30f));
             VexforgeTier1Ui.Full(shade.rectTransform);
 
             var title = VexforgeTier1Ui.Label(

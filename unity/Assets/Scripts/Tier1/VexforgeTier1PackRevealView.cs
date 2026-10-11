@@ -305,7 +305,7 @@ namespace Vexforge.Tier1
             var veil = VexforgeTier1Ui.Panel(
                 canvas.transform,
                 "Veil",
-                new Color(.002f, .002f, .006f, .82f));
+                new Color(.002f, .002f, .006f, .48f));
             VexforgeTier1Ui.Full(veil.rectTransform);
 
             background = VexforgeTier1Ui.Panel(
@@ -320,11 +320,7 @@ namespace Vexforge.Tier1
             if (hero != null)
             {
                 background.color = Color.white;
-                vaultSprite = Sprite.Create(
-                    hero,
-                    new Rect(0, 0, hero.width, hero.height),
-                    new Vector2(.5f, .5f),
-                    100f);
+                vaultSprite = VexforgeTier1Ui.CreateCoverSprite(hero);
                 background.sprite = vaultSprite;
                 background.preserveAspect = false;
             }
@@ -332,7 +328,7 @@ namespace Vexforge.Tier1
             var shade = VexforgeTier1Ui.Panel(
                 background.transform,
                 "Shade",
-                new Color(.002f, .003f, .007f, .68f));
+                new Color(.002f, .003f, .007f, .34f));
             VexforgeTier1Ui.Full(shade.rectTransform);
 
             var title = VexforgeTier1Ui.Label(

@@ -72,10 +72,10 @@ namespace Vexforge.Tier1
         {
             if (canvas != null) return;
             canvas = VexforgeTier1Ui.MakeCanvas("VexforgeTier1Tutorial", 90, 3.5f);
-            var veil = VexforgeTier1Ui.Panel(canvas.transform, "Veil", new Color(.001f,.002f,.005f,.64f)); VexforgeTier1Ui.Full(veil.rectTransform); veil.raycastTarget = false;
-            var plaque = VexforgeTier1Ui.Panel(canvas.transform, "TutorialPlaque", new Color(.009f,.012f,.018f,.96f)); VexforgeTier1Ui.Anchor(plaque.rectTransform,.05f,.11f,.95f,.89f);
+            var veil = VexforgeTier1Ui.Panel(canvas.transform, "Veil", new Color(.001f,.002f,.005f,.28f)); VexforgeTier1Ui.Full(veil.rectTransform); veil.raycastTarget = false;
+            var plaque = VexforgeTier1Ui.Panel(canvas.transform, "TutorialPlaque", new Color(.009f,.012f,.018f,.70f)); VexforgeTier1Ui.Anchor(plaque.rectTransform,.05f,.11f,.95f,.89f);
             hero = VexforgeTier1Ui.Panel(plaque.transform,"Hero",Color.white); VexforgeTier1Ui.Anchor(hero.rectTransform,.02f,.02f,.98f,.98f); hero.transform.SetAsFirstSibling(); hero.raycastTarget = false;
-            var heroVeil = VexforgeTier1Ui.Panel(hero.transform,"HeroShade",new Color(.004f,.006f,.010f,.46f)); VexforgeTier1Ui.Full(heroVeil.rectTransform); heroVeil.raycastTarget = false;
+            var heroVeil = VexforgeTier1Ui.Panel(hero.transform,"HeroShade",new Color(.004f,.006f,.010f,.24f)); VexforgeTier1Ui.Full(heroVeil.rectTransform); heroVeil.raycastTarget = false;
             eyebrow = VexforgeTier1Ui.Label(plaque.transform,"Eyebrow","",12,VexforgeTier1Ui.GoldSoft,TextAnchor.UpperLeft); VexforgeTier1Ui.Anchor(eyebrow.rectTransform,.08f,.86f,.92f,.93f);
             title = VexforgeTier1Ui.Label(plaque.transform,"Title","",34,VexforgeTier1Ui.Gold,TextAnchor.MiddleLeft); VexforgeTier1Ui.Anchor(title.rectTransform,.08f,.72f,.92f,.84f);
             stepText = VexforgeTier1Ui.Label(plaque.transform,"Step","",11,VexforgeTier1Ui.Muted,TextAnchor.MiddleLeft); VexforgeTier1Ui.Anchor(stepText.rectTransform,.08f,.66f,.92f,.71f);
@@ -176,7 +176,7 @@ namespace Vexforge.Tier1
             var tex=assets.LoadTexture(key,"VF_NEXUS_CITADEL_HERO");
             if(tex==null)return;
             var old=hero.sprite;
-            hero.sprite=Sprite.Create(tex,new Rect(0,0,tex.width,tex.height),new Vector2(.5f,.5f));
+            hero.sprite=VexforgeTier1Ui.CreateCoverSprite(tex);
             hero.type=Image.Type.Simple;
             hero.preserveAspect=false;
             if(old!=null)Destroy(old);

@@ -52,14 +52,14 @@ namespace Vexforge.Tier1
 
             var vignette = profile.Add<Vignette>();
             vignette.active = true;
-            vignette.intensity.Override(quality == VexforgeTier1Quality.Cinematic ? .16f : .11f);
-            vignette.smoothness.Override(.72f);
+            vignette.intensity.Override(quality == VexforgeTier1Quality.Cinematic ? .10f : .07f);
+            vignette.smoothness.Override(.78f);
 
             var grade = profile.Add<ColorAdjustments>();
             grade.active = true;
-            grade.contrast.Override(quality == VexforgeTier1Quality.Cinematic ? 10f : 6f);
-            grade.saturation.Override(-4f);
-            grade.postExposure.Override(0f);
+            grade.contrast.Override(quality == VexforgeTier1Quality.Cinematic ? 8f : 5f);
+            grade.saturation.Override(quality == VexforgeTier1Quality.Cinematic ? 8f : 5f);
+            grade.postExposure.Override(quality == VexforgeTier1Quality.Cinematic ? .22f : .30f);
 
             var tone = profile.Add<Tonemapping>();
             tone.active = quality != VexforgeTier1Quality.Mobile;
@@ -68,15 +68,20 @@ namespace Vexforge.Tier1
 
         private void ConfigureKeyLight()
         {
-            if (FindObjectsByType<Light>(FindObjectsInactive.Include, FindObjectsSortMode.None).Length > 0) return;
+            var existingLights = FindObjectsByType<Light>(FindObjectsInactive.Exclude, FindObjectsSortMode.None);
+            for (var i = 0; i < existingLights.Length; i++)
+                if (existingLights[i] != null && existingLights[i].enabled &&
+                    existingLights[i].type == LightType.Directional)
+                    return;
             var go = new GameObject("VexforgeTier1KeyLight");
             go.transform.SetParent(transform, false);
             go.transform.rotation = Quaternion.Euler(48f, -24f, 0f);
             keyLight = go.AddComponent<Light>();
             keyLight.type = LightType.Directional;
-            keyLight.intensity = .42f;
-            keyLight.color = new Color(.72f,.72f,.68f,1f);
+            keyLight.intensity = .72f;
+            keyLight.color = new Color(.84f,.80f,.72f,1f);
             keyLight.shadows = LightShadows.Soft;
+            keyLight.shadowStrength = .58f;
         }
 
         private static VexforgeTier1Quality DetectQuality()
