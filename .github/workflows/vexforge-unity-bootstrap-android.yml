@@ -207,7 +207,6 @@ jobs:
           test -x "$UNITY_EDITOR_PATH"
           editor_log="$GITHUB_WORKSPACE/build-artifacts/unity-bootstrap.log"
 
-          set +e
           "$UNITY_EDITOR_PATH" \
             -batchmode \
             -nographics \
@@ -217,17 +216,26 @@ jobs:
             -buildTarget Android \
             -executeMethod Vexforge.Bootstrap.Editor.VexforgeBootstrapBuild.BuildAndroid \
             -stackTraceLogType Full \
-            -logFile "$editor_log"
+            -logFile "$editor_log" &
+          editor_pid=$!
+          tail --pid="$editor_pid" --follow=name --retry --lines=80 "$editor_log" &
+          tail_pid=$!
+
+          set +e
+          wait "$editor_pid"
           editor_status=$?
+          wait "$tail_pid"
+          tail_status=$?
           set -e
 
           echo "Unity Editor exit code=$editor_status"
           if [ -f "$editor_log" ]; then
-            echo '--- tail of unity-bootstrap.log ---'
-            tail -n 200 "$editor_log"
-            echo '--- end tail of unity-bootstrap.log ---'
+            echo "Unity Editor log streamed from $editor_log"
           else
             echo "Unity Editor log was not created: $editor_log" >&2
+          fi
+          if [ "$tail_status" -ne 0 ]; then
+            echo "Unity log stream exit code=$tail_status" >&2
           fi
 
           test "$editor_status" -eq 0

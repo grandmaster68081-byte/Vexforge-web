@@ -359,22 +359,39 @@ del run #18 (sin coincidencia exacta) y se guardaron 2.010.449.557 bytes.
 
 La etapa 14 prepara las últimas ocho rutas del inventario (8/197, 4,0609 %).
 Tras copiarlas, las 197 rutas canónicas están representadas en Bootstrap y los
-81 scripts C# oficiales coinciden byte por byte; Bootstrap conserva, además,
-un entry point de build propio. También se alinearon por bytes la escena real,
-su lista de escenas, los manifiestos de paquetes y la versión de Unity. Solo
-`ProjectSettings/ProjectSettings.asset` conserva diferencias intencionales
-para el nombre, ID Android/metroPackageName y version code del Bootstrap.
+80 de los 81 scripts C# oficiales coinciden byte por byte. La copia Bootstrap de
+`VexforgeR5CloudBuildGate.cs` tiene una adaptación local de ciclo de build; los
+otros scripts oficiales y el contenido runtime siguen alineados. También se
+alinearon por bytes la escena real, su lista de escenas, los manifiestos de
+paquetes y la versión de Unity. Solo `ProjectSettings/ProjectSettings.asset`
+conserva diferencias de identidad para el nombre, ID Android/metroPackageName y
+version code del Bootstrap.
 
 La única modificación aprobada dentro de `unity/**` es añadir el mismo
 `using Vexforge.Core;` a `VexforgeTier1EconomyHub.cs` que ya permitía compilar
-Bootstrap. No se cambió otro archivo oficial. `VexforgeR5CloudBuildGate` es un
-callback local de prebuild: ejecuta `EnsureAll()` dentro del checkout Bootstrap
-y puede crear/actualizar recursos técnicos URP, materiales, recursos de
-presentación y la capa `VexforgeHotspot`. No llama a Unity Cloud, no modifica
-Supabase y no se ejecuta contra el proyecto oficial. La próxima acción es un
-único build APK completo del workflow manual Bootstrap en un SHA nuevo; detenerse
-ante cualquier fallo real de workflow, artefacto o hash. Ni 197/197 rutas ni un
-APK exitoso demuestran instalación, jugabilidad o equivalencia en dispositivo.
+Bootstrap. No se cambió otro archivo oficial. El run #20
+(`38085930684`, commit `3609d16093701b4d54ef5f0dd0e61596fb1c9571`) inició Unity
+tras pasar checkout, licencia y restauración de caché compatible, pero terminó
+cancelado al alcanzar el límite de 360 minutos. No devolvió código de salida,
+no produjo artefactos y no llegó a validar/subir APK ni guardar caché. El lote
+nuevo medía unos 35,8 KB y la caché anterior se restauró; esos datos no explican
+la duración.
+
+No se puede afirmar el punto interno exacto del bloqueo: el workflow anterior
+solo imprimía el log del Editor cuando Unity terminaba. La principal hipótesis
+era el nuevo `IPreprocessBuildWithReport`: llamaba `EnsureAll()` desde
+`BuildPipeline`, y `EnsureAll()` crea/actualiza recursos, guarda y ejecuta
+`AssetDatabase.Refresh()`. El arreglo prepara y valida esos mismos recursos
+antes de `BuildPipeline`; el callback ahora solo valida. La copia Bootstrap de
+ese editor script es la única diferencia entre los 81 scripts C# oficiales
+presentes y sus copias, mientras que `unity/**` y el comportamiento runtime no
+se alteran. El workflow también transmite el log de Unity en vivo para ubicar
+la fase si se repite una demora. Es una mitigación razonada, todavía no validada
+por otra APK. No se ha iniciado otro build; hace falta autorización nueva tras
+la cancelación del run #20.
+
+Ni 197/197 rutas ni un APK exitoso demuestran instalación, jugabilidad o
+equivalencia en dispositivo.
 
 La caché anterior pertenece a `unity-bootstrap/Library` y a GitHub Actions
 `actions/cache`. No es la caché del antiguo flujo de shards: ese workflow

@@ -18,7 +18,7 @@ it. The current game migration order is
 - Never request or share credentials in chat. Request Unity Cloud, Hub, or Editor
   credentials as secrets only if a specific authorized workflow requires them.
 
-## Current Bootstrap migration checkpoint (2026-10-10)
+## Current Bootstrap migration checkpoint (2026-10-11)
 
 - Stage 3 preparation began from clean `main` at
   `d4616089f1582c9994544b205a396d56b1c4e95b`.
@@ -149,14 +149,24 @@ it. The current game migration order is
   existing non-blocking rule. The run restored a compatible cache (2,010,423,176
   bytes) and saved a new cache (2,010,449,557 bytes).
 - Stage 14 copies the final 8 canonical paths (8/197, 4.0609%) into Bootstrap.
-  All 197 canonical paths are now present, and all 81 official C# files match
-  byte-for-byte; Bootstrap retains one additional build-only editor entry point.
-  Its scene and scene list, package files, and Unity version now match the source.
-  Only `ProjectSettings.asset` intentionally differs to retain the Bootstrap
-  name, app ID, and version code. The user-authorized `using Vexforge.Core`
-  import is now identical in official Unity and Bootstrap; no other file under
-  `unity/**` was changed. Stage 14 still needs its new-SHA manual Bootstrap APK
-  build and artifact validation.
+  All 197 canonical paths are present. 80 of the 81 official C# files remain
+  byte-identical; the Bootstrap copy of `VexforgeR5CloudBuildGate.cs` is
+  intentionally adapted so asset setup runs before `BuildPipeline` and the
+  callback only validates. No runtime content or file under `unity/**` changed.
+  The scene, scene list, packages, and Unity version match the source; only
+  `ProjectSettings.asset` intentionally differs for the Bootstrap identity.
+- Bootstrap run #20 (`38085930684`, source `3609d16093701b4d54ef5f0dd0e61596fb1c9571`)
+  launched Unity after checkout, compatible Library-cache restore, and license
+  setup, then was cancelled at the workflow's 360-minute limit. Unity produced
+  no exit code; APK verification/upload/cache-save were skipped and the run has
+  no artifacts. The cache restore and 35.8 KB Stage 14 addition do not explain
+  the duration. The new prebuild callback's asset writes/`AssetDatabase.Refresh`
+  are the leading code-level risk, not a proven root cause: run #20 did not
+  stream Unity's log, so its internal stall phase is unknown.
+- The build lifecycle is now repaired by preparing and validating R5 resources
+  before `BuildPipeline`, leaving the prebuild callback read-only, and streaming
+  the Unity log live. This mitigation has not yet been validated by a new APK;
+  a fresh manual build requires authorization after run #20's cancellation.
 
 ## Active scope
 

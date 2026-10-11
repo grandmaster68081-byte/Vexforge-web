@@ -12,14 +12,9 @@ namespace Vexforge.Presentation.Editor
 
         public void OnPreprocessBuild(BuildReport report)
         {
-            PreExport();
-        }
-
-        public static void PreExport()
-        {
-            Debug.Log("VEXFORGE R5 CLOUD EDITOR GATE: START");
-            VexforgeR5FoundationGate.ExecuteBatch();
-            Debug.Log("VEXFORGE R5 CLOUD EDITOR GATE: PASS");
+            Debug.Log("VEXFORGE R5 CLOUD BUILD VALIDATION: START");
+            VexforgeR5FoundationGate.ValidateOrThrow();
+            Debug.Log("VEXFORGE R5 CLOUD BUILD VALIDATION: PASS");
         }
     }
 }

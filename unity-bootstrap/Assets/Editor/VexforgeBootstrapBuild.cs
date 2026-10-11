@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using UnityEditor;
 using UnityEditor.Build.Reporting;
+using Vexforge.Presentation.Editor;
 
 namespace Vexforge.Bootstrap.Editor
 {
@@ -13,6 +14,7 @@ namespace Vexforge.Bootstrap.Editor
 
         public static void BuildAndroid()
         {
+            UnityEngine.Debug.Log("VEXFORGE BOOTSTRAP BUILD: START");
             var projectRoot = Directory.GetParent(UnityEngine.Application.dataPath).FullName;
             var sceneFile = Path.Combine(projectRoot, ScenePath.Replace('/', Path.DirectorySeparatorChar));
 
@@ -25,7 +27,16 @@ namespace Vexforge.Bootstrap.Editor
                     sceneFile);
             }
 
+            UnityEngine.Debug.Log("VEXFORGE BOOTSTRAP BUILD: initial AssetDatabase.Refresh START");
             AssetDatabase.Refresh();
+            UnityEngine.Debug.Log("VEXFORGE BOOTSTRAP BUILD: initial AssetDatabase.Refresh PASS");
+
+            UnityEngine.Debug.Log("VEXFORGE BOOTSTRAP BUILD: R5 asset setup START");
+            VexforgeR5ProjectSetup.EnsureAll();
+            UnityEngine.Debug.Log("VEXFORGE BOOTSTRAP BUILD: R5 asset setup PASS");
+            VexforgeR5FoundationGate.ValidateOrThrow();
+            UnityEngine.Debug.Log("VEXFORGE BOOTSTRAP BUILD: R5 foundation validation PASS");
+
             EditorBuildSettings.scenes = new[]
             {
                 new EditorBuildSettingsScene(ScenePath, true)
@@ -46,6 +57,7 @@ namespace Vexforge.Bootstrap.Editor
             var outputPath = Path.Combine(projectRoot, "Builds", "Vexforge-bootstrap.apk");
             Directory.CreateDirectory(Path.GetDirectoryName(outputPath));
 
+            UnityEngine.Debug.Log("VEXFORGE BOOTSTRAP BUILD: BuildPipeline.BuildPlayer START");
             var report = BuildPipeline.BuildPlayer(new BuildPlayerOptions
             {
                 scenes = new[] { ScenePath },
@@ -53,6 +65,7 @@ namespace Vexforge.Bootstrap.Editor
                 target = BuildTarget.Android,
                 options = BuildOptions.None
             });
+            UnityEngine.Debug.Log("VEXFORGE BOOTSTRAP BUILD: BuildPipeline.BuildPlayer RETURNED");
 
             var summary = report.summary;
             UnityEngine.Debug.Log(

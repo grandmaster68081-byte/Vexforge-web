@@ -5,17 +5,18 @@ game into complete Android APKs. The authorized plan first completes the entire
 canonical C# source set in one code-only pass; after that succeeds, the deferred
 full-project content is migrated in bounded, dependency-complete batches. This
 is not a second source of truth and must not replace the official game. The user
-approved one narrowly scoped import normalization in the official source so its
-81 C# files can match Bootstrap exactly; no other official Unity file may be
-changed in this migration.
+approved one narrowly scoped import normalization in the official source; no
+other official Unity file may be changed in this migration. All 81 official C#
+files are present here. The Bootstrap-only `VexforgeR5CloudBuildGate.cs` has a
+documented build-lifecycle adaptation; official `unity/**` remains untouched.
 
-## Current state (2026-10-10)
+## Current state (2026-10-11)
 
 - Unity Editor: `6000.3.0f1`, matched to `unity/ProjectSettings/ProjectVersion.txt`.
 - Android application ID: `com.vexforge.bootstrap`, distinct from the official
   `com.vexforge.android`.
 - Stages 1–13 have passed. The full 76-file runtime C# set and all 81 official
-  C# files are present; the latter now match the Bootstrap copies byte-for-byte.
+  C# files are present; 80 remain byte-identical to their official copies.
 - Stage 11 passed in Bootstrap run #17 on
   `c5d5b81011cc2647533c0684055fb980bc19cec0`. It produced
   `VEXFORGE-Unity-Bootstrap-APK-17` (ID `11679358725`). Its 45,827,437-byte APK
@@ -43,12 +44,26 @@ changed in this migration.
   the non-blocking rule. It restored a compatible cache of 2,010,423,176 bytes
   and saved a new cache of 2,010,449,557 bytes.
 - Stage 14 adds the final 8/197 canonical paths (4.0609%), bringing Bootstrap
-  path coverage to 197/197. All 81 official C# files now match byte-for-byte;
-  Bootstrap has one extra project-specific build entry point. The real scene,
-  scene list, packages, and Unity version are aligned. Only
+  path coverage to 197/197. The Bootstrap copy of
+  `VexforgeR5CloudBuildGate.cs` is the one intentional C# difference: resource
+  setup now runs before `BuildPipeline`, while the prebuild callback only
+  validates. This preserves the original resources and runtime code. The real
+  scene, scene list, packages, and Unity version are aligned. Only
   `ProjectSettings.asset` intentionally differs for the Bootstrap product name,
-  package ID, and version code. The new stage still requires its manual full APK
-  build and artifact/hash validation.
+  package ID, and version code.
+- Bootstrap run #20 (`38085930684`, source
+  `3609d16093701b4d54ef5f0dd0e61596fb1c9571`) started Unity after checkout,
+  compatible Library-cache restoration, and license setup, then was cancelled
+  at the workflow's 360-minute limit. No Editor exit code or artifact exists;
+  APK validation, upload, and cache-save were skipped. The project addition was
+  about 35.8 KB, and a compatible cache restored successfully, so neither
+  explains six hours. The new prebuild callback's asset writes and
+  `AssetDatabase.Refresh()` are the leading risk, but the exact internal stall
+  is unconfirmed because the workflow only printed the Editor log after exit.
+- The workflow now streams the Unity log live. R5 assets are prepared and
+  validated before `BuildPipeline`; the prebuild callback is read-only. This
+  repair still needs a newly authorized manual APK build and artifact/hash
+  validation.
 - The successful historical APK #2 was a workflow smoke test using an empty
   generated scene. It proves neither migrated game content nor a cache restore.
 - Stage 5 restored `Assets/Scenes/VexforgeBootstrap.unity` from the canonical
