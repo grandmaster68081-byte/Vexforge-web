@@ -7,7 +7,7 @@
 - [GitHub REST large-file commits](github-rest-large-files.md) — stream base64 JSON for large blobs; passing file content as a jq argument exceeds the shell argument limit.
 - [Replit config side effects](replit-config-side-effects.md) — tooling and framework exports can add unrelated modules or port mappings; compare against tracked config before publishing.
 - [Portable TypeScript verification](typescript-verification.md) — syntax checks must resolve project-local TypeScript before environment-specific global paths.
-- [GitHub Actions checkpoint storage](github-actions-checkpoint-storage.md) — retain only the live shader-chain head; exclude downloaded/uploaded payloads from evidence and retire consumed predecessors.
+- [GitHub Actions checkpoint storage](github-actions-checkpoint-storage.md) — retain the live shader-chain head and preserve Unity Library caches across project-path changes.
 - [Release dependency availability](release-dependency-availability.md) — verify pinned npm versions exist before treating a sealed release package as installable.
 - [Git LFS attachment recovery](git-lfs-attachment-recovery.md) — look for the historical LFS pointer and cache before asking to re-upload a missing large package.
 - [Vexforge access rule](vexforge-access-rule.md) — avoid connectors; use the project's configured PAT secrets for GitHub/Supabase operations.

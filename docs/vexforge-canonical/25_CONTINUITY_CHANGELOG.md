@@ -9,6 +9,10 @@
   jugador. El proyecto promovido usa `VEXFORGE` y `com.vexforge.android`.
 - El workflow Android antiguo fue reemplazado por el builder previamente usado
   por Bootstrap, ahora apuntando a `unity/`. Permanece manual.
+- Se confirmó la continuidad de Unity (`6000.3.0f1`, `companyGuid`, paquetes y
+  `.meta`); hay seis cachés Bootstrap disponibles. El workflow primero busca la
+  caché oficial y, si falta, restaura el caché anterior en su ruta original
+  antes de moverlo a `unity/Library`.
 - No se ejecutó una compilación durante la promoción. Los APKs anteriores no
   verifican el estado promovido. Supabase, `src/**` y `public/**` no se cambiaron.
 

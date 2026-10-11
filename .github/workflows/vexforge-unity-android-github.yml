@@ -170,11 +170,42 @@ jobs:
           restore-keys: |
             vexforge-unity-library-${{ runner.os }}-${{ runner.arch }}-${{ steps.unity-version.outputs.version }}-
 
+      - name: Restore pre-promotion Bootstrap Library cache
+        id: restore-bootstrap-library
+        if: steps.restore-unity-library.outputs.cache-matched-key == ''
+        uses: actions/cache/restore@v4
+        with:
+          # Keep the original path so actions/cache uses the legacy cache version.
+          path: unity-bootstrap/Library
+          key: vexforge-bootstrap-migration-${{ runner.os }}-${{ runner.arch }}-${{ steps.unity-version.outputs.version }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            vexforge-bootstrap-library-${{ runner.os }}-${{ runner.arch }}-${{ steps.unity-version.outputs.version }}-
+
+      - name: Relocate restored Bootstrap Library to the official project path
+        if: steps.restore-bootstrap-library.outputs.cache-matched-key != ''
+        shell: bash
+        run: |
+          set -euo pipefail
+          previous_library="unity-bootstrap/Library"
+          official_library="unity/Library"
+          test -d "$previous_library" || {
+            echo "Legacy Library cache matched but was not restored at its original path." >&2
+            exit 1
+          }
+          test ! -e "$official_library" || {
+            echo "Both legacy and official Library directories exist; refusing to merge caches." >&2
+            exit 1
+          }
+          mv "$previous_library" "$official_library"
+          rmdir unity-bootstrap
+          echo "Moved the compatible Bootstrap Library cache into unity/Library."
+
       - name: Record cache restore state
         shell: bash
         env:
           CACHE_HIT: ${{ steps.restore-unity-library.outputs.cache-hit }}
           CACHE_MATCHED_KEY: ${{ steps.restore-unity-library.outputs.cache-matched-key }}
+          LEGACY_CACHE_MATCHED_KEY: ${{ steps.restore-bootstrap-library.outputs.cache-matched-key }}
         run: |
           set -euo pipefail
           if [ "$CACHE_HIT" = true ]; then
@@ -182,6 +213,9 @@ jobs:
               | tee -a "$GITHUB_STEP_SUMMARY"
           elif [ -n "$CACHE_MATCHED_KEY" ]; then
             echo "Unity project Library cache restored with a compatible restore-key match: $CACHE_MATCHED_KEY" \
+              | tee -a "$GITHUB_STEP_SUMMARY"
+          elif [ -n "$LEGACY_CACHE_MATCHED_KEY" ]; then
+            echo "Unity project Library cache restored from the former Bootstrap path and relocated: $LEGACY_CACHE_MATCHED_KEY" \
               | tee -a "$GITHUB_STEP_SUMMARY"
           else
             echo "No compatible Unity project Library cache was available; this run will warm one after the APK succeeds." \

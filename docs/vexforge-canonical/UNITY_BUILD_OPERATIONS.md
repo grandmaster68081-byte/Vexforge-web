@@ -38,6 +38,30 @@ The Android workflow validates the Editor exit code, APK identity and size,
 records a SHA-256 report, and uploads the APK as a workflow artifact. An APK
 build or release still requires fresh explicit user authorization.
 
+### Unity project and Library cache continuity
+
+The project remains on the same Unity line: Editor version `6000.3.0f1`,
+`companyGuid`, package manifest/lock, and imported asset `.meta` GUIDs are
+preserved. `productName`, Android application ID, and the repository folder
+name are product/path changes; they do not replace the Unity assets or create a
+second project. The workflow explicitly opens `unity/`.
+
+The Library cache key includes Unity version and `ProjectSettings.asset`, so
+the intentional official identity changes alter its primary key. Six
+`vexforge-bootstrap-library-*` GitHub Actions caches were present at the
+2026-10-11 check. On a cache miss under the new key, the workflow restores a
+legacy cache using its original `unity-bootstrap/Library` path and key prefix,
+then moves that directory to `unity/Library` before starting Unity. Keeping the
+original restore path is required for GitHub Actions cache-version compatibility;
+adding only the old key prefix to the new path would not bridge that path change.
+
+Successful APK verification saves the resulting cache only at `unity/Library`
+under the official key. Later builds prefer that official cache and retain the
+legacy fallback while it is useful. No build was run to test this bridge during
+the promotion. GitHub may expire unused cache entries; if the old entries are
+gone before the first official build, Unity can initialize a fresh Library and
+save a new official cache after a verified APK.
+
 ## 3. Manual execution boundary
 
 The workflow is available for manual dispatch. Do not dispatch it or start an
