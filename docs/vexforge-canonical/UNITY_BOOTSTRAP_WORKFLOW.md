@@ -359,13 +359,11 @@ del run #18 (sin coincidencia exacta) y se guardaron 2.010.449.557 bytes.
 
 La etapa 14 prepara las últimas ocho rutas del inventario (8/197, 4,0609 %).
 Tras copiarlas, las 197 rutas canónicas están representadas en Bootstrap y los
-80 de los 81 scripts C# oficiales coinciden byte por byte. La copia Bootstrap de
-`VexforgeR5CloudBuildGate.cs` tiene una adaptación local de ciclo de build; los
-otros scripts oficiales y el contenido runtime siguen alineados. También se
-alinearon por bytes la escena real, su lista de escenas, los manifiestos de
-paquetes y la versión de Unity. Solo `ProjectSettings/ProjectSettings.asset`
-conserva diferencias de identidad para el nombre, ID Android/metroPackageName y
-version code del Bootstrap.
+81 scripts C# oficiales coinciden byte por byte. También se alinearon por bytes
+la escena real, su lista de escenas, los manifiestos de paquetes y la versión de
+Unity. Solo `ProjectSettings/ProjectSettings.asset` conserva diferencias de
+identidad para el nombre, ID Android/metroPackageName y version code del
+Bootstrap.
 
 La única modificación aprobada dentro de `unity/**` es añadir el mismo
 `using Vexforge.Core;` a `VexforgeTier1EconomyHub.cs` que ya permitía compilar
@@ -377,18 +375,22 @@ no produjo artefactos y no llegó a validar/subir APK ni guardar caché. El lote
 nuevo medía unos 35,8 KB y la caché anterior se restauró; esos datos no explican
 la duración.
 
+La consulta de los 20 registros de Actions confirma que el hook estaba ausente
+en los runs 1–19 y se incorporó por primera vez en el 20, idéntico al archivo de
+`unity/`. En el checkout de ese run no estaban los recursos generados por
+`EnsureAll()` (pipeline URP, renderer, materiales ni el asset de recursos de
+presentación), así que su primera creación/importación ocurrió dentro de
+`BuildPipeline`.
+
 No se puede afirmar el punto interno exacto del bloqueo: el workflow anterior
 solo imprimía el log del Editor cuando Unity terminaba. La principal hipótesis
-era el nuevo `IPreprocessBuildWithReport`: llamaba `EnsureAll()` desde
-`BuildPipeline`, y `EnsureAll()` crea/actualiza recursos, guarda y ejecuta
-`AssetDatabase.Refresh()`. El arreglo prepara y valida esos mismos recursos
-antes de `BuildPipeline`; el callback ahora solo valida. La copia Bootstrap de
-ese editor script es la única diferencia entre los 81 scripts C# oficiales
-presentes y sus copias, mientras que `unity/**` y el comportamiento runtime no
-se alteran. El workflow también transmite el log de Unity en vivo para ubicar
-la fase si se repite una demora. Es una mitigación razonada, todavía no validada
-por otra APK. No se ha iniciado otro build; hace falta autorización nueva tras
-la cancelación del run #20.
+era el nuevo `IPreprocessBuildWithReport`: al activarse por primera vez,
+materializó recursos y ejecutó `AssetDatabase.Refresh()` dentro de
+`BuildPipeline`. El builder Bootstrap ahora llama al mismo setup y validación
+antes de iniciar BuildPipeline; el hook oficial copiado permanece idéntico y se
+ejecuta sin adaptación local. El workflow también transmite el log de Unity en
+vivo. Es una mitigación razonada, todavía no validada por otra APK; la
+autorización actual cubre un build manual de validación.
 
 Ni 197/197 rutas ni un APK exitoso demuestran instalación, jugabilidad o
 equivalencia en dispositivo.
