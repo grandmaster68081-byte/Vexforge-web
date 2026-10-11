@@ -1,15 +1,15 @@
 # 17 — CURRENT BLOCK (UNITY CANÓNICO)
 
-> Este documento registra el trabajo/verificación del runtime oficial `unity/**`.
-> No representa el bloque activo de migración incremental del Bootstrap. Para
-> este último, la autoridad es `replit.md` junto con
-> `UNITY_BOOTSTRAP_WORKFLOW.md`.
+> `unity/**` es el único proyecto Unity activo. Fue promovido desde el proyecto
+> Bootstrap completo el 11 de octubre de 2026; el antiguo árbol oficial fue
+> retirado. La migración Bootstrap descrita en documentos antiguos está cerrada.
 
 ## Bloque activo
 
 La implementación Unity de los Hitos 01–07 sigue pendiente de verificación en
-Unity Editor y dispositivo. El workflow manual de GitHub Actions fue restaurado
-con 12 shards y un límite de 35.000 variantes por shard; no se ha ejecutado.
+Unity Editor y dispositivo. El workflow manual actual construye el proyecto
+promovido con el builder Android que antes pertenecía al Bootstrap; no se ejecutó
+durante la promoción.
 Las cuatro migraciones V7 están aplicadas en Supabase live desde el 2026-10-08.
 No se ha compilado Unity, generado APK/AAB ni validado gameplay en dispositivo.
 

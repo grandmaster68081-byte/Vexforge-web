@@ -1,14 +1,13 @@
 # VEXFORGE — Canonical Unity Android build operations
 
-Status: OFFICIAL FULL-GAME PIPELINE — MANUAL ONLY — NOT DISPATCHED
+Status: PROMOTED OFFICIAL PROJECT — MANUAL ANDROID APK WORKFLOW — NOT RUN AFTER PROMOTION
 
-This document applies only to the official full-game project in `unity/`.
-Current `main` contains the manual GitHub Actions workflow
-`.github/workflows/vexforge-unity-android-github.yml`. It was restored from
-repository history and has not been dispatched. Its shard mode partitions the
-inventory into 12 shards and caps each shard at 35,000 variants. `normal` and
-`final` use unfiltered builds without that cap. This document contains no
-credential values or local build instructions.
+This document applies to the single official Unity project in `unity/`, promoted
+from the completed Bootstrap project on 2026-10-11. The previous shard-based
+official workflow was retired and replaced at
+`.github/workflows/vexforge-unity-android-github.yml` with the proven Bootstrap
+Android entry point, retargeted to the official path and identity. No build was
+run during the promotion.
 
 ## 1. Canonical ownership
 
@@ -20,16 +19,13 @@ credential values or local build instructions.
 | Editor version | `unity/ProjectSettings/ProjectVersion.txt` |
 | Workflow | `.github/workflows/vexforge-unity-android-github.yml` |
 | Entry point | Manual `workflow_dispatch` only |
-| Platform | Android target: Gradle, IL2CPP, ARM64; not verified |
+| Platform | Android target: Gradle, IL2CPP, ARM64; not verified after promotion |
 | Trigger | `workflow_dispatch` only; no automatic trigger |
 
-This remains the only canonical Android compilation workflow for the official
-game under `unity/`. The isolated bootstrap workflow
-`.github/workflows/vexforge-unity-bootstrap-android.yml` is a separate,
-manual-only baseline for `unity-bootstrap/`; it must never compile or replace
-the official game. Its workflow, cache, authorization and verification rules are
-in [`UNITY_BOOTSTRAP_WORKFLOW.md`](UNITY_BOOTSTRAP_WORKFLOW.md). Do not use
-Unity Cloud Build.
+This is the only current Android compilation workflow. It builds `unity/` and
+uploads an APK plus a build report only after APK verification. It uses GitHub
+Actions Unity activation secrets; Replit credentials do not belong in the
+workflow. Do not use Unity Cloud Build.
 
 ## 2. Editor and project contract
 
@@ -38,19 +34,17 @@ The workflow checks out `main`, reads the Unity version from
 it with `-projectPath` set to `unity/`. It must not hardcode a different Editor
 version or treat the repository root or retired `mobile/` as the Unity project.
 
-Editor-only validation must not generate an Android package. A later Android
-build path would need to validate the Editor exit code, artifact identity and
-size, record evidence, and publish only when separately authorized and all
-release gates pass.
+The Android workflow validates the Editor exit code, APK identity and size,
+records a SHA-256 report, and uploads the APK as a workflow artifact. An APK
+build or release still requires fresh explicit user authorization.
 
 ## 3. Manual execution boundary
 
 The workflow is available for manual dispatch. Do not dispatch it or start an
 Android package build without explicit authorization.
 
-This authorization boundary applies to the official game workflow only. The
-experimental bootstrap workflow has its own separate authorization boundary.
-Editor, package and device gates for the official game remain open.
+Only the single official workflow remains. Editor, package and device gates for
+the promoted official game remain open until new evidence verifies them.
 
 ## 4. Secret boundary
 

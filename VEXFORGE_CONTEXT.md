@@ -2,14 +2,11 @@
 
 ## Dirección canónica
 
-**Unity bajo `unity/**` sigue siendo el runtime Android oficial del videojuego.**
-Existe además `unity-bootstrap/**`, un proyecto experimental, mínimo y aislado
-que se ampliará en incrementos acumulativos hasta incluir el juego completo
-según el código oficial. Cada APK compila el estado completo acumulado. No es
-permiso para modificar `unity/**`, que sigue siendo la fuente de referencia, ni
-para reemplazar el juego oficial. El portal oficial está en `src/**` y `public/**`.
-Mantener esos árboles y `unity/**` sin cambios durante tareas de limpieza o
-trabajo en el bootstrap.
+**`unity/**` es el único proyecto Unity Android oficial del videojuego.** El
+Bootstrap acumulativo completo fue promovido a esta ruta el 11 de octubre de
+2026. El antiguo proyecto oficial separado fue retirado de la rama actual; los
+documentos de migración que aún usan `unity-bootstrap/` son registros históricos,
+no rutas activas. El portal sigue en `src/**` y `public/**`.
 
 La autoridad para continuar es, en este orden:
 
@@ -22,53 +19,37 @@ La autoridad para continuar es, en este orden:
 ## Límites de alcance
 
 - Unity es el runtime del juego; no añadir un runtime cliente paralelo.
-- `unity-bootstrap/**` es la única excepción de build experimental: empieza
-  vacío y solo se amplía con copias parciales, acumulativas y autorizadas del
-  código oficial hasta completar el juego. No sustituye el juego oficial.
+- `unity/**` es la única ruta de proyecto Unity activa. No recrear una copia
+  separada `unity-bootstrap/**`.
 - Supabase conserva autoridad sobre autenticación, ownership, combate,
   settlement, recompensas y economía. La presentación móvil no calcula esos
   resultados.
-- No cambiar contratos ni datos live de Supabase. Mantener `src/**` y
-  `public/**` sin cambios durante las tareas de limpieza.
+- La promoción no cambió Supabase live ni `src/**`/`public/**`. No cambiar
+  contratos ni datos live de Supabase sin autorización específica.
 - No se encontraron assets, paquetes ni IDs importados de Epic/Fab. La ruta
   Epic/Fab queda retirada; no adquirir ni importar esos recursos en este
   trabajo. La rareza de cartas `epic` pertenece al juego y se conserva.
 
 ## Estado observado
 
-- Unity declara el editor `6000.3.0f1` y el identificador Android
-  `com.vexforge.android`; la Foundation ya contiene autenticación, estado,
-  repositorio REST/RPC y presentación, pero sigue sin verificación en el Editor
-  y dispositivo.
+- Unity declara el editor `6000.3.0f1`, el nombre de producto `VEXFORGE` y el
+  identificador Android `com.vexforge.android`.
+- La promoción usó el proyecto que antes estaba en `unity-bootstrap/` y el
+  builder Android que había producido APKs históricos. No se ejecutó una nueva
+  compilación durante esta sustitución; no afirmar que la versión promovida ya
+  compila ni que fue verificada en dispositivo.
 - `SecureSessionStore` implementa Android Keystore + AES/GCM en código; todavía
   requiere validación en el Editor/dispositivo antes de declarar la sesión
   verificada.
-- El workflow canónico `.github/workflows/vexforge-unity-android-github.yml`
-  tiene historial de ejecución, incluidos los shards 56/57. Ese flujo mueve
-  checkpoints de `unity/Library` como artefactos de 7 días; no es la caché
-  `actions/cache` que usa el Bootstrap para `unity-bootstrap/Library`. El run 57
-  restauró el checkpoint del run 56 con SHA-256 validado, pero el build final
-  se canceló tras 21.098 s. Ver `docs/VEXFORGE_RUN_57_FINAL_ANALYSIS.md`.
-- El workflow experimental
-  `.github/workflows/vexforge-unity-bootstrap-android.yml` construye solo
-  `unity-bootstrap/**`, manualmente en `main`, con ID Android
-  `com.vexforge.bootstrap`. Su guía operativa está en
-  `docs/vexforge-canonical/UNITY_BOOTSTRAP_WORKFLOW.md`.
-- La caché permitida para ese método es únicamente
-  `unity-bootstrap/Library/`, guardada tras validar el APK. No cachear la
-  instalación de Unity, Unity Hub, licencias, credenciales ni `unity/Library/`.
-- El primer intento autorizado del bootstrap falló durante `BuildAndroid`: no
-  produjo APK ni guardó caché. Se corrigió la propagación del directorio de
-  licencia al Editor y se añadió salida del log de Unity; no afirmar que el
-  método funciona hasta que un run posterior verifique y suba el APK.
-- El usuario autorizó continuar esta migración secuencial sin pedir una orden
-  nueva por cada APK si el build baseline actual termina correctamente y valida
-  y sube el artefacto. Si cualquier etapa falla, detenerse; no reintentar sin
-  nueva autorización. Esta autorización no alcanza al workflow oficial ni a
-  cambios live de Supabase.
-- El modo `shard` divide el inventario en 12 y limita cada shard a 35.000
-  variantes. Los modos `normal` y `final` no aplican ese límite.
-- No afirmar build Android, APK/AAB ni QA física sin evidencia nueva.
+- El workflow manual vigente es
+  `.github/workflows/vexforge-unity-android-github.yml`. Usa la entrada de
+  compilación promovida y mantiene la activación de Unity en GitHub Actions.
+- El código Unity contiene autenticación, estado, repositorios y presentación,
+  pero requiere verificación actual en el Editor y dispositivo.
+- Supabase live conserva autoridad sobre Auth, datos y reglas del servidor. No se
+  hicieron cambios en Supabase como parte de la promoción.
+- No afirmar build Android, APK/AAB ni QA física sin evidencia posterior a la
+  promoción.
 
 ## Flujo
 
@@ -76,8 +57,5 @@ Trabajar sobre `main`. Antes de cada hito, hacer `git fetch --prune origin`,
 confirmar rama `main`, árbol limpio y `HEAD == origin/main`; después de cerrar
 un hito, hacer commit y push antes del siguiente. No resetear, rebasar, mezclar,
 cherry-pick ni hacer force-push. No iniciar builds Android sin autorización
-explícita para esa ejecución, excepto la autorización activa y condicionada de
-esta migración bootstrap: continuar un paso por vez solo después de un APK
-verificado, deteniéndose ante cualquier fallo. No autoriza el workflow del juego
-oficial, ni cambios live de Supabase. No usar conectores. El flujo del bootstrap
-no modifica ni consulta Supabase.
+explícita y vigente. No usar conectores. Supabase no se modifica como parte del
+flujo de compilación de Unity.

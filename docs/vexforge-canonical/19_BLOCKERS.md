@@ -1,11 +1,12 @@
-## CURRENT RECONCILIATION — 2026-10-06
+## CURRENT RECONCILIATION — 2026-10-11
 
-- El workflow manual de Unity está restaurado en
-  `.github/workflows/vexforge-unity-android-github.yml`; usa 12 shards y un
-  límite de 35.000 variantes por shard. No se ha ejecutado.
+- El Bootstrap completo fue promovido al único proyecto oficial en `unity/**`;
+  el anterior árbol oficial separado se retiró de la rama actual.
+- `.github/workflows/vexforge-unity-android-github.yml` usa el builder Android
+  promovido y sigue siendo manual. No se ejecutó después de la promoción.
 - Unity Editor y dispositivo siguen sin verificar.
-- No se inició una compilación, no se generó APK/AAB y no se modificó Supabase
-  live.
+- No se hizo una nueva compilación durante la promoción; Supabase live no se
+  modificó.
 - Los blockers fechados abajo son registros históricos salvo que se reconfirmen
   contra el código y el servicio actuales.
 
@@ -41,7 +42,7 @@
 - WHY BLOCKED: no toda rutina live es necesariamente activa ni consumida por Android.
 - UNBLOCK CONDITION: matriz RPC/table/policy por dominio con evidencia.
 
-## B-004 — Unity Cloud R5 Editor verification
+## B-004 — Unity Cloud R5 Editor verification (histórico; ruta no activa)
 
 - AREA: importación, compilación del Editor y ejecución del R5 Foundation Gate.
 - STATUS: EVIDENCE_REQUIRED

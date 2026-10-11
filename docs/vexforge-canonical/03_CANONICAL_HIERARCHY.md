@@ -12,7 +12,7 @@
 
 - SOURCE A: `README.md` original llama a la web “Official Web Frontend”.
 - SOURCE B: decisión activa y `unity/**` declaran Android como producto activo.
-- CURRENT EVIDENCE: Unity project settings, bootstrap scene, Presentation
+- CURRENT EVIDENCE: promoted Unity project settings, canonical scene, Presentation
   Foundation and current Unity runtime.
 - STATUS: `RESUELTO` para orientación futura: Android activo; la afirmación web queda histórica/frozen.
 
@@ -25,5 +25,5 @@ instrucciones del propietario.
   existente.
 - Decisión de producto/runtime: Unity es el runtime Android activo y `unity/**`
   es la fuente canónica.
-- El workflow Unity es manual, usa 12 shards con un máximo de 35.000 variantes
-  por shard y todavía no se ha ejecutado.
+- `unity/**` es el único proyecto Unity actual. El workflow manual usa el builder
+  Android promovido y no se ejecutó después del cambio.

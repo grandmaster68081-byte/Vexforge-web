@@ -1,19 +1,19 @@
-# VEXFORGE Unity Bootstrap
+# VEXFORGE Unity Android
 
-This is the isolated, cumulative destination for migrating the official Unity
-game into complete Android APKs. The authorized plan first completes the entire
-canonical C# source set in one code-only pass; after that succeeds, the deferred
-full-project content is migrated in bounded, dependency-complete batches. This
-is not a second source of truth and must not replace the official game. The user
-approved two narrowly scoped paired edits in the official source: the
-`Vexforge.Core` import normalization and the R5 route-gate correction for
-`World=8`. Each is mirrored identically here; no other official Unity file may
-be changed in this migration. All 81 official C# files are present here and
-byte-identical. Bootstrap's project-specific
-`VexforgeBootstrapBuild.cs` entry point prepares R5 resources before starting
-the build; the copied `VexforgeR5CloudBuildGate.cs` remains identical to source.
+This is the sole official Unity Android project. It was promoted from the
+completed Bootstrap project on 2026-10-11 at the user's direction. It uses the
+official product name `VEXFORGE`, Android application ID
+`com.vexforge.android`, and Unity Editor `6000.3.0f1`.
 
-## Current state (2026-10-11)
+The project contains all 197 canonical Unity paths from the former official
+project, plus the Bootstrap build entry point and supporting files. The
+promotion did not run a new build; historical Bootstrap APKs do not verify the
+promoted project state. Supabase remains authoritative and was not modified.
+
+The remaining sections are a historical migration record. Do not treat their
+old Bootstrap paths or conditional build authorization as current instructions.
+
+## Historical migration record (2026-10-11)
 
 - Unity Editor: `6000.3.0f1`, matched to `unity/ProjectSettings/ProjectVersion.txt`.
 - Android application ID: `com.vexforge.bootstrap`, distinct from the official
@@ -83,7 +83,7 @@ the build; the copied `VexforgeR5CloudBuildGate.cs` remains identical to source.
   requires that real scene and never creates a default or placeholder. APK
   success still does not prove gameplay parity or device behavior.
 
-## Migration rules
+## Archived migration rules
 
 - Keep `unity/**` as canonical. The only approved changes in this repair are
   the mirrored `using Vexforge.Core` import in `VexforgeTier1EconomyHub.cs` and
@@ -115,7 +115,7 @@ the build; the copied `VexforgeR5CloudBuildGate.cs` remains identical to source.
   retire the official Unity copy. Do not delete `unity/**` in this stage; that
   destructive action requires completed verification and explicit confirmation.
 
-## Build and cache
+## Archived Bootstrap build and cache details
 
 The workflow `.github/workflows/vexforge-unity-bootstrap-android.yml` is
 manual-only and builds this folder. It uploads the APK and report. Its only

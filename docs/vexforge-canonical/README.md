@@ -22,10 +22,11 @@ Los registros de `data/` son resúmenes derivados de evidencia observada. No sus
 
 ## Runtime decision
 
-Unity Android bajo `unity/**` es el runtime activo. El workflow manual de
-GitHub Actions usa 12 shards y limita cada shard a 35.000 variantes; aún no se
-ha ejecutado. Supabase conserva autoridad de datos y reglas. El portal oficial
-está en `src/**` y `public/**`.
+Unity Android bajo `unity/**` es el único proyecto activo. El proyecto Bootstrap
+completo fue promovido a esa ruta el 11 de octubre de 2026; el anterior árbol
+oficial se retiró de la rama actual. El workflow vigente es manual y usa el
+builder Android promovido; no se ejecutó después del cambio. Supabase conserva
+la autoridad de datos y reglas. El portal sigue en `src/**` y `public/**`.
 
 El estado de implementación está en
 [`16_IMPLEMENTATION_STATUS.md`](16_IMPLEMENTATION_STATUS.md); las reglas de

@@ -11,4 +11,4 @@
 - [Release dependency availability](release-dependency-availability.md) — verify pinned npm versions exist before treating a sealed release package as installable.
 - [Git LFS attachment recovery](git-lfs-attachment-recovery.md) — look for the historical LFS pointer and cache before asking to re-upload a missing large package.
 - [Vexforge access rule](vexforge-access-rule.md) — avoid connectors; use the project's configured PAT secrets for GitHub/Supabase operations.
-- [Vexforge milestone workflow](vexforge-migration-workflow.md) — keep changes on verified, pushed `main`; preserve Supabase authority and the manual Unity build boundary.
+- [Vexforge Unity authority](vexforge-migration-workflow.md) — the completed Bootstrap is now the sole official project; require fresh approval before any new Unity build.

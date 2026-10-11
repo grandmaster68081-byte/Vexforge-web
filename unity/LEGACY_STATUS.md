@@ -1,10 +1,13 @@
 # VEXFORGE — Unity Android Runtime
 
-`unity/**` contiene el runtime Android del juego y se conserva intacto durante
-la limpieza del repositorio.
+`unity/**` es el proyecto oficial único, promovido desde la migración Bootstrap
+el 11 de octubre de 2026. El proyecto Unity oficial anterior ya no está en el
+árbol actual; sus commits siguen disponibles en el historial de Git.
 
-- Unity es el runtime canónico del juego.
-- No modificar el código Unity como parte de la limpieza.
-- El workflow manual está en `.github/workflows/vexforge-unity-android-github.yml`.
-- El modo `shard` usa 12 particiones y limita cada shard a 35.000 variantes.
-- No iniciar builds ni despachar workflows sin autorización explícita.
+- Identidad Android: `com.vexforge.android`.
+- Workflow manual: `.github/workflows/vexforge-unity-android-github.yml`.
+- Builder: prepara y valida los recursos R5 antes de compilar el APK completo.
+- Supabase conserva la autoridad del backend; no se modificó durante esta
+  promoción.
+- La promoción no lanzó un build. El código actual no debe declararse compilado
+  o verificado hasta contar con evidencia posterior.

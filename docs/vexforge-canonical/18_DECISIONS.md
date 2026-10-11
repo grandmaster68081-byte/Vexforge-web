@@ -1,5 +1,20 @@
 # 18 — DECISIONS
 
+## D-013 — Promover el Bootstrap completo como Unity oficial
+
+- DATE: 2026-10-11
+- DECISION: El proyecto Bootstrap completo ocupa `unity/**` como único proyecto
+  Unity Android oficial; el árbol oficial anterior se retiró de la rama actual.
+- SCOPE: proyecto Unity, identidad Android y workflow manual.
+- WHY: instrucción explícita del propietario; no exigir un build APK previo a la
+  sustitución.
+- EVIDENCE: árbol del repositorio y `VEXFORGE_CONTEXT.md`.
+- STATUS: ACTIVE
+- SUPERSEDES: instrucciones anteriores que exigían mantener un proyecto Unity
+  separado o compilar un APK antes de promoverlo.
+- BUILD: no se ejecutó una nueva compilación durante la promoción; requerir
+  autorización explícita y vigente para cualquier build posterior.
+
 ## D-010 — Runtime Unity único (decisión vigente)
 
 - DATE: 2026-10-04
@@ -145,7 +160,7 @@
 - DECISION: Restore the manual Unity GitHub Actions workflow without dispatching it. Shard mode defaults to 12 partitions and caps each shard at 35,000 variants; `normal` and `final` remain unfiltered.
 - SCOPE: `.github/workflows/vexforge-unity-android-github.yml` and repository cleanup.
 - WHY: the user requested the prior shard-based Unity workflow while preserving the official web portal, Unity source, and live Supabase project.
-- STATUS: ACTIVE / MANUAL ONLY / NOT DISPATCHED
+- STATUS: SUPERSEDED ON 2026-10-11 BY D-013
 - RULES: do not dispatch or generate an APK/AAB without separate authorization; do not mutate Supabase live.
 
 ## HISTÓRICO / SUPERSEDIDO — 2026-09-30 — CLIENTE MÓVIL ALTERNATIVO COMO RUNTIME ACTIVO
@@ -160,9 +175,7 @@
 
 ## Estado de decisiones vigente
 
-D-012, fechado 2026-10-06, confirma Unity bajo `unity/**` como runtime Android
-activo y el workflow manual restaurado, aún sin ejecutar. El shard mode usa
-12 particiones con un máximo de 35.000 variantes por shard. La dirección está en
-`VEXFORGE_CONTEXT.md`, `replit.md` y
-`docs/vexforge-canonical/UNITY_BUILD_OPERATIONS.md`. La retirada de Epic/Fab se
-mantiene vigente.
+D-013 confirma el proyecto Unity Android único bajo `unity/**`, el workflow
+manual actual y la promoción sin un nuevo build. Consulta `VEXFORGE_CONTEXT.md`,
+`replit.md` y `UNITY_BUILD_OPERATIONS.md`. La retirada de Epic/Fab se mantiene
+vigente.

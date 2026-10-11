@@ -4,7 +4,7 @@
 
 | Área | Estado observado en código | Evidencia | Pendiente |
 |---|---|---|---|
-| Runtime Android | Unity 6.3 (`6000.3.0f1`), paquete `com.vexforge.android` | `unity/ProjectSettings/ProjectVersion.txt`, `unity/ProjectSettings/ProjectSettings.asset` | Abrir y compilar en el Editor objetivo; sin build Android durante esta migración |
+| Runtime Android | Unity 6.3 (`6000.3.0f1`), paquete `com.vexforge.android`, proyecto promovido desde Bootstrap | `unity/ProjectSettings/ProjectVersion.txt`, `unity/ProjectSettings/ProjectSettings.asset` | Compilar el estado promovido en el Editor objetivo; no hay build posterior a la promoción |
 | Bootstrap y navegación | Foundation con `VexforgeApp`, `NavigationService`, router diegético | `unity/Assets/Scripts/Core/**`, `unity/Assets/Scripts/Presentation/VexforgeDiegeticInputRouter.cs` | Paridad de flujo, lifecycle y tutorial |
 | Auth y sesión | Inicio de sesión, restauración con recarga del estado del jugador, cierre remoto/local y alta por email con estado de confirmación implementados en código; almacén Android Keystore/AES-GCM presente | `SupabaseAuthService.cs`, `SessionService.cs`, `VexforgeApp.cs`, `SecureSessionStore.cs`, `GameShellController.cs` | Unity Editor/dispositivo sin verificar; los proveedores externos están deshabilitados en la configuración live observada |
 | Estado de jugador | Perfil, progreso, catálogo, colección, deck, misiones, wallet, estadísticas y rango; paquetes y órdenes se consultan bajo demanda; jefes activos se cargan al abrir el atlas | `GameStateStore.cs`, `VexforgeRepository.cs` | Igualar estados offline/sync y evitar que errores técnicos lleguen al jugador |

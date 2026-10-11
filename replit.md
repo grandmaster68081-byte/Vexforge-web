@@ -1,17 +1,15 @@
 # VEXFORGE — Unity Android Runtime
 
-Unity under `unity/**` remains the untouched source of truth for the official
-Android game. The separate `unity-bootstrap/**` project is the experimental,
-incremental destination; the goal is to add all required original code, scenes,
-assets and dependencies over multiple authorized APK builds until the complete
-game is represented there. Changes to the official source remain out of scope
-except for narrowly approved paired corrections; for this validation, the R5
-route gate may be synchronized with the canonical `GameRoute` enum.
-Read
-`docs/vexforge-canonical/UNITY_BOOTSTRAP_WORKFLOW.md` before changing or building
-it. The current game migration order is
-`VEXFORGE_UNITY_MIGRATION_MASTER_V1`; operational context is in
-`VEXFORGE_CONTEXT.md` and `docs/vexforge-canonical/`.
+As of 2026-10-11, `unity/**` is the single official Android game project,
+promoted from the completed Bootstrap project at the user's direction. The
+previous separate official Unity tree was removed from the current branch.
+Bootstrap migration documents below are historical unless explicitly marked
+current. The promoted project uses `com.vexforge.android`; its new official
+state was not rebuilt as part of the promotion.
+
+The current manual build workflow is
+`.github/workflows/vexforge-unity-android-github.yml`. Operational context is
+in `VEXFORGE_CONTEXT.md` and `docs/vexforge-canonical/`.
 
 ## Integrations and credentials
 
@@ -20,7 +18,7 @@ it. The current game migration order is
 - Never request or share credentials in chat. Request Unity Cloud, Hub, or Editor
   credentials as secrets only if a specific authorized workflow requires them.
 
-## Current Bootstrap migration checkpoint (2026-10-11)
+## Historical Bootstrap migration checkpoint (through 2026-10-11)
 
 - Stage 3 preparation began from clean `main` at
   `d4616089f1582c9994544b205a396d56b1c4e95b`.
@@ -185,46 +183,22 @@ it. The current game migration order is
 
 ## Active scope
 
-- Unity under `unity/**` is the Android game runtime.
-- The approved source edits to official `unity/**` are limited to the mirrored
-  `using Vexforge.Core` import in
-  `Assets/Scripts/Tier1/VexforgeTier1EconomyHub.cs` and the paired R5 route-gate
-  correction adding `World=8`. Do not alter other official Unity files in this
-  batch. The user's eventual goal is to keep the complete
-  Bootstrap project after parity and then retire the official copy; no deletion
-  is authorized now. Require complete validation and explicit confirmation at
-  that future destructive step.
+- `unity/**` is the sole official Unity Android project. The former project at
+  `unity/**` was removed and the completed Bootstrap project was promoted there
+  on 2026-10-11 at the user's explicit direction.
+- Its Android identity is `com.vexforge.android`, product name `VEXFORGE`, and
+  Unity Editor version `6000.3.0f1`.
+- The manual workflow
+  `.github/workflows/vexforge-unity-android-github.yml` now uses the promoted
+  Android builder. It is not dispatched automatically.
+- The promotion deliberately did not run a new Unity/Android build. Do not claim
+  the promoted state compiles or is device-verified; a future build requires
+  fresh explicit user authorization.
 - The official web portal is under `src/**` and `public/**`; leave it unchanged
   unless the user directly requests portal work.
 - Supabase remains authoritative for identity, ownership, combat, settlement,
   economy, progress, and rewards. Do not alter the live project unless directly
   authorized.
-- The manual Unity workflow is
-  `.github/workflows/vexforge-unity-android-github.yml`. Its shard mode has 12
-  partitions and a 35,000-variant cap per shard. `normal` and `final` are
-  unfiltered and have no variant cap. Do not dispatch or build without separate
-  authorization.
-- The experimental workflow
-  `.github/workflows/vexforge-unity-bootstrap-android.yml` builds only
-  `unity-bootstrap/**`, manually, on `main`. Each accepted content slice is
-  cumulative and followed by a complete APK build. Run #2 was only a workflow
-   smoke test; runs #3–#7 validated the code slices, run #8 validated stage 4
-   metadata, run #9 validated the canonical bootstrap scene (stage 5), and run
-   #10 validated all canonical audio cues (stage 6). Keep later
-  full-project content in dependency-closed batches capped at 10% of the
-  complete tracked Unity inventory, with no fixed number of batches.
-   The builder requires a real scene and does not generate placeholders. It does
-   not replace or authorize the official game workflow. The earlier authorization
-   for successive content batches was conditioned on each previous workflow and
-   APK validation succeeding; it does not authorize retries after a failure. The
-   canonical inventory is now present. The user's current request authorizes
-   exactly one manual Bootstrap validation build after the R5 route-gate repair;
-   stop after that attempt and do not dispatch another build without new approval.
-  Record Unity BuildReport counters for later review; per the user's instruction
-  they do not alone block a successful workflow with a valid APK/artifact. Stop
-  after an actual workflow or artifact validation failure; do not retry without
-  fresh authorization.
-  Follow its dedicated operations guide.
 - Keep the official branch on `main`; before milestones, fetch and confirm a
   clean tree with `HEAD == origin/main`. Commit and push completed work.
 - Never reset, rebase, merge, cherry-pick, or force-push the official branch.
@@ -232,12 +206,10 @@ it. The current game migration order is
 
 Out of scope unless requested:
 
-- Changes to `src/**`, `public/**`, or `unity/**` during repository cleanup.
+- Changes to `src/**` or `public/**` during Unity work.
 - Supabase live schema, RPC, RLS, authentication, data, and backend rules.
-- Official game builds, APK/AAB releases, and Unity Cloud Build unless directly
-  requested.
-- Bootstrap APK/AAB builds outside the current, success-conditioned migration
-  authorization.
+- Unity/Android builds, APK/AAB releases, and Unity Cloud Build unless directly
+  and freshly requested.
 
 No Epic/Fab asset payloads or listing identifiers were found in the repository.
 Epic/Fab sourcing is retired from the active direction. The game's `epic`
@@ -247,10 +219,8 @@ card rarity is unrelated and must remain intact.
 
 Unity Editor/device validation is not available in this environment. Do not
 claim Unity compilation, Android behavior, or parity without corresponding
-evidence. The official game workflow remains manual and has not been dispatched.
-Bootstrap builds use their separate manual workflow. The active migration may
-continue after a successful APK without asking again; stop and report on failure.
-A successful bootstrap APK build is not device verification or gameplay parity.
+evidence. The promoted official workflow is manual; it was not run as part of the
+promotion. Historical Bootstrap APKs do not verify the promoted official state.
 
 The root `npm run verify`, `npm run typecheck`, and `npm run build` commands
 apply to the web portal, not to Unity.
@@ -259,9 +229,8 @@ apply to the web portal, not to Unity.
 
 - Unity Editor `6000.3.0f1`
 - Android package `com.vexforge.android`
+- Product name `VEXFORGE`
 - C# / Unity runtime under `unity/**`
-- Experimental bootstrap package `com.vexforge.bootstrap` under
-  `unity-bootstrap/**`; not a gameplay runtime.
 
 ## Where things live
 
@@ -271,10 +240,8 @@ apply to the web portal, not to Unity.
   audio and other runtime presentation.
 - `unity/Assets/` — Unity scenes and project assets.
 - `docs/vexforge-canonical/UNITY_BUILD_OPERATIONS.md` — manual build boundaries.
-- `docs/vexforge-canonical/UNITY_BOOTSTRAP_WORKFLOW.md` — isolated project,
-  incremental content, manual APK, cache, secret and verification rules.
-- `docs/vexforge-canonical/UNITY_INCREMENTAL_VARIANT_BATCHES.md` — shard and
-  checkpoint operations.
+- `docs/vexforge-canonical/UNITY_BOOTSTRAP_WORKFLOW.md` — archived migration
+  history; not the current build guide.
 - `supabase/`, `backend/` — existing authority/contracts; do not change their
   behavior for this client migration.
 - `src/`, `public/` — official web portal.

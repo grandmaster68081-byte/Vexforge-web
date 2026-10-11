@@ -1,5 +1,11 @@
 # VEXFORGE CURRENT STATE
 
+> CURRENT UPDATE — 2026-10-11: the complete Bootstrap project is now the sole
+> official Unity Android project at `unity/`; the former separate Unity tree
+> was removed. The manual workflow was retargeted, but no build was run after
+> promotion. Supabase was not modified. Historical workflow facts below predate
+> this update; see `VEXFORGE_CONTEXT.md` and `UNITY_BUILD_OPERATIONS.md`.
+
 > HISTORICAL AUDIT SNAPSHOT (2026-09-23). The runtime directive recorded below
 > was superseded on 2026-10-04: Unity is the sole active Android runtime and
 > Expo is retained only as a migration reference. See `VEXFORGE_CONTEXT.md`.

@@ -1,10 +1,11 @@
-# VEXFORGE — Incremental variant batch continuity
+# VEXFORGE — Archivo del flujo histórico de variantes incrementales
 
-Status: MANUAL WORKFLOW RESTORED — NOT DISPATCHED
+Status: ARCHIVED — previous shader-shard workflow retired on 2026-10-11
 
-This document describes the restored manual shader-cache workflow and its
-checkpoint chain. No workflow run or APK/AAB build has been started. Dispatch
-and artifact generation still require explicit authorization.
+This document records the former shader-cache workflow and checkpoint chain.
+It is not an operational guide for the current project. The current official
+Unity build workflow is documented in `UNITY_BUILD_OPERATIONS.md`; any build
+still requires fresh, explicit authorization.
 
 ## Historical workflow configuration
 

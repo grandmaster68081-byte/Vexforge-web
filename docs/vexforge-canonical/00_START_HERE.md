@@ -1,29 +1,18 @@
 # 00 — START HERE (AUTORIDAD ACTUAL: UNITY)
 
-## Enrutamiento de alcance (2026-10-10)
+## Estado actual (2026-10-11)
 
-El trabajo activo de migración incremental usa `unity-bootstrap/`, separado del
-runtime oficial. Para esa tarea, leer primero `replit.md`,
-`UNITY_BOOTSTRAP_WORKFLOW.md` y `unity-bootstrap/README.md`. El documento
-`17_CURRENT_BLOCK.md` y `16_IMPLEMENTATION_STATUS.md` describen el runtime
-oficial bajo `unity/**`; no son la cola de trabajo del Bootstrap. El protocolo
-de IA y el bloque actual deben interpretarse según esta separación.
+`unity/**` es el único proyecto Unity Android oficial. El Bootstrap acumulativo
+fue promovido a esa ruta y el proyecto Unity oficial anterior fue retirado de la
+rama actual por instrucción del usuario. No existe ya un proyecto separado
+`unity-bootstrap/`. Los documentos específicos de aquella migración son
+históricos.
 
-El run #2 del Bootstrap fue una prueba del workflow con una escena vacía, no un
-hito de contenido. El builder actual bloquea la compilación si no existe una
-escena. La comprobación solo valida que exista el archivo; no prueba que sea
-oficial ni que tenga todas sus dependencias. La siguiente tarea es inspeccionar
-la escena oficial de inicio y su cierre de dependencias para incorporar una
-porción pequeña, auténtica y compilable.
-
-## Dirección vigente
-
-Unity en `unity/**` es el runtime Android del videojuego. El portal oficial está
-en `src/**` y `public/**`. Supabase live conserva la autoridad de backend.
-
-El workflow manual de Unity está en
-`.github/workflows/vexforge-unity-android-github.yml`. Usa 12 shards y un límite
-de 35.000 variantes por shard; no se ha despachado.
+El workflow manual vigente es
+`.github/workflows/vexforge-unity-android-github.yml`; no se ejecutó una nueva
+compilación durante la promoción. `replit.md` y `VEXFORGE_CONTEXT.md` describen
+los límites actuales. El portal oficial sigue en `src/**` y `public/**`;
+Supabase live conserva la autoridad de backend.
 
 ## Orden de lectura
 
@@ -33,18 +22,16 @@ de 35.000 variantes por shard; no se ha despachado.
    `17_CURRENT_BLOCK.md` — estado observado y bloque actual.
 4. `docs/vexforge-canonical/05_ANDROID_RUNTIME_AND_BUILD.md` — control de
    compilación y estado del workflow.
-5. `docs/vexforge-canonical/UNITY_BUILD_OPERATIONS.md` y
-   `UNITY_INCREMENTAL_VARIANT_BATCHES.md` — operación manual por shards.
+5. `docs/vexforge-canonical/UNITY_BUILD_OPERATIONS.md` — build manual actual.
 
 ## Límites
 
 - Mantener Supabase como autoridad para combate, propiedad, recompensas,
   progreso y economía.
-- Mantener el portal web y el código Unity sin cambios durante la limpieza.
+- Mantener el portal web y Supabase sin cambios durante el trabajo de Unity.
 - No copiar ni sustituir el arte oficial de cartas sin aprobación.
 - No generar APK/AAB del juego oficial ni alterar Supabase live sin autorización
-  explícita. Para la autorización condicional ya concedida al Bootstrap, seguir
-  exclusivamente `UNITY_BOOTSTRAP_WORKFLOW.md`; no extenderla al workflow
-  oficial.
+  explícita y vigente. `UNITY_BOOTSTRAP_WORKFLOW.md` es archivo histórico; no
+  concede autorización actual de build.
 - Antes de cada hito: confirmar `main`, árbol limpio y `HEAD == origin/main`;
   cerrar con commit y push antes de iniciar el siguiente.

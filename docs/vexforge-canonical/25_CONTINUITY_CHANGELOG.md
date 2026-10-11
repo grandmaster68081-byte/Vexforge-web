@@ -1,5 +1,17 @@
 # 25 — CONTINUITY CHANGELOG
 
+## 2026-10-11 — Bootstrap promovido a Unity oficial
+
+- Se retiró el árbol Unity oficial anterior de la rama actual y el proyecto
+  Bootstrap completo pasó a `unity/`; se eliminó la ruta separada `unity-bootstrap/`.
+- Se conservaron las 197 rutas del proyecto Unity anterior: 195 son idénticas
+  byte por byte; solo se reemplazaron el estado documental y los ajustes del
+  jugador. El proyecto promovido usa `VEXFORGE` y `com.vexforge.android`.
+- El workflow Android antiguo fue reemplazado por el builder previamente usado
+  por Bootstrap, ahora apuntando a `unity/`. Permanece manual.
+- No se ejecutó una compilación durante la promoción. Los APKs anteriores no
+  verifican el estado promovido. Supabase, `src/**` y `public/**` no se cambiaron.
+
 ## 2026-10-10 — Bootstrap Stage 12 verified; Stage 13 prepared
 
 - Bootstrap run #18 passed on commit

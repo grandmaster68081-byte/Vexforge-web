@@ -1,6 +1,7 @@
-> Historical technical observations remain below. The current manual workflow
-> is `.github/workflows/vexforge-unity-android-github.yml`; it has not been
-> dispatched.
+> Historical technical observations below predate the 2026-10-11 project
+> promotion. The current project and build state are documented in
+> `VEXFORGE_CONTEXT.md` and `UNITY_BUILD_OPERATIONS.md`. The promoted workflow
+> has not been dispatched.
 
 # UNITY RUNTIME FACTS
 

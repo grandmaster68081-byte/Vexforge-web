@@ -1,4 +1,11 @@
-# VEXFORGE — flujo experimental de Unity Bootstrap Android
+# VEXFORGE — archivo del flujo de migración Unity Bootstrap Android
+
+> HISTÓRICO: el 11 de octubre de 2026 el usuario indicó promover el Bootstrap
+> completo como proyecto Unity oficial. El directorio separado y su workflow ya
+> no existen en la rama actual. No seguir las autorizaciones, instrucciones de
+> build ni rutas `unity-bootstrap/` que aparecen más abajo; el estado vigente está
+> en `replit.md`, `VEXFORGE_CONTEXT.md` y `UNITY_BUILD_OPERATIONS.md`. No se
+> ejecutó una compilación después de la promoción.
 
 ## Propósito y estado
 
