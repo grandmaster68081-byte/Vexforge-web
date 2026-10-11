@@ -90,14 +90,16 @@ namespace Vexforge.Presentation.Editor
                 "Battle",
                 "Missions",
                 "Economy",
-                "Profile"
+                "Profile",
+                "World"
             };
 
             var actual = Enum.GetNames(typeof(GameRoute));
             if (actual.Length != expected.Length)
             {
                 failures.Add(
-                    "CANONICAL_ROUTE_ENUM_MISMATCH: expected exactly 8 GameRoute values, found " +
+                    "CANONICAL_ROUTE_ENUM_MISMATCH: expected exactly " + expected.Length +
+                    " GameRoute values, found " +
                     actual.Length + ".");
                 return;
             }

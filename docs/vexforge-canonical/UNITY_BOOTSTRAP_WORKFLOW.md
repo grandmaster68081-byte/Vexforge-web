@@ -342,7 +342,7 @@ el inventario canónico restante sin fijar por adelantado el número de etapas.
 Detenerse si el workflow falla, falta el APK/artefacto, hay corrupción o no
 coincide el hash.
 
-## Estado actualizado — 2026-10-10 — Etapas 13 y 14
+## Estado actualizado — 2026-10-11 — Etapas 13 y 14
 
 La etapa 13 pasó en Bootstrap run #19 (`38081004065`) sobre el commit
 `045127b73cf1c772e0867bed9346aa05178161cc`. Unity 6000.3.0f1 terminó con
@@ -365,9 +365,11 @@ Unity. Solo `ProjectSettings/ProjectSettings.asset` conserva diferencias de
 identidad para el nombre, ID Android/metroPackageName y version code del
 Bootstrap.
 
-La única modificación aprobada dentro de `unity/**` es añadir el mismo
+Las modificaciones aprobadas dentro de `unity/**` se limitan a añadir el mismo
 `using Vexforge.Core;` a `VexforgeTier1EconomyHub.cs` que ya permitía compilar
-Bootstrap. No se cambió otro archivo oficial. El run #20
+Bootstrap y a sincronizar el gate R5 con el enum canónico `World=8`. Cada
+corrección se refleja byte por byte en `unity-bootstrap/`; no cambiar otros
+archivos oficiales. El run #20
 (`38085930684`, commit `3609d16093701b4d54ef5f0dd0e61596fb1c9571`) inició Unity
 tras pasar checkout, licencia y restauración de caché compatible, pero terminó
 cancelado al alcanzar el límite de 360 minutos. No devolvió código de salida,
@@ -375,22 +377,32 @@ no produjo artefactos y no llegó a validar/subir APK ni guardar caché. El lote
 nuevo medía unos 35,8 KB y la caché anterior se restauró; esos datos no explican
 la duración.
 
-La consulta de los 20 registros de Actions confirma que el hook estaba ausente
-en los runs 1–19 y se incorporó por primera vez en el 20, idéntico al archivo de
-`unity/`. En el checkout de ese run no estaban los recursos generados por
-`EnsureAll()` (pipeline URP, renderer, materiales ni el asset de recursos de
-presentación), así que su primera creación/importación ocurrió dentro de
-`BuildPipeline`.
+La consulta de Actions confirma que el hook R5 estaba ausente en los runs 1–19
+y se incorporó por primera vez en el 20, idéntico al archivo de `unity/`. Run #20
+(`38085930684`, commit `3609d16093701b4d54ef5f0dd0e61596fb1c9571`) pasó checkout,
+licencia y restauración de caché, pero Unity no terminó antes del límite de 360
+minutos. No hubo código de salida ni APK, artefacto o caché nueva. Como el run no
+transmitía el log del Editor mientras trabajaba, no se puede afirmar el punto
+interno exacto del bloqueo. La hipótesis principal es la creación/importación
+dentro de `BuildPipeline` de los recursos R5 que aún no existían en el checkout.
 
-No se puede afirmar el punto interno exacto del bloqueo: el workflow anterior
-solo imprimía el log del Editor cuando Unity terminaba. La principal hipótesis
-era el nuevo `IPreprocessBuildWithReport`: al activarse por primera vez,
-materializó recursos y ejecutó `AssetDatabase.Refresh()` dentro de
-`BuildPipeline`. El builder Bootstrap ahora llama al mismo setup y validación
-antes de iniciar BuildPipeline; el hook oficial copiado permanece idéntico y se
-ejecuta sin adaptación local. El workflow también transmite el log de Unity en
-vivo. Es una mitigación razonada, todavía no validada por otra APK; la
-autorización actual cubre un build manual de validación.
+El builder Bootstrap se cambió para crear y validar esos recursos antes de
+`BuildPipeline`, y el workflow ahora transmite el log en vivo. Bootstrap run #21
+(`38115064772`, commit `ead747414417ddbbda8fbb815c92f0cc7c900968`) pasó checkout,
+instalación de Unity/Android, activación y restauró una caché compatible de
+2.010.449.557 bytes (guardada por run #19). Unity inició el método Bootstrap,
+pero el gate R5 se detuvo antes de `BuildPipeline`: informó
+`CANONICAL_ROUTE_ENUM_MISMATCH`, porque esperaba 8 rutas y el enum real contiene
+9. La ruta oficial es `Boot=0` … `Profile=7`, `World=8`; no fue un error de
+compilación C# ni de credenciales. El run no produjo APK, artefacto, informe de
+build ni caché nueva. Esta ejecución muestra que la validación R5 ya termina
+rápidamente, pero no valida todavía la compilación Android.
+
+La lista esperada del gate se corrigió en ambas copias idénticas, añadiendo
+`World` y conservando la comprobación numérica de los índices 0–8. El resto de
+`unity/**` permanece fuera del alcance. La petición actual del usuario autoriza
+un único build manual Bootstrap después de este arreglo; verificar APK,
+artefacto, informe y hash, y detenerse si algo falla.
 
 Ni 197/197 rutas ni un APK exitoso demuestran instalación, jugabilidad o
 equivalencia en dispositivo.
@@ -447,7 +459,8 @@ técnica inicial; los runs #3 y #4 validaron las porciones oficiales 1 y 2.
 Una vez cumplida esa condición, continuar de forma secuencial: elegir e integrar
 una pieza, revisar el diff, hacer commit/push a `main`, despachar manualmente un
 solo build completo, verificar APK e informe, y avanzar únicamente después de
-un run correcto. No lanzar builds en paralelo ni automatizar el disparador.
+un run correcto. Para la reparación descrita arriba, el usuario autorizó un
+único build manual; no lanzar builds en paralelo ni automatizar el disparador.
 Esta autorización termina al completar la migración o si un workflow falla,
 falta el APK/artefacto, el APK está corrupto, el hash no coincide o la siguiente
 pieza requiere una decisión de alcance. Por la instrucción del usuario del 10 de

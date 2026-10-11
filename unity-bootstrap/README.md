@@ -5,9 +5,11 @@ game into complete Android APKs. The authorized plan first completes the entire
 canonical C# source set in one code-only pass; after that succeeds, the deferred
 full-project content is migrated in bounded, dependency-complete batches. This
 is not a second source of truth and must not replace the official game. The user
-approved one narrowly scoped import normalization in the official source; no
-other official Unity file may be changed in this migration. All 81 official C#
-files are present here and byte-identical. Bootstrap's project-specific
+approved two narrowly scoped paired edits in the official source: the
+`Vexforge.Core` import normalization and the R5 route-gate correction for
+`World=8`. Each is mirrored identically here; no other official Unity file may
+be changed in this migration. All 81 official C# files are present here and
+byte-identical. Bootstrap's project-specific
 `VexforgeBootstrapBuild.cs` entry point prepares R5 resources before starting
 the build; the copied `VexforgeR5CloudBuildGate.cs` remains identical to source.
 
@@ -64,10 +66,16 @@ the build; the copied `VexforgeR5CloudBuildGate.cs` remains identical to source.
   creation/import happened inside `BuildPipeline`. This is the strongest
   suspected cause, but the exact stall remains unconfirmed because the Editor
   log was only printed after exit.
-- The Bootstrap-specific builder now creates and validates those resources
-  before `BuildPipeline`, leaving the official prebuild hook unchanged and
-  byte-identical. The workflow streams the Unity log live. This mitigation
-  still needs the authorized manual APK build and artifact/hash validation.
+- The Bootstrap-specific builder creates and validates the R5 resources before
+  `BuildPipeline`; the workflow streams Unity's log live. Bootstrap run #21
+  (`38115064772`, commit `ead747414417ddbbda8fbb815c92f0cc7c900968`) restored
+  the compatible 2,010,449,557-byte cache from run #19, then stopped at the R5
+  gate before `BuildPipeline`: the allowlist expected 8 `GameRoute` values but
+  the canonical enum has 9 (`Boot=0` through `World=8`). It was not a C#
+  compiler or credential failure; no APK, artifact, report, or new cache was
+  produced. The two gate copies now include `World` and retain the 0–8 index
+  validation. The current user request authorizes one manual Bootstrap build
+  after this repair; validate the APK/artifact/hash and stop if it fails.
 - The successful historical APK #2 was a workflow smoke test using an empty
   generated scene. It proves neither migrated game content nor a cache restore.
 - Stage 5 restored `Assets/Scenes/VexforgeBootstrap.unity` from the canonical
@@ -77,9 +85,10 @@ the build; the copied `VexforgeR5CloudBuildGate.cs` remains identical to source.
 
 ## Migration rules
 
-- Keep `unity/**` as canonical. Its only approved change here is the mirrored
-  `using Vexforge.Core` import in `VexforgeTier1EconomyHub.cs`; make no other
-  official Unity source edits.
+- Keep `unity/**` as canonical. The only approved changes in this repair are
+  the mirrored `using Vexforge.Core` import in `VexforgeTier1EconomyHub.cs` and
+  the paired R5 gate correction adding `World=8`. Make no other official Unity
+  source edits.
 - Preserve the verified stages 1 and 2. Stage 3 is the user-directed one-time
   completion of all remaining canonical C# source, taking the code inventory to
   100%; it is intentionally larger than the historical 5–7% code slices.

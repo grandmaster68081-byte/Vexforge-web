@@ -1,3 +1,33 @@
+## 2026-10-11 — CONTINUIDAD ACTUALIZADA — RUNS BOOTSTRAP 20–21
+
+- **FUENTE:** `main` del repositorio Vexforge; el run #21 usó el commit
+  `ead747414417ddbbda8fbb815c92f0cc7c900968`.
+- **RUN #20:** `38085930684` se canceló al alcanzar el límite de 360 minutos
+  después de iniciar Unity. No devolvió código de salida ni generó APK, artefacto
+  o caché nueva. El log del Editor no se transmitía en vivo; la causa interna
+  exacta no puede confirmarse. La primera creación/importación de recursos R5
+  dentro de `BuildPipeline` era la hipótesis principal.
+- **RUN #21:** `38115064772` completó checkout, instalación de Unity/Android,
+  activación de licencia y restauró una caché compatible de 2.010.449.557 bytes
+  del run #19. Falló antes de `BuildPipeline` con
+  `CANONICAL_ROUTE_ENUM_MISMATCH`: el gate esperaba 8 valores, pero
+  `GameRoute` contiene nueve, `Boot=0` hasta `World=8`. No fue un error C# ni de
+  credenciales; no hubo APK, informe, artefacto o caché nueva.
+- **REPARACIÓN:** se añadió `World` a la lista esperada en las copias canónica y
+  Bootstrap de `VexforgeR5FoundationGate`. El gate ya comprueba que los valores
+  numéricos se mantengan en índices 0–8; no se alteraron esos índices. No
+  modificar otros archivos de `unity/**`.
+- **AUTORIZACIÓN:** la petición del usuario del 11 de octubre autoriza un único
+  build manual Bootstrap después de esta reparación. Verificar el APK, informe,
+  artefacto y hash; detenerse si falla. No iniciar el workflow oficial de Unity,
+  Unity Cloud Build ni más intentos automáticos.
+- **SUPABASE:** Management API consultada en modo de solo lectura el 2026-10-11:
+  `ACTIVE_HEALTHY` (`us-west-2`). No se modificaron datos, esquema, Auth, RLS,
+  RPCs, funciones, Storage ni configuración.
+- **ALCANCE:** `unity-bootstrap/**` sigue siendo la migración acumulativa; 197/197
+  rutas y 81 scripts C# están presentes y los scripts oficiales son idénticos.
+  Un APK válido no demostraría ejecución en dispositivo ni paridad de juego.
+
 ## 2026-10-10 — CONTINUIDAD ACTUALIZADA — BOOTSTRAP, ETAPA 14
 
 - **ORIGEN:** `main` sigue `origin/main` del repositorio Vexforge en el SHA

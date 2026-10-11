@@ -4,7 +4,9 @@ Unity under `unity/**` remains the untouched source of truth for the official
 Android game. The separate `unity-bootstrap/**` project is the experimental,
 incremental destination; the goal is to add all required original code, scenes,
 assets and dependencies over multiple authorized APK builds until the complete
-game is represented there. It is not permission to change the official source.
+game is represented there. Changes to the official source remain out of scope
+except for narrowly approved paired corrections; for this validation, the R5
+route gate may be synchronized with the canonical `GameRoute` enum.
 Read
 `docs/vexforge-canonical/UNITY_BOOTSTRAP_WORKFLOW.md` before changing or building
 it. The current game migration order is
@@ -170,15 +172,25 @@ it. The current game migration order is
   resources before `BuildPipeline`; the original hook remains byte-identical and
   will run unchanged afterward. The workflow streams Unity's log live. This
   mitigation has not yet been validated by an APK; one manual validation build
-  is authorized for the current repair.
+  was authorized for that repair.
+- Bootstrap run #21 (`38115064772`, commit
+  `ead747414417ddbbda8fbb815c92f0cc7c900968`) passed setup, Unity activation and
+  compatible cache restore (2,010,449,557 bytes from run #19), then failed before
+  `BuildPipeline` because the R5 gate expected 8 `GameRoute` values while the
+  canonical enum has 9 (`Boot=0` through `World=8`). This is a gate mismatch,
+  not a C# compiler or credential failure; no APK, artifact or new cache exists.
+  Both gate copies now include `World` and enforce indices 0–8. The current user
+  authorizes exactly one manual Bootstrap validation build after this repair;
+  validate the APK, artifact, report and hash, then stop on any failure.
 
 ## Active scope
 
 - Unity under `unity/**` is the Android game runtime.
-- The sole approved source edit to official `unity/**` in this migration is the
-  mirrored `using Vexforge.Core` import in
-  `Assets/Scripts/Tier1/VexforgeTier1EconomyHub.cs`. Do not alter other official
-  Unity files in this batch. The user's eventual goal is to keep the complete
+- The approved source edits to official `unity/**` are limited to the mirrored
+  `using Vexforge.Core` import in
+  `Assets/Scripts/Tier1/VexforgeTier1EconomyHub.cs` and the paired R5 route-gate
+  correction adding `World=8`. Do not alter other official Unity files in this
+  batch. The user's eventual goal is to keep the complete
   Bootstrap project after parity and then retire the official copy; no deletion
   is authorized now. Require complete validation and explicit confirmation at
   that future destructive step.
@@ -201,13 +213,13 @@ it. The current game migration order is
    #10 validated all canonical audio cues (stage 6). Keep later
   full-project content in dependency-closed batches capped at 10% of the
   complete tracked Unity inventory, with no fixed number of batches.
-  The builder requires a real scene and does not generate placeholders. It does
-   not replace or authorize the official game workflow. The user has authorized
-   successive, newly selected content batches to continue without a per-APK prompt
-   until the canonical inventory is migrated, only after the prior workflow and APK
-   validations succeed. Each next dispatch must include a new dependency-closed
-   content slice and a new source SHA; an unchanged-SHA rebuild does not advance
-   the migration.
+   The builder requires a real scene and does not generate placeholders. It does
+   not replace or authorize the official game workflow. The earlier authorization
+   for successive content batches was conditioned on each previous workflow and
+   APK validation succeeding; it does not authorize retries after a failure. The
+   canonical inventory is now present. The user's current request authorizes
+   exactly one manual Bootstrap validation build after the R5 route-gate repair;
+   stop after that attempt and do not dispatch another build without new approval.
   Record Unity BuildReport counters for later review; per the user's instruction
   they do not alone block a successful workflow with a valid APK/artifact. Stop
   after an actual workflow or artifact validation failure; do not retry without
