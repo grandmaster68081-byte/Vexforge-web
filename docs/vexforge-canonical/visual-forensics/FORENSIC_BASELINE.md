@@ -39,6 +39,7 @@ The Replit workspace's existing repository/backup configuration was preserved. T
 
 - Only three files are present in `unity/ProjectSettings/`: `EditorBuildSettings.asset`, `ProjectSettings.asset`, and `ProjectVersion.txt`.
 - `GraphicsSettings.asset`, `QualitySettings.asset`, a URP pipeline asset, and a URP renderer asset were not found. The package declaration alone does not prove an active URP assignment; active pipeline/quality settings are **NOT VERIFIED**.
+- Revalidation on synchronized `main` (`21c923f06e5f574f6cf308ac9dd584e20aa44c94`) found 35 dependencies in `Packages/manifest.json` and 33 in `packages-lock.json`. The lock omits `com.unity.inputsystem` 1.20.0, URP 17.3.0, and UGUI 2.0.0; it also contains `com.unity.modules.unitywebrequestxml`, which is absent from the manifest. Package resolution/import is **NOT VERIFIED**; F0 did not modify or resolve packages.
 - The scene contains one `VexforgeApp` component and no serialized camera. The `MainCamera` and runtime presentation objects are created by code; successful runtime creation is **NOT VERIFIED**.
 - No Unity Editor import, Player build, installation, or device run was attempted.
 
