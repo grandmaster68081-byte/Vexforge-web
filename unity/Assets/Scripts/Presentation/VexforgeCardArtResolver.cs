@@ -29,6 +29,8 @@ namespace Vexforge.Presentation
         private readonly int maxDimension;
         private bool disposed;
 
+        public bool IsDisposed { get { return disposed; } }
+
         public VexforgeCardArtResolver(
             VexforgeTextureLruCache cache,
             int maxConcurrentRequests = 3,

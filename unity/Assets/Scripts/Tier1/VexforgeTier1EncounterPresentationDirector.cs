@@ -19,14 +19,36 @@ namespace Vexforge.Tier1
         private Color targetColor = new Color(.40f,.24f,.10f,1f);
         private float targetScale = 1f;
         private bool bound;
+        private VexforgeBattlefieldStage stage;
+        private Coroutine battlefieldSearch;
 
         public void Initialize(BattlePresentationDirector canonical, VexforgeBattlefieldStage canonicalStage)
         {
-            if (bound || canonical == null) return;
-            director = canonical;
-            director.EventPresented += OnEvent;
-            bound = true;
-            StartCoroutine(FindBattlefield(canonicalStage));
+            if (canonical == null) return;
+            var stageChanged = stage != canonicalStage;
+            if (director != canonical)
+            {
+                if (director != null && bound) director.EventPresented -= OnEvent;
+                director = canonical;
+                director.EventPresented += OnEvent;
+                bound = true;
+            }
+            if (!stageChanged && (manifestation != null || battlefieldSearch != null)) return;
+
+            ResetManifestation();
+            stage = canonicalStage;
+            if (battlefieldSearch != null) StopCoroutine(battlefieldSearch);
+            battlefieldSearch = StartCoroutine(FindBattlefield(canonicalStage));
+        }
+
+        private void ResetManifestation()
+        {
+            if (meshRenderer != null && meshRenderer.sharedMaterial != null)
+                Destroy(meshRenderer.sharedMaterial);
+            if (manifestation != null) Destroy(manifestation);
+            manifestation = null;
+            meshRenderer = null;
+            point = null;
         }
 
         private IEnumerator FindBattlefield(VexforgeBattlefieldStage canonicalStage)
@@ -39,12 +61,13 @@ namespace Vexforge.Tier1
                     var arena=canonicalStage.transform.Find("BattlefieldArena");
                     parent=arena==null?canonicalStage.transform:arena;
                     var premium=parent.Find("VexforgePremiumBattlefield");
-                    if(premium!=null){Build(premium);yield break;}
+                    if(premium!=null){Build(premium);battlefieldSearch=null;yield break;}
                 }
                 var go=GameObject.Find("VexforgePremiumBattlefield");
-                if(go!=null){Build(go.transform);yield break;}
+                if(go!=null){Build(go.transform);battlefieldSearch=null;yield break;}
                 yield return null;
             }
+            battlefieldSearch=null;
         }
 
         private void Build(Transform parent)
@@ -126,6 +149,10 @@ namespace Vexforge.Tier1
             mesh.vertices=verts;mesh.triangles=tris;mesh.RecalculateNormals();return mesh;
         }
 
-        private void OnDestroy(){if(director!=null&&bound)director.EventPresented-=OnEvent;if(meshRenderer!=null&&meshRenderer.sharedMaterial!=null)Destroy(meshRenderer.sharedMaterial);}
+        private void OnDestroy()
+        {
+            if(director!=null&&bound)director.EventPresented-=OnEvent;
+            ResetManifestation();
+        }
     }
 }

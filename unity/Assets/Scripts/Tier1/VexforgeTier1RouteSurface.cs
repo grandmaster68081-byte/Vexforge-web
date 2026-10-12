@@ -1,4 +1,3 @@
-using System.Collections;
 using UnityEngine;
 using Vexforge.Core;
 using Vexforge.Presentation;
@@ -18,13 +17,19 @@ namespace Vexforge.Tier1
         private BattlePresentationDirector canonicalBattle;
         private VexforgeTier1PackRevealDirector packReveal;
         private VexforgeTier1WorldAtlasDirector worldAtlas;
+        private VexforgeTier1Bootstrap presentationReadiness;
         private bool subscribed;
-        private bool ready;
         private bool routeBounce;
 
-        public void Initialize(VexforgeApp host, VexforgeTier1BattleGate gate, VexforgeTier1TutorialDirector tutorialDirector, BattlePresentationDirector battleDirector, VexforgeTier1AssetRegistry assets)
+        public void Initialize(
+            VexforgeApp host,
+            VexforgeTier1BattleGate gate,
+            VexforgeTier1TutorialDirector tutorialDirector,
+            BattlePresentationDirector battleDirector,
+            VexforgeTier1AssetRegistry assets,
+            VexforgeTier1Bootstrap readiness)
         {
-            app=host;battleGate=gate;tutorial=tutorialDirector;canonicalBattle=battleDirector;
+            app=host;battleGate=gate;tutorial=tutorialDirector;canonicalBattle=battleDirector;presentationReadiness=readiness;
             rooms=gameObject.GetComponent<VexforgeTier1DiegeticRoomDirector>();
             if(rooms==null)rooms=gameObject.AddComponent<VexforgeTier1DiegeticRoomDirector>();
             rooms.Initialize(app,assets);
@@ -41,15 +46,18 @@ namespace Vexforge.Tier1
             {
                 app.Navigation.RouteChanged+=HandleRoute;
                 app.Session.StateChanged+=HandleAuth;
+                if(presentationReadiness!=null)
+                    presentationReadiness.PresentationReadinessChanged+=HandlePresentationReadinessChanged;
                 subscribed=true;
             }
-            StartCoroutine(WaitForBattleAndApply());
+            Apply(app==null?GameRoute.Nexus:app.Navigation.CurrentRoute);
         }
 
         public void InitializeCanonicalBattle(BattlePresentationDirector director)
         {
             canonicalBattle=director;
-            if(ready)Apply(app==null?GameRoute.Nexus:app.Navigation.CurrentRoute);
+            if(presentationReadiness!=null&&presentationReadiness.IsPresentationReady)
+                Apply(app==null?GameRoute.Nexus:app.Navigation.CurrentRoute);
         }
 
         public void BindPackReveal(VexforgeTier1PackRevealDirector director)
@@ -63,21 +71,13 @@ namespace Vexforge.Tier1
             worldAtlas=director;
         }
 
-        private IEnumerator WaitForBattleAndApply()
+        private void HandlePresentationReadinessChanged()
         {
-            for(var i=0;i<600;i++)
-            {
-                if(canonicalBattle==null)
-                {
-                    var directors=FindObjectsByType<BattlePresentationDirector>(FindObjectsInactive.Exclude,FindObjectsSortMode.None);
-                    for(var d=0;d<directors.Length;d++)
-                        if(directors[d]!=null&&directors[d].isActiveAndEnabled&&directors[d].IsInitialized){canonicalBattle=directors[d];break;}
-                }
-                if(canonicalBattle!=null&&canonicalBattle.IsInitialized)break;
-                yield return null;
-            }
-            ready=true;
-            Apply(app==null?GameRoute.Nexus:app.Navigation.CurrentRoute);
+            canonicalBattle=presentationReadiness!=null&&presentationReadiness.IsPresentationReady
+                ?presentationReadiness.CanonicalBattle
+                :null;
+            if(app!=null)
+                Apply(app.Navigation.CurrentRoute);
         }
 
         private void HandleAuth(AuthState state)
@@ -97,7 +97,13 @@ namespace Vexforge.Tier1
             Apply(app.Navigation.CurrentRoute);
         }
 
-        private void HandleRoute(GameRoute route){Apply(route);}
+        private void HandleRoute(GameRoute route)
+        {
+            if(route==GameRoute.Battle&&presentationReadiness!=null&&
+                !presentationReadiness.IsPresentationReady)
+                presentationReadiness.RetryPresentationBinding("ruta Battle solicitada");
+            Apply(route);
+        }
 
         private void Apply(GameRoute route)
         {
@@ -133,7 +139,14 @@ namespace Vexforge.Tier1
             {
                 if(rooms!=null)rooms.Hide();
                 if(tutorial!=null&&!(battleGate!=null&&battleGate.IsBattleActive))tutorial.Hide();
-                if(canonicalBattle!=null&&canonicalBattle.IsInitialized)canonicalBattle.SetVisible(true);
+                if(presentationReadiness==null||!presentationReadiness.IsPresentationReady)
+                {
+                    if(canonicalBattle!=null)canonicalBattle.StopAndHide();
+                    if(battleGate!=null)battleGate.Show();
+                    return;
+                }
+                canonicalBattle=presentationReadiness.CanonicalBattle;
+                if(canonicalBattle!=null)canonicalBattle.SetVisible(true);
                 if(battleGate!=null)battleGate.Show();
             }
             else
@@ -159,6 +172,8 @@ namespace Vexforge.Tier1
             {
                 app.Navigation.RouteChanged-=HandleRoute;
                 app.Session.StateChanged-=HandleAuth;
+                if(presentationReadiness!=null)
+                    presentationReadiness.PresentationReadinessChanged-=HandlePresentationReadinessChanged;
             }
         }
     }

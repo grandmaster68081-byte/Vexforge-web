@@ -41,6 +41,8 @@ namespace Vexforge.Presentation
         private Coroutine atmosphereReturn;
         private MaterialPropertyBlock pulseBlock;
 
+        public bool IsInitialized { get { return initialized; } }
+
         public void Initialize(
             Camera camera,
             VexforgeCardArtResolver resolver,

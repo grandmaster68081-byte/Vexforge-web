@@ -13,6 +13,7 @@ namespace Vexforge.Tier1
     {
         private VexforgeApp app;
         private VexforgeTier1AssetRegistry assets;
+        private VexforgeTier1Bootstrap presentationReadiness;
         private BattlePresentationDirector canonicalBattle;
         private VexforgeTier1BattleResultHud resultHud;
         private VexforgeTier1OperationJournal journal;
@@ -25,6 +26,11 @@ namespace Vexforge.Tier1
         private Button changeOpponentButton;
         private Button trainingButton;
         private Button pvpButton;
+        private GameObject selectionPlaque;
+        private GameObject readinessStatusRoot;
+        private Text readinessStatus;
+        private Button readinessRetryButton;
+        private Image backdropShade;
         private VexforgeTier1TurnCombatGate turnCombatGate;
         private bool shown;
         private bool busy;
@@ -62,11 +68,16 @@ namespace Vexforge.Tier1
             if(resultHud!=null)resultHud.Hide();
         }
 
-        public void Initialize(VexforgeApp host, BattlePresentationDirector director, VexforgeTier1AssetRegistry registry)
+        public void Initialize(
+            VexforgeApp host,
+            BattlePresentationDirector director,
+            VexforgeTier1AssetRegistry registry,
+            VexforgeTier1Bootstrap readiness)
         {
             app = host;
             canonicalBattle = director;
             assets = registry;
+            presentationReadiness = readiness;
             journal = new VexforgeTier1OperationJournal();
             resultHud = gameObject.GetComponent<VexforgeTier1BattleResultHud>();
             if (resultHud == null) resultHud = gameObject.AddComponent<VexforgeTier1BattleResultHud>();
@@ -97,6 +108,16 @@ namespace Vexforge.Tier1
             shown = true;
             resultHud.Hide();
             canvas.gameObject.SetActive(true);
+
+            if (presentationReadiness == null || !presentationReadiness.IsPresentationReady)
+            {
+                ShowReadinessWait();
+                return;
+            }
+
+            canonicalBattle = presentationReadiness.CanonicalBattle;
+            if (selectionPlaque != null) selectionPlaque.SetActive(true);
+            if (readinessStatusRoot != null) readinessStatusRoot.SetActive(false);
 
             if (busy)
             {
@@ -150,7 +171,7 @@ namespace Vexforge.Tier1
             bg.transform.SetParent(canvas.transform, false);
             VexforgeTier1Ui.Full(bg.GetComponent<RectTransform>());
             hero = bg.GetComponent<Image>();
-            hero.color = new Color(.006f,.008f,.013f,1f);
+            hero.color = Color.white;
             var tex = assets == null ? null : assets.LoadTexture("VF_BATTLE_ARENA_CITADEL_A", "VF_NEXUS_CITADEL_HERO");
             if (tex != null)
             {
@@ -158,32 +179,38 @@ namespace Vexforge.Tier1
                 hero.type = Image.Type.Simple;
                 hero.preserveAspect = false;
             }
+            else
+            {
+                hero.enabled = false;
+                Debug.LogError("VEXFORGE F1: no se pudo cargar el fondo local de espera VF_BATTLE_ARENA_CITADEL_A ni su fallback VF_NEXUS_CITADEL_HERO. El canvas de espera permanecerá transparente para no cubrir la escena en negro.");
+            }
             hero.raycastTarget = false;
 
-            var veil = VexforgeTier1Ui.Panel(canvas.transform, "BattleVeil", new Color(.004f,.005f,.009f,.22f));
-            VexforgeTier1Ui.Full(veil.rectTransform); veil.raycastTarget = false;
-            var plaque = VexforgeTier1Ui.Panel(canvas.transform, "GatePlaque", new Color(.012f,.014f,.020f,.68f));
-            VexforgeTier1Ui.Anchor(plaque.rectTransform, .05f,.10f,.95f,.88f);
-            var title = VexforgeTier1Ui.Label(plaque.transform, "Title", "BATTLE GATE", 31, VexforgeTier1Ui.Gold, TextAnchor.MiddleCenter);
+            backdropShade = VexforgeTier1Ui.Panel(canvas.transform, "BattleVeil", new Color(.004f,.005f,.009f,.22f));
+            VexforgeTier1Ui.Full(backdropShade.rectTransform); backdropShade.raycastTarget = false;
+            if (tex == null) backdropShade.gameObject.SetActive(false);
+            selectionPlaque = VexforgeTier1Ui.Panel(canvas.transform, "GatePlaque", new Color(.012f,.014f,.020f,.68f)).gameObject;
+            VexforgeTier1Ui.Anchor(selectionPlaque.GetComponent<RectTransform>(), .05f,.10f,.95f,.88f);
+            var title = VexforgeTier1Ui.Label(selectionPlaque.transform, "Title", "BATTLE GATE", 31, VexforgeTier1Ui.Gold, TextAnchor.MiddleCenter);
             VexforgeTier1Ui.Anchor(title.rectTransform, .07f,.88f,.67f,.96f);
             pvpButton = VexforgeTier1Ui.Button(
-                plaque.transform,
+                selectionPlaque.transform,
                 "PvpRoomsV7",
                 "SALAS PvP",
                 OpenTurnCombatPvp,
                 new Color(.035f,.050f,.052f,.97f),
                 12);
             VexforgeTier1Ui.Anchor(pvpButton.GetComponent<RectTransform>(), .70f,.89f,.93f,.955f);
-            status = VexforgeTier1Ui.Label(plaque.transform, "Status", string.Empty, 12, VexforgeTier1Ui.Muted, TextAnchor.MiddleCenter);
+            status = VexforgeTier1Ui.Label(selectionPlaque.transform, "Status", string.Empty, 12, VexforgeTier1Ui.Muted, TextAnchor.MiddleCenter);
             VexforgeTier1Ui.Anchor(status.rectTransform, .07f,.82f,.93f,.88f);
-            strategy = VexforgeTier1Ui.Label(plaque.transform, "Strategy", "SELECCIONA UN RIVAL PARA LEER TU FORMACIÓN.", 13, VexforgeTier1Ui.Text, TextAnchor.UpperLeft);
+            strategy = VexforgeTier1Ui.Label(selectionPlaque.transform, "Strategy", "SELECCIONA UN RIVAL PARA LEER TU FORMACIÓN.", 13, VexforgeTier1Ui.Text, TextAnchor.UpperLeft);
             VexforgeTier1Ui.Anchor(strategy.rectTransform, .08f,.65f,.92f,.79f);
             list = new GameObject("OpponentSeals", typeof(RectTransform)).GetComponent<RectTransform>();
-            list.SetParent(plaque.transform, false);
+            list.SetParent(selectionPlaque.transform, false);
             VexforgeTier1Ui.Anchor(list, .07f,.23f,.93f,.63f);
 
             trainingButton = VexforgeTier1Ui.Button(
-                plaque.transform,
+                selectionPlaque.transform,
                 "MirrorTrainingV7",
                 "ENTRENAMIENTO ESPEJO V7 · SIN RECOMPENSAS",
                 OpenTurnCombatTraining,
@@ -191,24 +218,73 @@ namespace Vexforge.Tier1
                 12);
             VexforgeTier1Ui.Anchor(trainingButton.GetComponent<RectTransform>(), .10f,.155f,.90f,.215f);
 
-            confirmButton = VexforgeTier1Ui.Button(plaque.transform, "Confirm", "SELLAR DESAFÍO", ConfirmSelectedOpponent, new Color(.075f,.055f,.040f,.97f), 13);
+            confirmButton = VexforgeTier1Ui.Button(selectionPlaque.transform, "Confirm", "SELLAR DESAFÍO", ConfirmSelectedOpponent, new Color(.075f,.055f,.040f,.97f), 13);
             VexforgeTier1Ui.Anchor(confirmButton.GetComponent<RectTransform>(), .09f,.075f,.56f,.145f);
-            changeOpponentButton = VexforgeTier1Ui.Button(plaque.transform, "Change", "CAMBIAR RIVAL", CancelSelection, new Color(.045f,.050f,.056f,.97f), 13);
+            changeOpponentButton = VexforgeTier1Ui.Button(selectionPlaque.transform, "Change", "CAMBIAR RIVAL", CancelSelection, new Color(.045f,.050f,.056f,.97f), 13);
             VexforgeTier1Ui.Anchor(changeOpponentButton.GetComponent<RectTransform>(), .60f,.075f,.91f,.145f);
             HideConfirmActions();
+
+            readinessStatusRoot = VexforgeTier1Ui.Panel(canvas.transform, "PresentationReadiness", new Color(.012f,.016f,.024f,.58f)).gameObject;
+            VexforgeTier1Ui.Anchor(readinessStatusRoot.GetComponent<RectTransform>(), .055f,.025f,.945f,.125f);
+            readinessStatus = VexforgeTier1Ui.Label(readinessStatusRoot.transform, "Status", "PREPARANDO CAMPO DE BATALLA", 12, VexforgeTier1Ui.Text, TextAnchor.MiddleLeft);
+            VexforgeTier1Ui.Anchor(readinessStatus.rectTransform, .035f,.12f,.75f,.88f);
+            readinessRetryButton = VexforgeTier1Ui.Button(
+                readinessStatusRoot.transform,
+                "Retry",
+                "REINTENTAR",
+                RetryPresentationBinding,
+                new Color(.045f,.055f,.064f,.82f),
+                11);
+            VexforgeTier1Ui.Anchor(readinessRetryButton.GetComponent<RectTransform>(), .77f,.15f,.97f,.85f);
+            readinessStatusRoot.SetActive(false);
             canvas.gameObject.SetActive(false);
+        }
+
+        private void ShowReadinessWait()
+        {
+            if (selectionPlaque != null) selectionPlaque.SetActive(false);
+            if (readinessStatusRoot != null) readinessStatusRoot.SetActive(true);
+            if (readinessStatus == null) return;
+
+            if (presentationReadiness == null)
+            {
+                readinessStatus.text = "NO SE PUDO INICIALIZAR EL SERVICIO DE PRESENTACIÓN.";
+                if (readinessRetryButton != null) readinessRetryButton.gameObject.SetActive(false);
+                return;
+            }
+
+            var state = presentationReadiness.PresentationState;
+            var failure = presentationReadiness.PresentationFailure;
+            if (state == VexforgeTier1PresentationState.FailedRetryable && !string.IsNullOrWhiteSpace(failure))
+            {
+                var readable = failure.Length > 150 ? failure.Substring(0, 147) + "..." : failure;
+                readinessStatus.text = "PRESENTACIÓN NO LISTA · " + readable;
+                if (readinessRetryButton != null) readinessRetryButton.gameObject.SetActive(true);
+            }
+            else
+            {
+                readinessStatus.text = "PREPARANDO CAMPO DE BATALLA · " + state.ToString().ToUpperInvariant();
+                if (readinessRetryButton != null) readinessRetryButton.gameObject.SetActive(false);
+            }
+        }
+
+        private void RetryPresentationBinding()
+        {
+            if (presentationReadiness != null)
+                presentationReadiness.RetryPresentationBinding("botón Reintentar de Battle Gate");
+            ShowReadinessWait();
         }
 
         private void OpenTurnCombatTraining()
         {
-            if (busy || turnCombatGate == null) return;
+            if (busy || turnCombatGate == null || presentationReadiness == null || !presentationReadiness.IsPresentationReady) return;
             Hide();
             turnCombatGate.Open();
         }
 
         private void OpenTurnCombatPvp()
         {
-            if (busy || turnCombatGate == null) return;
+            if (busy || turnCombatGate == null || presentationReadiness == null || !presentationReadiness.IsPresentationReady) return;
             Hide();
             turnCombatGate.OpenPvp();
         }
@@ -232,11 +308,23 @@ namespace Vexforge.Tier1
         private async Task DiscoverAsync()
         {
             if (!shown || app == null || app.Session == null || !app.Session.IsAuthenticated) { SetStatus("AUTENTICACIÓN REQUERIDA"); return; }
-            if (canonicalBattle == null || !canonicalBattle.IsInitialized) { SetStatus("CAMPO DE BATALLA AÚN NO LISTO"); return; }
+            if (presentationReadiness == null || !presentationReadiness.IsPresentationReady ||
+                canonicalBattle == null || canonicalBattle != presentationReadiness.CanonicalBattle ||
+                !canonicalBattle.IsInitialized)
+            {
+                ShowReadinessWait();
+                if (presentationReadiness != null)
+                    presentationReadiness.RetryPresentationBinding("oponentes solicitados antes de readiness");
+                return;
+            }
+            var requestGeneration = presentationReadiness.PresentationGeneration;
             try
             {
                 var rows = await app.Repository.GetPvpOpponentsAsync(8);
-                if (!shown) return;
+                if (!shown || presentationReadiness == null ||
+                    !presentationReadiness.IsPresentationReady ||
+                    requestGeneration != presentationReadiness.PresentationGeneration)
+                    return;
                 if (rows == null || rows.Length == 0) { SetStatus("NO HAY RIVALES DISPONIBLES"); return; }
                 Render(rows);
             }
@@ -311,7 +399,10 @@ namespace Vexforge.Tier1
         private async Task BeginBattleAsync(string opponentId, string opponentName, string existingKey)
         {
             if (busy && string.IsNullOrWhiteSpace(existingKey)) return;
-            if (app == null || app.Session == null || !app.Session.IsAuthenticated || canonicalBattle == null || !canonicalBattle.IsInitialized) return;
+            if (app == null || app.Session == null || !app.Session.IsAuthenticated ||
+                presentationReadiness == null || !presentationReadiness.IsPresentationReady ||
+                canonicalBattle == null || canonicalBattle != presentationReadiness.CanonicalBattle ||
+                !canonicalBattle.IsInitialized) return;
             busy = true;
             ClearList();
             SetStatus("SELLANDO " + opponentName.ToUpperInvariant() + " · ESPERANDO CONFIRMACIÓN");

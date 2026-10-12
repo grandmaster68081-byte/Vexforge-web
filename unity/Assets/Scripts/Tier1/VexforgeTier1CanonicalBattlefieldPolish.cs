@@ -24,16 +24,37 @@ namespace Vexforge.Tier1
 
         public void Initialize(BattlePresentationDirector canonical, VexforgeBattlefieldStage canonicalStage, VexforgeTier1AssetRegistry registry)
         {
+            var directorChanged = director != canonical;
+            var stageChanged = stage != canonicalStage;
+            if (directorChanged && director != null)
+                director.EventPresented -= OnEventPresented;
             director = canonical;
             stage = canonicalStage;
             assets = registry;
+            if (directorChanged && director != null)
+                director.EventPresented += OnEventPresented;
+            if (built && stageChanged)
+                ResetBattlefieldBuild();
             if (built || stage == null) return;
-            if (director != null) director.EventPresented += OnEventPresented;
             arenaTexture = assets == null ? null : assets.LoadTexture("VF_BATTLE_ARENA_CITADEL_A");
             sigilTexture = assets == null ? null : assets.LoadTexture("VF_BATTLE_SIGIL_ATLAS");
             bossTexture = assets == null ? null : assets.LoadTexture("VF_BOSS_SIGIL");
             Build();
             built = true;
+        }
+
+        private void ResetBattlefieldBuild()
+        {
+            if (root != null) Destroy(root.gameObject);
+            root = null;
+            for (var i = 0; i < materials.Count; i++)
+                if (materials[i] != null) Destroy(materials[i]);
+            for (var i = 0; i < ownedMeshes.Count; i++)
+                if (ownedMeshes[i] != null) Destroy(ownedMeshes[i]);
+            materials.Clear();
+            ownedMeshes.Clear();
+            replacements.Clear();
+            built = false;
         }
 
         private void Update()

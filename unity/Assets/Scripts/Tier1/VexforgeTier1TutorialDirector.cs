@@ -11,6 +11,7 @@ namespace Vexforge.Tier1
         private VexforgeApp app;
         private VexforgeTier1AssetRegistry assets;
         private VexforgeTier1BattleGate battleGate;
+        private VexforgeTier1Bootstrap presentationReadiness;
         private Canvas canvas;
         private Image hero;
         private Text eyebrow;
@@ -22,6 +23,7 @@ namespace Vexforge.Tier1
         private int step;
         private bool active;
         private bool tutorialBattleRequested;
+        private bool pendingStart;
 
         public void Initialize(VexforgeApp host, VexforgeTier1AssetRegistry registry)
         {
@@ -38,9 +40,28 @@ namespace Vexforge.Tier1
             if (battleGate != null) battleGate.BattleCompleted += OnBattleCompleted;
         }
 
+        public void BindPresentationReadiness(VexforgeTier1Bootstrap readiness)
+        {
+            if (presentationReadiness == readiness) return;
+            if (presentationReadiness != null)
+                presentationReadiness.PresentationReadinessChanged -= OnPresentationReadinessChanged;
+            presentationReadiness = readiness;
+            if (presentationReadiness != null)
+                presentationReadiness.PresentationReadinessChanged += OnPresentationReadinessChanged;
+        }
+
         public void TryStart()
         {
             if (app == null || app.Session == null || !app.Session.IsAuthenticated) return;
+            if (presentationReadiness == null || !presentationReadiness.IsPresentationReady)
+            {
+                pendingStart = true;
+                if (canvas != null) canvas.gameObject.SetActive(false);
+                if (presentationReadiness != null)
+                    presentationReadiness.RetryPresentationBinding("inicio del tutorial solicitado");
+                return;
+            }
+            pendingStart = false;
             var completeKey = CompleteKey();
             if (!string.IsNullOrWhiteSpace(completeKey) && PlayerPrefs.GetInt(completeKey, 0) == 1) return;
             step = Mathf.Clamp(PlayerPrefs.GetInt(StepKey(), 0), 0, 7);
@@ -55,6 +76,16 @@ namespace Vexforge.Tier1
             if (app == null || app.Session == null || !app.Session.IsAuthenticated || canvas == null)
                 return;
 
+            if (presentationReadiness == null || !presentationReadiness.IsPresentationReady)
+            {
+                pendingStart = true;
+                if (presentationReadiness != null)
+                    presentationReadiness.RetryPresentationBinding("tutorial manual solicitado");
+                Hide();
+                return;
+            }
+
+            pendingStart = false;
             step = 0;
             tutorialBattleRequested = false;
             active = true;
@@ -66,6 +97,20 @@ namespace Vexforge.Tier1
         {
             active = false;
             if (canvas != null) canvas.gameObject.SetActive(false);
+        }
+
+        private void OnPresentationReadinessChanged()
+        {
+            if (presentationReadiness == null) return;
+            if (!presentationReadiness.IsPresentationReady)
+            {
+                if (active) pendingStart = true;
+                Hide();
+                return;
+            }
+
+            if (pendingStart)
+                TryStart();
         }
 
         private void Build()
@@ -110,6 +155,14 @@ namespace Vexforge.Tier1
         {
             if (step == 5 && !tutorialBattleRequested)
             {
+                if (presentationReadiness == null || !presentationReadiness.IsPresentationReady)
+                {
+                    pendingStart = true;
+                    Hide();
+                    if (presentationReadiness != null)
+                        presentationReadiness.RetryPresentationBinding("tutorial solicitó Battle");
+                    return;
+                }
                 tutorialBattleRequested = true;
                 SaveStep();
                 Hide();
@@ -181,6 +234,11 @@ namespace Vexforge.Tier1
             hero.preserveAspect=false;
             if(old!=null)Destroy(old);
         }
-        private void OnDestroy() { if(battleGate!=null) battleGate.BattleCompleted-=OnBattleCompleted; }
+        private void OnDestroy()
+        {
+            if(battleGate!=null) battleGate.BattleCompleted-=OnBattleCompleted;
+            if(presentationReadiness!=null)
+                presentationReadiness.PresentationReadinessChanged-=OnPresentationReadinessChanged;
+        }
     }
 }

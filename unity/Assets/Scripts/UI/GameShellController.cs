@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using UnityEngine.InputSystem.UI;
 using Vexforge.Backend;
@@ -49,6 +50,73 @@ namespace Vexforge.UI
 
         internal VexforgeCardArtResolver CanonicalArtResolver => artResolver;
         internal BattlePresentationDirector CanonicalBattlePresentation => battleDirector;
+
+        internal bool TryGetCanonicalBattlePresentation(
+            out BattlePresentationDirector director,
+            out VexforgeBattlefieldStage stage,
+            out VexforgeCardArtResolver resolver,
+            out Camera camera,
+            out string reason)
+        {
+            director = null;
+            stage = null;
+            resolver = null;
+            camera = null;
+
+            var activeScene = SceneManager.GetActiveScene();
+            if (!isActiveAndEnabled || !gameObject.activeInHierarchy)
+            {
+                reason = "GameShellController is not active and enabled.";
+                return false;
+            }
+
+            if (!activeScene.IsValid() || !activeScene.isLoaded || gameObject.scene != activeScene)
+            {
+                reason = "GameShellController does not belong to the loaded active scene.";
+                return false;
+            }
+
+            if (!built || !battlePresentationInitialized)
+            {
+                reason = "GameShellController presentation host or battle initialization is incomplete.";
+                return false;
+            }
+
+            camera = presentationCamera;
+            if (camera == null || !camera.isActiveAndEnabled ||
+                !camera.gameObject.activeInHierarchy || camera.gameObject.scene != activeScene ||
+                Camera.main != camera)
+            {
+                reason = "The active MainCamera for the presentation is missing, inactive, or belongs to another scene.";
+                return false;
+            }
+
+            resolver = artResolver;
+            if (resolver == null || resolver.IsDisposed)
+            {
+                reason = "The canonical card-art resolver is missing or disposed.";
+                return false;
+            }
+
+            director = battleDirector;
+            if (director == null || !director.isActiveAndEnabled ||
+                !director.gameObject.activeInHierarchy || director.gameObject.scene != activeScene ||
+                !director.IsInitialized)
+            {
+                reason = "The canonical BattlePresentationDirector is missing, inactive, or not initialized in the active scene.";
+                return false;
+            }
+
+            stage = director.GetComponentInChildren<VexforgeBattlefieldStage>(true);
+            if (stage == null || !stage.IsInitialized || stage.gameObject.scene != activeScene)
+            {
+                reason = "The canonical VexforgeBattlefieldStage is missing, uninitialized, or outside the active scene.";
+                return false;
+            }
+
+            reason = null;
+            return true;
+        }
 
         private async void Start()
         {

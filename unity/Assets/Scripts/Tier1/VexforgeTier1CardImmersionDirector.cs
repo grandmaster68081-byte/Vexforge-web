@@ -18,9 +18,16 @@ namespace Vexforge.Tier1
 
         public void Initialize(BattlePresentationDirector canonical, VexforgeCardArtResolver _)
         {
+            var canonicalStage=canonical==null?null:canonical.GetComponentInChildren<VexforgeBattlefieldStage>(true);
+            if(director==canonical&&stage==canonicalStage&&bound)return;
+            if(director!=null&&bound)director.EventPresented-=OnEventPresented;
+            StopAllCoroutines();
+            activeResponses=0;
+            roundRobin=0;
             director=canonical;
-            stage=director==null?null:director.GetComponentInChildren<VexforgeBattlefieldStage>(true);
-            if(director==null||bound)return;
+            stage=canonicalStage;
+            bound=false;
+            if(director==null)return;
             director.EventPresented+=OnEventPresented;
             bound=true;
         }
