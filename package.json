@@ -18,7 +18,7 @@
     "verify:public-surface": "node scripts/verify-public-surface.mjs",
     "verify:supabase": "node scripts/verify-supabase-public-contract.mjs",
     "verify:quality": "node scripts/verify-quality.mjs",
-    "verify": "npm run verify:unity-lifecycle && npm run verify:syntax && npm run verify:portal && npm run verify:links && npm run verify:copy && npm run verify:public-surface && npm run verify:supabase && npm run verify:responsive && npm run verify:visual-residency && npm run verify:surface-lighting && npm run verify:visual-assets && npm run verify:quality",
+    "verify": "npm run verify:unity-lifecycle && npm run verify:unity-card-presentation && npm run verify:syntax && npm run verify:portal && npm run verify:links && npm run verify:copy && npm run verify:public-surface && npm run verify:supabase && npm run verify:responsive && npm run verify:visual-residency && npm run verify:surface-lighting && npm run verify:visual-assets && npm run verify:quality",
     "verify:links": "node scripts/verify-links.mjs",
     "verify:responsive": "node scripts/verify-responsive-contract.mjs",
     "verify:visual-residency": "node scripts/verify-visual-residency.mjs",
@@ -27,7 +27,8 @@
     "verify:card-art": "node scripts/verify-card-art.mjs",
     "verify:unity-assets": "node scripts/verify-tier1-unity-assets.mjs",
     "verify:unity-lifecycle": "node scripts/verify-unity-battle-lifecycle.mjs",
-    "verify:visual-production": "npm run verify:unity-lifecycle && npm run verify:unity-assets && npm run verify:card-art"
+    "verify:unity-card-presentation": "node scripts/verify-unity-card-presentation.mjs",
+    "verify:visual-production": "npm run verify:unity-lifecycle && npm run verify:unity-card-presentation && npm run verify:unity-assets && npm run verify:card-art"
   },
   "dependencies": {
     "react": "18.3.1",

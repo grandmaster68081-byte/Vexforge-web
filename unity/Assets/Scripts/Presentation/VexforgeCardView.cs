@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -19,8 +20,11 @@ namespace Vexforge.Presentation
         private Renderer bodyRenderer;
         private Renderer artRenderer;
         private Renderer frameRenderer;
+        private Mesh bodyMesh;
+        private Mesh artMesh;
         private Mesh frameMesh;
         private Material artMaterialInstance;
+        private Texture2D unavailableArtTexture;
         private TextMesh artStatusLabel;
         private VexforgeCardArtResolver resolver;
         private VexforgeTextureLruCache.TextureLease lease;
@@ -31,18 +35,27 @@ namespace Vexforge.Presentation
 
         private static readonly Vector2 CardSize = new Vector2(1.65f, 2.30f);
         private static readonly Vector2 IllustrationSize = new Vector2(1.50f, 1.72f);
+        private const float CardDepth = 0.08f;
+        private const string UnavailableArtResourcesKey =
+            "VexforgeTier1/Art/VF_CARD_FALLBACK_NEUTRAL";
+        private static readonly Color UnavailableArtTint = new Color(0.12f, 0.34f, 0.44f, 1f);
 
         public static VexforgeCardView CreateRuntime(Transform parent)
         {
-            var root = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            var root = new GameObject("VexforgeCardView");
             root.name = "VexforgeCardView";
             root.transform.SetParent(parent, false);
-            root.transform.localScale = new Vector3(CardSize.x, CardSize.y, 0.08f);
-            var rootCollider = root.GetComponent<Collider>();
-            if (rootCollider == null) rootCollider = root.AddComponent<BoxCollider>();
+            root.transform.localScale = Vector3.one;
+
+            var bodyFilter = root.AddComponent<MeshFilter>();
+            root.AddComponent<MeshRenderer>();
+            var rootCollider = root.AddComponent<BoxCollider>();
+            rootCollider.size = new Vector3(CardSize.x, CardSize.y, CardDepth);
             rootCollider.isTrigger = false;
 
             var view = root.AddComponent<VexforgeCardView>();
+            view.bodyMesh = BuildCardBodyMesh();
+            bodyFilter.sharedMesh = view.bodyMesh;
             view.InitializeVisuals();
             return view;
         }
@@ -216,13 +229,16 @@ namespace Vexforge.Presentation
             initialized = true;
 
             bodyRenderer = GetComponent<Renderer>();
+            unavailableArtTexture = Resources.Load<Texture2D>(UnavailableArtResourcesKey);
 
-            var artObject = GameObject.CreatePrimitive(PrimitiveType.Quad);
+            var artObject = new GameObject("OfficialCardArt");
             artObject.name = "OfficialCardArt";
             artObject.transform.SetParent(transform, false);
             artObject.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
-            artRenderer = artObject.GetComponent<Renderer>();
-            RemoveCollider(artObject);
+            var artFilter = artObject.AddComponent<MeshFilter>();
+            artRenderer = artObject.AddComponent<MeshRenderer>();
+            artMesh = BuildArtworkQuadMesh();
+            artFilter.sharedMesh = artMesh;
 
             var frameObject = new GameObject("IllustrationFrame");
             frameObject.transform.SetParent(transform, false);
@@ -256,16 +272,17 @@ namespace Vexforge.Presentation
         {
             if (artMaterialInstance == null) return false;
 
+            var displayedTexture = texture != null ? texture : unavailableArtTexture;
             var hasTextureProperty = false;
             if (artMaterialInstance.HasProperty("_BaseMap"))
             {
-                artMaterialInstance.SetTexture("_BaseMap", texture);
+                artMaterialInstance.SetTexture("_BaseMap", displayedTexture);
                 hasTextureProperty = true;
             }
 
             if (artMaterialInstance.HasProperty("_MainTex"))
             {
-                artMaterialInstance.SetTexture("_MainTex", texture);
+                artMaterialInstance.SetTexture("_MainTex", displayedTexture);
                 hasTextureProperty = true;
             }
 
@@ -273,17 +290,17 @@ namespace Vexforge.Presentation
             {
                 artMaterialInstance.SetColor(
                     "_BaseColor",
-                    texture == null
-                        ? new Color(0.04f, 0.04f, 0.05f, 1f)
-                        : Color.white);
+                    displayedTexture == null ? UnavailableArtTint : Color.white);
             }
             else if (artMaterialInstance.HasProperty("_Color"))
             {
-                artMaterialInstance.SetColor("_Color", texture == null
-                    ? new Color(0.04f, 0.04f, 0.05f, 1f)
-                    : Color.white);
+                artMaterialInstance.SetColor(
+                    "_Color",
+                    displayedTexture == null ? UnavailableArtTint : Color.white);
             }
 
+            // The fallback is an explicit loading/error surface, never a successful
+            // substitute for the official Supabase card image.
             return texture != null && hasTextureProperty;
         }
 
@@ -299,7 +316,7 @@ namespace Vexforge.Presentation
             {
                 var statusObject = new GameObject("CardArtStatus");
                 statusObject.transform.SetParent(transform, false);
-                statusObject.transform.localPosition = new Vector3(0f, 0f, -0.074f);
+                statusObject.transform.localPosition = new Vector3(0f, -0.78f, -0.074f);
                 statusObject.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
                 artStatusLabel = statusObject.AddComponent<TextMesh>();
                 artStatusLabel.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
@@ -335,10 +352,180 @@ namespace Vexforge.Presentation
             current.Dispose();
         }
 
-        private static void RemoveCollider(GameObject target)
+        private static Mesh BuildCardBodyMesh()
         {
-            var collider = target.GetComponent<Collider>();
-            if (collider != null) Object.Destroy(collider);
+            const int segmentsPerCorner = 6;
+            const float outerCornerRadius = 0.13f;
+            const float bevelWidth = 0.028f;
+            const float bevelDepth = 0.018f;
+
+            var insetOutline = BuildRoundedRectOutline(
+                CardSize.x - bevelWidth * 2f,
+                CardSize.y - bevelWidth * 2f,
+                outerCornerRadius - bevelWidth,
+                segmentsPerCorner);
+            var outerOutline = BuildRoundedRectOutline(
+                CardSize.x,
+                CardSize.y,
+                outerCornerRadius,
+                segmentsPerCorner);
+
+            var vertices = new List<Vector3>(insetOutline.Length * 4 + 2);
+            var triangles = new List<int>(insetOutline.Length * 24);
+            var frontFace = AddRing(vertices, insetOutline, -CardDepth * 0.5f);
+            var frontBevel = AddRing(vertices, outerOutline, -CardDepth * 0.5f + bevelDepth);
+            var backBevel = AddRing(vertices, outerOutline, CardDepth * 0.5f - bevelDepth);
+            var backFace = AddRing(vertices, insetOutline, CardDepth * 0.5f);
+
+            var frontCenter = vertices.Count;
+            vertices.Add(new Vector3(0f, 0f, -CardDepth * 0.5f));
+            var backCenter = vertices.Count;
+            vertices.Add(new Vector3(0f, 0f, CardDepth * 0.5f));
+
+            AddFaceFan(triangles, frontCenter, frontFace, insetOutline.Length, false);
+            AddFaceFan(triangles, backCenter, backFace, insetOutline.Length, true);
+            ConnectRings(vertices, triangles, frontFace, frontBevel, insetOutline.Length, -1f);
+            ConnectRings(vertices, triangles, frontBevel, backBevel, insetOutline.Length, 0f);
+            ConnectRings(vertices, triangles, backBevel, backFace, insetOutline.Length, 1f);
+
+            var mesh = new Mesh { name = "VexforgeBeveledCardBody" };
+            mesh.SetVertices(vertices);
+            mesh.SetTriangles(triangles, 0);
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+            return mesh;
+        }
+
+        private static Vector2[] BuildRoundedRectOutline(
+            float width,
+            float height,
+            float radius,
+            int segmentsPerCorner)
+        {
+            var halfWidth = width * 0.5f;
+            var halfHeight = height * 0.5f;
+            var clampedRadius = Mathf.Clamp(radius, 0.001f, Mathf.Min(halfWidth, halfHeight));
+            var centers = new[]
+            {
+                new Vector2(halfWidth - clampedRadius, halfHeight - clampedRadius),
+                new Vector2(-halfWidth + clampedRadius, halfHeight - clampedRadius),
+                new Vector2(-halfWidth + clampedRadius, -halfHeight + clampedRadius),
+                new Vector2(halfWidth - clampedRadius, -halfHeight + clampedRadius),
+            };
+            var points = new Vector2[segmentsPerCorner * 4];
+            var outputIndex = 0;
+
+            for (var corner = 0; corner < centers.Length; corner++)
+            {
+                var startAngle = corner * 90f;
+                for (var segment = 0; segment < segmentsPerCorner; segment++)
+                {
+                    var angle = (startAngle + segment * (90f / segmentsPerCorner)) * Mathf.Deg2Rad;
+                    points[outputIndex++] = centers[corner] +
+                        new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * clampedRadius;
+                }
+            }
+
+            return points;
+        }
+
+        private static int AddRing(List<Vector3> vertices, Vector2[] outline, float z)
+        {
+            var start = vertices.Count;
+            foreach (var point in outline) vertices.Add(new Vector3(point.x, point.y, z));
+            return start;
+        }
+
+        private static void AddFaceFan(
+            List<int> triangles,
+            int center,
+            int ring,
+            int count,
+            bool facesPositiveZ)
+        {
+            for (var index = 0; index < count; index++)
+            {
+                var current = ring + index;
+                var next = ring + (index + 1) % count;
+                if (facesPositiveZ)
+                {
+                    triangles.Add(center);
+                    triangles.Add(current);
+                    triangles.Add(next);
+                }
+                else
+                {
+                    triangles.Add(center);
+                    triangles.Add(next);
+                    triangles.Add(current);
+                }
+            }
+        }
+
+        private static void ConnectRings(
+            List<Vector3> vertices,
+            List<int> triangles,
+            int firstRing,
+            int secondRing,
+            int count,
+            float faceDirectionZ)
+        {
+            for (var index = 0; index < count; index++)
+            {
+                var next = (index + 1) % count;
+                var a = firstRing + index;
+                var b = firstRing + next;
+                var c = secondRing + next;
+                var d = secondRing + index;
+                var midpoint = (vertices[a] + vertices[b] + vertices[c] + vertices[d]) * 0.25f;
+                var outward = new Vector3(midpoint.x, midpoint.y, faceDirectionZ);
+                AddOrientedTriangle(vertices, triangles, a, b, c, outward);
+                AddOrientedTriangle(vertices, triangles, a, c, d, outward);
+            }
+        }
+
+        private static void AddOrientedTriangle(
+            List<Vector3> vertices,
+            List<int> triangles,
+            int a,
+            int b,
+            int c,
+            Vector3 desiredNormal)
+        {
+            var normal = Vector3.Cross(vertices[b] - vertices[a], vertices[c] - vertices[a]);
+            if (Vector3.Dot(normal, desiredNormal) < 0f)
+            {
+                var swap = b;
+                b = c;
+                c = swap;
+            }
+
+            triangles.Add(a);
+            triangles.Add(b);
+            triangles.Add(c);
+        }
+
+        private static Mesh BuildArtworkQuadMesh()
+        {
+            var mesh = new Mesh { name = "VexforgeOfficialCardArtworkSurface" };
+            mesh.vertices = new[]
+            {
+                new Vector3(-0.5f, -0.5f, 0f),
+                new Vector3(0.5f, -0.5f, 0f),
+                new Vector3(0.5f, 0.5f, 0f),
+                new Vector3(-0.5f, 0.5f, 0f),
+            };
+            mesh.uv = new[]
+            {
+                new Vector2(0f, 0f),
+                new Vector2(1f, 0f),
+                new Vector2(1f, 1f),
+                new Vector2(0f, 1f),
+            };
+            mesh.triangles = new[] { 0, 1, 2, 0, 2, 3 };
+            mesh.RecalculateNormals();
+            mesh.RecalculateBounds();
+            return mesh;
         }
 
         private static Mesh BuildFrameMesh()
@@ -406,6 +593,16 @@ namespace Vexforge.Presentation
             if (artMaterialInstance != null)
             {
                 Object.Destroy(artMaterialInstance);
+            }
+
+            if (artMesh != null)
+            {
+                Object.Destroy(artMesh);
+            }
+
+            if (bodyMesh != null)
+            {
+                Object.Destroy(bodyMesh);
             }
 
             if (frameMesh != null)
