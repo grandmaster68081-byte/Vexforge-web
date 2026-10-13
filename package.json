@@ -23,7 +23,10 @@
     "verify:responsive": "node scripts/verify-responsive-contract.mjs",
     "verify:visual-residency": "node scripts/verify-visual-residency.mjs",
     "verify:surface-lighting": "node scripts/verify-surface-lighting.mjs",
-    "verify:visual-assets": "node scripts/verify-visual-assets.mjs"
+    "verify:visual-assets": "node scripts/verify-visual-assets.mjs",
+    "verify:card-art": "node scripts/verify-card-art.mjs",
+    "verify:unity-assets": "node scripts/verify-tier1-unity-assets.mjs",
+    "verify:visual-production": "npm run verify:unity-assets && npm run verify:card-art"
   },
   "dependencies": {
     "react": "18.3.1",

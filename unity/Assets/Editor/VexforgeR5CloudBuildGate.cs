@@ -2,6 +2,7 @@
 using UnityEditor.Build;
 using UnityEditor.Build.Reporting;
 using UnityEngine;
+using Vexforge.Tier1.Editor;
 using Vexforge.Presentation.Editor;
 
 namespace Vexforge.Presentation.Editor
@@ -18,6 +19,7 @@ namespace Vexforge.Presentation.Editor
         public static void PreExport()
         {
             Debug.Log("VEXFORGE R5 CLOUD EDITOR GATE: START");
+            VexforgeTier1BuildValidator.ValidateVisualAssetsOrThrow();
             VexforgeR5FoundationGate.ExecuteBatch();
             Debug.Log("VEXFORGE R5 CLOUD EDITOR GATE: PASS");
         }

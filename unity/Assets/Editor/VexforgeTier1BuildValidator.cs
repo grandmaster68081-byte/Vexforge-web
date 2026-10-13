@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using UnityEditor;
+using UnityEditor.Build;
 using UnityEngine;
+using Vexforge.Tier1;
 
 namespace Vexforge.Tier1.Editor
 {
@@ -60,6 +62,7 @@ namespace Vexforge.Tier1.Editor
                 Require(manifest, "\"known_count\": 127", "127-card inventory", errors);
                 Require(manifest, "\"local_card_art_copy_forbidden\": true", "Remote card art guard", errors);
             }
+            ValidateTier1AssetManifest(projectRoot, errors);
 
             var shellPath = Path.Combine(projectRoot, "Assets/Scripts/UI/GameShellController.cs");
             if (File.Exists(shellPath))
@@ -153,6 +156,190 @@ namespace Vexforge.Tier1.Editor
 
             foreach (var warning in warnings) Debug.LogWarning("VEXFORGE V15.1 WARNING: " + warning);
             Debug.Log("VEXFORGE V15.1 production closure PASS");
+        }
+
+        public static void ValidateVisualAssetsOrThrow()
+        {
+            var projectRoot = Path.GetFullPath(Path.Combine(Application.dataPath, ".."));
+            var errors = new List<string>();
+            ValidateTier1AssetManifest(projectRoot, errors);
+            if (errors.Count > 0)
+            {
+                throw new BuildFailedException(
+                    "VEXFORGE visual asset manifest failed validation:\n- " +
+                    string.Join("\n- ", errors.ToArray()));
+            }
+        }
+
+        private static void ValidateTier1AssetManifest(string projectRoot, List<string> errors)
+        {
+            var manifestPath = Path.Combine(
+                projectRoot,
+                "Assets/Resources/VexforgeTier1/VexforgeTier1AssetManifest.json");
+            if (!File.Exists(manifestPath))
+            {
+                errors.Add("Falta VexforgeTier1AssetManifest.json.");
+                return;
+            }
+
+            VexforgeTier1AssetManifest manifest;
+            try
+            {
+                manifest = JsonUtility.FromJson<VexforgeTier1AssetManifest>(File.ReadAllText(manifestPath));
+            }
+            catch
+            {
+                errors.Add("No se pudo leer VexforgeTier1AssetManifest.json.");
+                return;
+            }
+
+            if (manifest == null || manifest.assets == null || manifest.assets.Length == 0)
+            {
+                errors.Add("El manifiesto Tier1 no contiene entradas de assets utilizables.");
+                return;
+            }
+
+            if (manifest.schema_version != "3.0")
+                errors.Add("El manifiesto Tier1 usa un schema_version no compatible: " + manifest.schema_version);
+            if (manifest.official_card_art_source == null ||
+                manifest.official_card_art_source.known_count != 127 ||
+                !manifest.official_card_art_source.local_card_art_copy_forbidden ||
+                manifest.official_card_art_source.replacement_artwork_for_official_127)
+            {
+                errors.Add("El contrato del catálogo oficial de 127 cartas no es válido.");
+            }
+
+            var ids = new HashSet<string>();
+            var resourceKeys = new HashSet<string>();
+            var extensions = new[]
+            {
+                ".png", ".jpg", ".jpeg", ".tga", ".tif", ".tiff",
+                ".wav", ".mp3", ".ogg"
+            };
+            var criticalTextures = 0;
+
+            foreach (var entry in manifest.assets)
+            {
+                if (entry == null ||
+                    string.IsNullOrWhiteSpace(entry.asset_id) ||
+                    string.IsNullOrWhiteSpace(entry.domain) ||
+                    string.IsNullOrWhiteSpace(entry.resources_key))
+                {
+                    errors.Add("El manifiesto contiene una entrada sin asset_id, domain o resources_key.");
+                    continue;
+                }
+
+                if (!ids.Add(entry.asset_id))
+                    errors.Add("ID duplicado en el manifiesto: " + entry.asset_id);
+                if (!resourceKeys.Add(entry.resources_key))
+                    errors.Add("Resources key duplicada en el manifiesto: " + entry.resources_key);
+
+                if (entry.domain == "card/art" ||
+                    entry.domain == "official_card_art" ||
+                    entry.resources_key.ToLowerInvariant().Contains("/cards/"))
+                {
+                    errors.Add("El arte oficial de cartas debe permanecer remoto: " + entry.asset_id);
+                }
+
+                if (entry.identity_critical && !string.IsNullOrWhiteSpace(entry.fallback_id))
+                    errors.Add("Un asset visual crítico no puede declarar fallback: " + entry.asset_id);
+
+                if (!string.IsNullOrWhiteSpace(entry.fallback_id))
+                {
+                    VexforgeTier1AssetEntry fallback = null;
+                    foreach (var candidate in manifest.assets)
+                    {
+                        if (candidate != null &&
+                            string.Equals(candidate.asset_id, entry.fallback_id, System.StringComparison.OrdinalIgnoreCase))
+                        {
+                            fallback = candidate;
+                            break;
+                        }
+                    }
+
+                    if (fallback == null ||
+                        fallback.identity_critical ||
+                        !string.Equals(entry.domain, fallback.domain, System.StringComparison.OrdinalIgnoreCase))
+                    {
+                        errors.Add("Fallback desconocido, crítico o de otro dominio: " + entry.asset_id);
+                    }
+                }
+
+                var resourcesRoot = Path.GetFullPath(Path.Combine(projectRoot, "Assets/Resources"));
+                var resourceBase = Path.GetFullPath(Path.Combine(
+                    resourcesRoot,
+                    entry.resources_key.Replace('/', Path.DirectorySeparatorChar)));
+                if (!resourceBase.StartsWith(resourcesRoot + Path.DirectorySeparatorChar, System.StringComparison.Ordinal))
+                {
+                    errors.Add("Resources key fuera de Assets/Resources: " + entry.asset_id);
+                    continue;
+                }
+
+                var candidates = new List<string>();
+                foreach (var extension in extensions)
+                {
+                    var candidate = resourceBase + extension;
+                    if (File.Exists(candidate)) candidates.Add(candidate);
+                }
+
+                if (candidates.Count != 1)
+                {
+                    errors.Add(
+                        "Se esperaba un único archivo local para " + entry.asset_id +
+                        " y se encontraron " + candidates.Count + ".");
+                    continue;
+                }
+
+                var assetPath = candidates[0]
+                    .Substring(projectRoot.Length + 1)
+                    .Replace('\\', '/');
+                var importedAsset = AssetDatabase.LoadMainAssetAtPath(assetPath);
+                if (importedAsset == null)
+                {
+                    errors.Add("Unity no importó el asset: " + entry.asset_id + " (" + assetPath + ")");
+                    continue;
+                }
+
+                if (entry.domain == "audio")
+                {
+                    var clip = AssetDatabase.LoadAssetAtPath<AudioClip>(assetPath);
+                    if (clip == null || Resources.Load<AudioClip>(entry.resources_key) == null)
+                        errors.Add("El cue de audio no está importado en Resources: " + entry.asset_id);
+                    continue;
+                }
+
+                var texture = AssetDatabase.LoadAssetAtPath<Texture2D>(assetPath);
+                var runtimeTexture = Resources.Load<Texture2D>(entry.resources_key);
+                if (texture == null || runtimeTexture == null)
+                {
+                    errors.Add("La textura no se importa o no se incluye en Resources: " + entry.asset_id);
+                    continue;
+                }
+
+                if (entry.identity_critical)
+                {
+                    criticalTextures++;
+                    if (texture.width < 256 || texture.height < 256)
+                    {
+                        errors.Add(
+                            "La textura crítica es menor que 256x256: " + entry.asset_id +
+                            " (" + texture.width + "x" + texture.height + ")");
+                    }
+                }
+
+                if (AssetImporter.GetAtPath(assetPath) == null ||
+                    string.IsNullOrWhiteSpace(AssetDatabase.AssetPathToGUID(assetPath)))
+                {
+                    errors.Add("Falta importer o GUID estable para: " + entry.asset_id);
+                }
+            }
+
+            if (errors.Count == 0)
+            {
+                Debug.Log(
+                    "VEXFORGE Tier1 asset manifest PASS — " + manifest.assets.Length +
+                    " assets importados; " + criticalTextures + " texturas críticas cargables desde Resources.");
+            }
         }
 
         private static void CheckFile(string root, string relative, List<string> errors)

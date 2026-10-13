@@ -8,6 +8,29 @@ using Vexforge.Backend;
 
 namespace Vexforge.Presentation
 {
+    public sealed class VexforgeCardArtDiagnostic
+    {
+        public string CardId { get; private set; }
+        public string Stage { get; private set; }
+        public string Status { get; private set; }
+        public string ErrorType { get; private set; }
+        public long HttpStatusCode { get; private set; }
+
+        public VexforgeCardArtDiagnostic(
+            string cardId,
+            string stage,
+            string status,
+            string errorType,
+            long httpStatusCode)
+        {
+            CardId = cardId ?? string.Empty;
+            Stage = stage ?? string.Empty;
+            Status = status ?? string.Empty;
+            ErrorType = errorType ?? string.Empty;
+            HttpStatusCode = httpStatusCode;
+        }
+    }
+
     /// <summary>
     /// Bounded loader for official VEXFORGE card art.
     /// Only the canonical Supabase host/bucket path is accepted.
@@ -21,15 +44,34 @@ namespace Vexforge.Presentation
 
         private readonly VexforgeTextureLruCache cache;
         private readonly SemaphoreSlim concurrency;
-        private readonly Dictionary<string, Task<Texture2D>> inFlight =
-            new Dictionary<string, Task<Texture2D>>(StringComparer.Ordinal);
+        private readonly Dictionary<string, Task<LoadOutcome>> inFlight =
+            new Dictionary<string, Task<LoadOutcome>>(StringComparer.Ordinal);
         private readonly object inFlightGate = new object();
         private readonly int timeoutSeconds;
         private readonly long maxDownloadBytes;
         private readonly int maxDimension;
         private bool disposed;
 
+        public event Action<VexforgeCardArtDiagnostic> Diagnostic;
         public bool IsDisposed { get { return disposed; } }
+
+        private sealed class LoadOutcome
+        {
+            public readonly Texture2D Texture;
+            public readonly string Stage;
+            public readonly string Status;
+            public readonly long HttpStatusCode;
+
+            public LoadOutcome(Texture2D texture, string stage, string status, long httpStatusCode)
+            {
+                Texture = texture;
+                Stage = stage;
+                Status = status;
+                HttpStatusCode = httpStatusCode;
+            }
+
+            public bool Succeeded { get { return Texture != null && Status == "decoded"; } }
+        }
 
         public VexforgeCardArtResolver(
             VexforgeTextureLruCache cache,
@@ -55,17 +97,47 @@ namespace Vexforge.Presentation
             CardRecord card,
             CancellationToken cancellationToken = default(CancellationToken))
         {
-            if (disposed || card == null || string.IsNullOrWhiteSpace(card.image_url)) return null;
+            var cardId = card == null ? string.Empty : card.id;
+            if (disposed)
+            {
+                ReportDiagnostic(cardId, "load", "resolver_disposed", "resolver_disposed", 0L, false);
+                return null;
+            }
+
+            if (card == null)
+            {
+                ReportDiagnostic(cardId, "load", "card_missing", "card_missing", 0L, false);
+                return null;
+            }
+
+            if (string.IsNullOrWhiteSpace(card.image_url))
+            {
+                ReportDiagnostic(cardId, "url", "image_url_missing", "image_url_missing", 0L, false);
+                return null;
+            }
 
             string cacheKey;
             var normalizedUrl = card.image_url.Trim();
-            if (!TryValidateOfficialCardUrl(normalizedUrl, out cacheKey)) return null;
-            if (cancellationToken.IsCancellationRequested) return null;
+            if (!TryValidateOfficialCardUrl(normalizedUrl, out cacheKey))
+            {
+                ReportDiagnostic(cardId, "url", "official_url_rejected", "official_url_rejected", 0L, false);
+                return null;
+            }
+
+            if (cancellationToken.IsCancellationRequested)
+            {
+                ReportDiagnostic(cardId, "load", "cancelled", "cancelled", 0L, false);
+                return null;
+            }
 
             var cached = cache.TryAcquire(cacheKey);
-            if (cached != null) return cached;
+            if (cached != null)
+            {
+                ReportDiagnostic(cardId, "load", "cache_hit", string.Empty, 0L, true);
+                return cached;
+            }
 
-            Task<Texture2D> shared;
+            Task<LoadOutcome> shared;
             lock (inFlightGate)
             {
                 if (!inFlight.TryGetValue(cacheKey, out shared))
@@ -84,20 +156,65 @@ namespace Vexforge.Presentation
                     using (cancellationToken.Register(() => cancellationSource.TrySetResult(true)))
                     {
                         var completed = await Task.WhenAny(shared, cancellationSource.Task);
-                        if (completed != shared) return null;
+                        if (completed != shared)
+                        {
+                            ReportDiagnostic(cardId, "load", "cancelled", "cancelled", 0L, false);
+                            return null;
+                        }
                     }
                 }
 
-                await shared;
+                var outcome = await shared;
+                if (outcome == null)
+                {
+                    ReportDiagnostic(cardId, "load", "empty_load_result", "empty_load_result", 0L, false);
+                    return null;
+                }
+
+                if (!outcome.Succeeded)
+                {
+                    ReportDiagnostic(
+                        cardId,
+                        outcome.Stage,
+                        outcome.Status,
+                        outcome.Status,
+                        outcome.HttpStatusCode,
+                        false);
+                    return null;
+                }
             }
-            catch (Exception ex)
+            catch
             {
-                Debug.LogWarning("VEXFORGE card-art load failed: " + ex.Message);
+                ReportDiagnostic(cardId, "load", "unexpected_load_failure", "unexpected_load_failure", 0L, false);
                 return null;
             }
 
-            if (disposed || cancellationToken.IsCancellationRequested) return null;
-            return cache.TryAcquire(cacheKey);
+            if (disposed || cancellationToken.IsCancellationRequested)
+            {
+                ReportDiagnostic(cardId, "load", "cancelled", "cancelled", 0L, false);
+                return null;
+            }
+
+            var lease = cache.TryAcquire(cacheKey);
+            if (lease == null)
+            {
+                ReportDiagnostic(cardId, "cache", "cache_entry_unavailable", "cache_entry_unavailable", 0L, false);
+                return null;
+            }
+
+            ReportDiagnostic(cardId, "decode", "decoded", string.Empty, 0L, true);
+            return lease;
+        }
+
+        public void ReportAssignment(CardRecord card, bool assigned, string errorType = null)
+        {
+            var cardId = card == null ? string.Empty : card.id;
+            var status = assigned ? "assigned" : "assignment_failed";
+            var failure = assigned ? string.Empty : string.IsNullOrWhiteSpace(errorType)
+                ? "assignment_failed"
+                : errorType;
+
+            ReportDiagnostic(cardId, "assignment", status, failure, 0L, assigned);
         }
 
         public void Dispose()
@@ -117,7 +234,7 @@ namespace Vexforge.Presentation
             // lifetime and may have more than one presentation consumer.
         }
 
-        private async Task ObserveCompletionAsync(string cacheKey, Task<Texture2D> shared)
+        private async Task ObserveCompletionAsync(string cacheKey, Task<LoadOutcome> shared)
         {
             try
             {
@@ -131,7 +248,7 @@ namespace Vexforge.Presentation
             {
                 lock (inFlightGate)
                 {
-                    Task<Texture2D> current;
+                    Task<LoadOutcome> current;
                     if (inFlight.TryGetValue(cacheKey, out current) && ReferenceEquals(current, shared))
                     {
                         inFlight.Remove(cacheKey);
@@ -145,12 +262,12 @@ namespace Vexforge.Presentation
             }
         }
 
-        private async Task<Texture2D> LoadAndCacheAsync(string cacheKey, string requestUrl)
+        private async Task<LoadOutcome> LoadAndCacheAsync(string cacheKey, string requestUrl)
         {
             await concurrency.WaitAsync();
             try
             {
-                if (disposed) return null;
+                if (disposed) return new LoadOutcome(null, "load", "resolver_disposed", 0L);
 
                 using (var request = UnityWebRequestTexture.GetTexture(requestUrl, true))
                 {
@@ -163,7 +280,7 @@ namespace Vexforge.Presentation
                         if (request.downloadedBytes > (ulong)maxDownloadBytes)
                         {
                             request.Abort();
-                            return null;
+                            return new LoadOutcome(null, "load", "download_too_large", request.responseCode);
                         }
 
                         await Task.Yield();
@@ -171,12 +288,13 @@ namespace Vexforge.Presentation
 
                     if (request.result != UnityWebRequest.Result.Success)
                     {
-                        return null;
+                        var status = request.responseCode >= 400L ? "http_error" : "transport_error";
+                        return new LoadOutcome(null, "load", status, request.responseCode);
                     }
 
                     if (request.downloadedBytes > (ulong)maxDownloadBytes)
                     {
-                        return null;
+                        return new LoadOutcome(null, "load", "download_too_large", request.responseCode);
                     }
 
                     var responseLength = request.GetResponseHeader("Content-Length");
@@ -186,7 +304,7 @@ namespace Vexforge.Presentation
                         if (long.TryParse(responseLength, out declaredLength) &&
                             declaredLength > maxDownloadBytes)
                         {
-                            return null;
+                            return new LoadOutcome(null, "load", "declared_download_too_large", request.responseCode);
                         }
                     }
 
@@ -194,18 +312,31 @@ namespace Vexforge.Presentation
                     if (string.IsNullOrWhiteSpace(contentType) ||
                         !contentType.StartsWith("image/", StringComparison.OrdinalIgnoreCase))
                     {
-                        return null;
+                        return new LoadOutcome(null, "load", "invalid_content_type", request.responseCode);
                     }
 
-                    var texture = DownloadHandlerTexture.GetContent(request);
-                    if (texture == null ||
-                        texture.width <= 0 ||
+                    Texture2D texture;
+                    try
+                    {
+                        texture = DownloadHandlerTexture.GetContent(request);
+                    }
+                    catch
+                    {
+                        return new LoadOutcome(null, "decode", "decode_failed", request.responseCode);
+                    }
+
+                    if (texture == null)
+                    {
+                        return new LoadOutcome(null, "decode", "decode_failed", request.responseCode);
+                    }
+
+                    if (texture.width <= 0 ||
                         texture.height <= 0 ||
                         texture.width > maxDimension ||
                         texture.height > maxDimension)
                     {
-                        if (texture != null) UnityEngine.Object.Destroy(texture);
-                        return null;
+                        UnityEngine.Object.Destroy(texture);
+                        return new LoadOutcome(null, "decode", "dimensions_rejected", request.responseCode);
                     }
 
                     texture.wrapMode = TextureWrapMode.Clamp;
@@ -215,15 +346,58 @@ namespace Vexforge.Presentation
                     if (!cache.Store(cacheKey, texture))
                     {
                         UnityEngine.Object.Destroy(texture);
-                        return null;
+                        return new LoadOutcome(null, "cache", "cache_store_rejected", request.responseCode);
                     }
 
-                    return texture;
+                    return new LoadOutcome(texture, "decode", "decoded", request.responseCode);
                 }
             }
             finally
             {
                 concurrency.Release();
+            }
+        }
+
+        private void ReportDiagnostic(
+            string cardId,
+            string stage,
+            string status,
+            string errorType,
+            long httpStatusCode,
+            bool succeeded)
+        {
+            var diagnostic = new VexforgeCardArtDiagnostic(
+                cardId,
+                stage,
+                status,
+                errorType,
+                httpStatusCode);
+            var handlers = Diagnostic;
+
+            if (handlers != null)
+            {
+                foreach (var callback in handlers.GetInvocationList())
+                {
+                    try
+                    {
+                        var handler = (Action<VexforgeCardArtDiagnostic>)callback;
+                        handler(diagnostic);
+                    }
+                    catch
+                    {
+                        Debug.LogWarning("VEXFORGE card-art diagnostic listener failed.");
+                    }
+                }
+            }
+
+            if (!succeeded)
+            {
+                Debug.LogWarning(
+                    "VEXFORGE card-art diagnostic: card_id=" + diagnostic.CardId +
+                    " stage=" + diagnostic.Stage +
+                    " status=" + diagnostic.Status +
+                    " error_type=" + diagnostic.ErrorType +
+                    " http_status=" + diagnostic.HttpStatusCode);
             }
         }
 

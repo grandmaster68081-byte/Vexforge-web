@@ -21,6 +21,7 @@ namespace Vexforge.Presentation
         private Renderer frameRenderer;
         private Mesh frameMesh;
         private Material artMaterialInstance;
+        private TextMesh artStatusLabel;
         private VexforgeCardArtResolver resolver;
         private VexforgeTextureLruCache.TextureLease lease;
         private CancellationTokenSource bindCancellation;
@@ -76,6 +77,27 @@ namespace Vexforge.Presentation
             CardArtMode presentationMode,
             CancellationToken externalCancellation = default(CancellationToken))
         {
+            _ = BindAsync(
+                card,
+                ownership,
+                selected,
+                activeInBattle,
+                locked,
+                artResolver,
+                presentationMode,
+                externalCancellation);
+        }
+
+        public async Task<bool> BindAsync(
+            CardRecord card,
+            PlayerCardRecord ownership,
+            bool selected,
+            bool activeInBattle,
+            bool locked,
+            VexforgeCardArtResolver artResolver,
+            CardArtMode presentationMode,
+            CancellationToken externalCancellation = default(CancellationToken))
+        {
             if (!initialized) InitializeVisuals();
             resolver = artResolver;
             BoundCard = card;
@@ -87,11 +109,14 @@ namespace Vexforge.Presentation
 
             ApplyTexture(null);
             SetArtMode(presentationMode);
+            SetArtStatus(card == null || resolver == null ? "ARTE NO DISPONIBLE" : "CARGANDO ARTE", VexforgeCardArtStatusColor);
 
-            if (card != null && resolver != null)
+            if (card == null || resolver == null)
             {
-                _ = BindArtAsync(card, generation, externalCancellation);
+                return false;
             }
+
+            return await BindArtAsync(card, generation, externalCancellation);
         }
 
         public void Bind(
@@ -123,10 +148,11 @@ namespace Vexforge.Presentation
             BoundCard = null;
             ApplyTexture(null);
             SetArtMode(CardArtMode.FullCardArtwork);
+            SetArtStatus(null, Color.white);
             gameObject.SetActive(false);
         }
 
-        private async Task BindArtAsync(
+        private async Task<bool> BindArtAsync(
             CardRecord card,
             int generation,
             CancellationToken externalCancellation)
@@ -161,11 +187,27 @@ namespace Vexforge.Presentation
             if (generation != bindGeneration || !isActiveAndEnabled)
             {
                 if (nextLease != null) nextLease.Dispose();
-                return;
+                return false;
+            }
+
+            if (nextLease == null)
+            {
+                SetArtStatus("ARTE NO\nDISPONIBLE", VexforgeCardArtStatusColor);
+                resolver?.ReportAssignment(card, false, "texture_unavailable");
+                return false;
             }
 
             lease = nextLease;
-            ApplyTexture(lease == null ? null : lease.Texture);
+            if (ApplyTexture(lease.Texture))
+            {
+                SetArtStatus(null, Color.white);
+                resolver?.ReportAssignment(card, true);
+                return true;
+            }
+
+            SetArtStatus("ARTE NO\nDISPONIBLE", VexforgeCardArtStatusColor);
+            resolver?.ReportAssignment(card, false, "renderer_material_unavailable");
+            return false;
         }
 
         private void InitializeVisuals()
@@ -210,13 +252,21 @@ namespace Vexforge.Presentation
             SetArtMode(artMode);
         }
 
-        private void ApplyTexture(Texture2D texture)
+        private bool ApplyTexture(Texture2D texture)
         {
-            if (artMaterialInstance == null) return;
+            if (artMaterialInstance == null) return false;
 
+            var hasTextureProperty = false;
             if (artMaterialInstance.HasProperty("_BaseMap"))
             {
                 artMaterialInstance.SetTexture("_BaseMap", texture);
+                hasTextureProperty = true;
+            }
+
+            if (artMaterialInstance.HasProperty("_MainTex"))
+            {
+                artMaterialInstance.SetTexture("_MainTex", texture);
+                hasTextureProperty = true;
             }
 
             if (artMaterialInstance.HasProperty("_BaseColor"))
@@ -227,7 +277,47 @@ namespace Vexforge.Presentation
                         ? new Color(0.04f, 0.04f, 0.05f, 1f)
                         : Color.white);
             }
+            else if (artMaterialInstance.HasProperty("_Color"))
+            {
+                artMaterialInstance.SetColor("_Color", texture == null
+                    ? new Color(0.04f, 0.04f, 0.05f, 1f)
+                    : Color.white);
+            }
+
+            return texture != null && hasTextureProperty;
         }
+
+        private void SetArtStatus(string message, Color color)
+        {
+            if (string.IsNullOrEmpty(message))
+            {
+                if (artStatusLabel != null) artStatusLabel.gameObject.SetActive(false);
+                return;
+            }
+
+            if (artStatusLabel == null)
+            {
+                var statusObject = new GameObject("CardArtStatus");
+                statusObject.transform.SetParent(transform, false);
+                statusObject.transform.localPosition = new Vector3(0f, 0f, -0.074f);
+                statusObject.transform.localRotation = Quaternion.Euler(0f, 180f, 0f);
+                artStatusLabel = statusObject.AddComponent<TextMesh>();
+                artStatusLabel.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+                artStatusLabel.anchor = TextAnchor.MiddleCenter;
+                artStatusLabel.alignment = TextAlignment.Center;
+                artStatusLabel.characterSize = 0.038f;
+                artStatusLabel.fontSize = 32;
+                artStatusLabel.richText = false;
+                var labelRenderer = statusObject.GetComponent<MeshRenderer>();
+                if (labelRenderer != null) labelRenderer.sortingOrder = 20;
+            }
+
+            artStatusLabel.text = message;
+            artStatusLabel.color = color;
+            artStatusLabel.gameObject.SetActive(true);
+        }
+
+        private static readonly Color VexforgeCardArtStatusColor = new Color(0.94f, 0.70f, 0.32f, 1f);
 
         private void ReleaseLease()
         {
