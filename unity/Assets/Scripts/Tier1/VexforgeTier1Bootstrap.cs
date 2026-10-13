@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Vexforge.Core;
@@ -18,13 +17,7 @@ namespace Vexforge.Tier1
 
     public sealed class VexforgeTier1Bootstrap : MonoBehaviour
     {
-        private const int PresentationBindingTimeoutFrames = 600;
-        private const float ReadyValidationIntervalSeconds = .25f;
-        private const float RetryIntervalSeconds = 2f;
-        private static bool installed;
-
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.SubsystemRegistration)]
-        private static void ResetInstallationState() { installed = false; }
+        private const float CanonicalBindingTimeoutSeconds = 15f;
         private VexforgeApp app;
         private VexforgeTier1AssetRegistry assets;
         private VexforgeTier1BattleGate gate;
@@ -37,11 +30,8 @@ namespace Vexforge.Tier1
         private Camera canonicalCamera;
         private VexforgeTier1PackRevealDirector packReveal;
         private VexforgeTier1WorldAtlasDirector worldAtlas;
-        private Coroutine presentationBinding;
-        private float nextPresentationValidation;
-        private float nextPresentationRetry;
-        private float nextReadinessWarning;
         private int presentationGeneration;
+        private bool initialized;
 
         public VexforgeTier1PresentationState PresentationState { get; private set; }
         public string PresentationFailure { get; private set; }
@@ -54,33 +44,46 @@ namespace Vexforge.Tier1
         {
             get
             {
+                if (PresentationState != VexforgeTier1PresentationState.Ready)
+                    return false;
+
                 string ignored;
-                return PresentationState == VexforgeTier1PresentationState.Ready &&
-                    ValidatePublishedPresentation(out ignored);
+                if (ValidatePublishedPresentation(out ignored))
+                    return true;
+
+                FailPresentation(ignored);
+                return false;
             }
         }
 
         public event Action PresentationReadinessChanged;
 
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
-        private static void Install()
+        public void Initialize(VexforgeApp owner)
         {
-            if (installed) return;
-            installed = true;
-            var go=new GameObject("VexforgeTier1Bootstrap");
-            DontDestroyOnLoad(go);
-            go.AddComponent<VexforgeTier1Bootstrap>();
-        }
+            if (owner == null)
+            {
+                FailPresentation("El VexforgeApp propietario no está disponible.");
+                return;
+            }
+            if (initialized)
+            {
+                if (app != owner)
+                    FailPresentation("El bootstrap ya pertenece a otra instancia de VexforgeApp.");
+                return;
+            }
 
-        private IEnumerator Start()
-        {
+            app = owner;
+            SetPresentationState(
+                VexforgeTier1PresentationState.Initializing,
+                "Inicializando la presentación Tier1 desde VexforgeApp.");
             LockUprightPortrait();
-            while(VexforgeApp.Instance==null)yield return null;
-            app=VexforgeApp.Instance;
-            while(!app.IsInitialized)yield return null;
             Build(app);
+            app.Session.StateChanged -= OnAuth;
+            app.Session.StateChanged += OnAuth;
             SceneManager.activeSceneChanged += OnActiveSceneChanged;
-            RetryPresentationBinding("startup");
+            initialized = true;
+            Invoke(nameof(HandleCanonicalBindingTimeout), CanonicalBindingTimeoutSeconds);
+            Debug.Log("[VEXFORGE][Lifecycle] VexforgeTier1Bootstrap phase=initialized-from-app", this);
             if(app.Session.IsAuthenticated&&tutorial!=null)tutorial.TryStart();
         }
 
@@ -115,100 +118,159 @@ namespace Vexforge.Tier1
             surface.BindPackReveal(packReveal);
             surface.BindWorldAtlas(worldAtlas);
             gameObject.AddComponent<VexforgeTier1RoomOrnamentDirector>().Initialize(app,assets);
-            app.Session.StateChanged+=OnAuth;
+        }
+
+        public void BindCanonicalPresentation(
+            BattlePresentationDirector director,
+            VexforgeBattlefieldStage stage,
+            VexforgeCardArtResolver resolver,
+            Camera camera,
+            string trigger)
+        {
+            var safeTrigger = SafeTrigger(trigger);
+            if (!initialized || app == null)
+            {
+                FailPresentation("No se puede enlazar Battle antes de inicializar el bootstrap desde VexforgeApp.");
+                return;
+            }
+
+            string reason;
+            if (!ValidateCandidate(director, stage, resolver, camera, out reason))
+            {
+                FailPresentation(reason);
+                return;
+            }
+
+            if (PresentationState == VexforgeTier1PresentationState.Ready &&
+                canonicalBattle == director &&
+                canonicalStage == stage &&
+                canonicalArtResolver == resolver &&
+                canonicalCamera == camera &&
+                ValidatePublishedPresentation(out reason))
+                return;
+
+            CancelInvoke(nameof(HandleCanonicalBindingTimeout));
+            presentationGeneration++;
+            SetPresentationState(
+                VexforgeTier1PresentationState.Initializing,
+                "Enlazando la presentación canónica (" + safeTrigger + ").");
+            try
+            {
+                PublishCanonicalPresentation(director, stage, resolver, camera);
+            }
+            catch (Exception ex)
+            {
+                FailPresentation(
+                    "No se pudieron publicar las referencias canónicas: " +
+                    ex.GetType().Name + ": " + ex.Message);
+                return;
+            }
+
+            if (!ValidatePublishedPresentation(out reason))
+            {
+                FailPresentation(reason);
+                return;
+            }
+
+            SetPresentationState(VexforgeTier1PresentationState.Ready, null);
+            Debug.Log(
+                "[VEXFORGE][Lifecycle] VexforgeTier1Bootstrap phase=canonical-bound generation=" +
+                presentationGeneration + " trigger=" + safeTrigger,
+                this);
+            if (app.Session != null && app.Session.IsAuthenticated && tutorial != null)
+                tutorial.TryStart();
         }
 
         public void RetryPresentationBinding(string trigger)
         {
-            if(app==null||!gameObject.activeInHierarchy)return;
-
-            string invalidReason;
-            if(PresentationState==VexforgeTier1PresentationState.Ready&&ValidatePublishedPresentation(out invalidReason))
+            if (!initialized || app == null || !gameObject.activeInHierarchy)
                 return;
 
-            if(PresentationState==VexforgeTier1PresentationState.Ready)
+            var shell = app.GetComponent<GameShellController>();
+            if (shell == null)
             {
-                ClearPublishedPresentation();
-                SetPresentationState(VexforgeTier1PresentationState.FailedRetryable,invalidReason);
+                FailPresentation("No se encontró GameShellController en el VexforgeApp propietario.");
+                return;
             }
 
-            if(presentationBinding!=null)return;
-            presentationGeneration++;
-            SetPresentationState(
-                VexforgeTier1PresentationState.Initializing,
-                "Esperando la presentación canónica ("+SafeTrigger(trigger)+").");
-            presentationBinding=StartCoroutine(BindCanonicalPresentation(presentationGeneration,SafeTrigger(trigger)));
+            BattlePresentationDirector director;
+            VexforgeBattlefieldStage stage;
+            VexforgeCardArtResolver resolver;
+            Camera camera;
+            string reason;
+            if (!shell.TryGetCanonicalBattlePresentation(
+                    out director,
+                    out stage,
+                    out resolver,
+                    out camera,
+                    out reason))
+            {
+                FailPresentation(reason);
+                return;
+            }
+
+            BindCanonicalPresentation(director, stage, resolver, camera, trigger);
         }
 
-        private IEnumerator BindCanonicalPresentation(int generation,string trigger)
+        private bool ValidateCandidate(
+            BattlePresentationDirector director,
+            VexforgeBattlefieldStage stage,
+            VexforgeCardArtResolver resolver,
+            Camera camera,
+            out string reason)
         {
-            yield return null;
-            var startTime=Time.realtimeSinceStartup;
-            var shellCount=0;
-            var lastFailure="GameShellController no está disponible.";
-
-            for(var frame=0;frame<PresentationBindingTimeoutFrames;frame++)
+            if (app == null || !app.gameObject.scene.IsValid())
             {
-                if(generation!=presentationGeneration)
-                {
-                    presentationBinding=null;
-                    yield break;
-                }
-
-                var shells=FindObjectsByType<GameShellController>(FindObjectsInactive.Include,FindObjectsSortMode.None);
-                shellCount=shells.Length;
-                for(var i=0;i<shells.Length;i++)
-                {
-                    if(shells[i]==null)continue;
-                    BattlePresentationDirector director;
-                    VexforgeBattlefieldStage stage;
-                    VexforgeCardArtResolver resolver;
-                    Camera camera;
-                    string reason;
-                    if(!shells[i].TryGetCanonicalBattlePresentation(out director,out stage,out resolver,out camera,out reason))
-                    {
-                        lastFailure=shells[i].name+": "+reason;
-                        continue;
-                    }
-
-                    try
-                    {
-                        PublishCanonicalPresentation(director,stage,resolver,camera);
-                    }
-                    catch(Exception ex)
-                    {
-                        ClearPublishedPresentation();
-                        presentationBinding=null;
-                        var failedScene=SceneManager.GetActiveScene();
-                        var failure="No se pudieron publicar las referencias canónicas en el frame "+
-                            Time.frameCount+" de la escena '"+(failedScene.IsValid()?failedScene.name:"<sin escena activa>")+
-                            "': "+ex.GetType().Name+": "+ex.Message;
-                        SetPresentationState(VexforgeTier1PresentationState.FailedRetryable,failure);
-                        nextPresentationRetry=Time.unscaledTime+RetryIntervalSeconds;
-                        LogReadinessFailure(failure);
-                        yield break;
-                    }
-                    presentationBinding=null;
-                    nextPresentationValidation=Time.unscaledTime+ReadyValidationIntervalSeconds;
-                    SetPresentationState(VexforgeTier1PresentationState.Ready,null);
-                    if(app!=null&&app.Session!=null&&app.Session.IsAuthenticated&&tutorial!=null)
-                        tutorial.TryStart();
-                    yield break;
-                }
-                if(shellCount==0)lastFailure="No se encontró ningún GameShellController activo en la escena.";
-                yield return null;
+                reason = "El VexforgeApp propietario no pertenece a una escena válida.";
+                return false;
             }
 
-            presentationBinding=null;
-            var activeScene=SceneManager.GetActiveScene();
-            var elapsed=Time.realtimeSinceStartup-startTime;
-            var failure="No listo: "+lastFailure+" Timeout de "+PresentationBindingTimeoutFrames+
-                " frames; frame actual="+Time.frameCount+" ("+elapsed.ToString("0.0")+" s) en la escena '"+
-                (activeScene.IsValid()?activeScene.name:"<sin escena activa>")+
-                "'; GameShellController encontrados="+shellCount+".";
-            SetPresentationState(VexforgeTier1PresentationState.FailedRetryable,failure);
-            nextPresentationRetry=Time.unscaledTime+RetryIntervalSeconds;
-            LogReadinessFailure(failure);
+            var ownerScene = app.gameObject.scene;
+            if (director == null || !director.isActiveAndEnabled ||
+                !director.gameObject.activeInHierarchy ||
+                director.gameObject.scene != ownerScene || !director.IsInitialized)
+            {
+                reason = "El BattlePresentationDirector canónico falta, no está inicializado o no pertenece al VexforgeApp.";
+                return false;
+            }
+
+            if (stage == null || !stage.IsInitialized || stage.gameObject.scene != ownerScene)
+            {
+                reason = "El VexforgeBattlefieldStage canónico falta, no está inicializado o no pertenece al VexforgeApp.";
+                return false;
+            }
+
+            if (resolver == null || resolver.IsDisposed)
+            {
+                reason = "El resolver canónico de arte de cartas falta o está liberado.";
+                return false;
+            }
+
+            if (camera == null || !camera.isActiveAndEnabled ||
+                !camera.gameObject.activeInHierarchy || Camera.main != camera)
+            {
+                reason = "La cámara MainCamera canónica falta, está inactiva o dejó de ser la cámara activa.";
+                return false;
+            }
+
+            reason = null;
+            return true;
+        }
+
+        private void FailPresentation(string failure)
+        {
+            presentationGeneration++;
+            ClearPublishedPresentation();
+            SetPresentationState(VexforgeTier1PresentationState.FailedRetryable, failure);
+        }
+
+        private void HandleCanonicalBindingTimeout()
+        {
+            if (PresentationState != VexforgeTier1PresentationState.Initializing)
+                return;
+
+            FailPresentation(
+                "Timeout esperando el enlace explícito desde GameShellController.InitializeBattlePresentation.");
         }
 
         private void PublishCanonicalPresentation(
@@ -243,24 +305,24 @@ namespace Vexforge.Tier1
 
         private bool ValidatePublishedPresentation(out string reason)
         {
-            var activeScene=SceneManager.GetActiveScene();
-            if(!activeScene.IsValid()||!activeScene.isLoaded)
+            if(app==null||!app.gameObject.scene.IsValid())
             {
-                reason="No hay una escena activa y cargada.";
+                reason="El VexforgeApp propietario no pertenece a una escena válida.";
                 return false;
             }
 
+            var ownerScene=app.gameObject.scene;
             if(canonicalBattle==null||!canonicalBattle.isActiveAndEnabled||
-                !canonicalBattle.gameObject.activeInHierarchy||canonicalBattle.gameObject.scene!=activeScene||
+                !canonicalBattle.gameObject.activeInHierarchy||canonicalBattle.gameObject.scene!=ownerScene||
                 !canonicalBattle.IsInitialized)
             {
-                reason="El BattlePresentationDirector canónico desapareció, salió de la escena activa o dejó de estar inicializado.";
+                reason="El BattlePresentationDirector canónico desapareció, salió de la escena propietaria o dejó de estar inicializado.";
                 return false;
             }
 
-            if(canonicalStage==null||!canonicalStage.IsInitialized||canonicalStage.gameObject.scene!=activeScene)
+            if(canonicalStage==null||!canonicalStage.IsInitialized||canonicalStage.gameObject.scene!=ownerScene)
             {
-                reason="El VexforgeBattlefieldStage canónico desapareció o dejó de estar inicializado.";
+                reason="El VexforgeBattlefieldStage canónico desapareció, salió de la escena propietaria o dejó de estar inicializado.";
                 return false;
             }
 
@@ -271,10 +333,9 @@ namespace Vexforge.Tier1
             }
 
             if(canonicalCamera==null||!canonicalCamera.isActiveAndEnabled||
-                !canonicalCamera.gameObject.activeInHierarchy||canonicalCamera.gameObject.scene!=activeScene||
-                Camera.main!=canonicalCamera)
+                !canonicalCamera.gameObject.activeInHierarchy||Camera.main!=canonicalCamera)
             {
-                reason="La cámara MainCamera de la presentación desapareció o dejó de estar activa.";
+                reason="La cámara MainCamera de la presentación desapareció, dejó de estar activa o ya no es la cámara activa.";
                 return false;
             }
 
@@ -299,69 +360,27 @@ namespace Vexforge.Tier1
                 return;
             PresentationState=state;
             PresentationFailure=normalizedFailure;
+            var message="[VEXFORGE][Lifecycle] VexforgeTier1Bootstrap state="+state+
+                (string.IsNullOrWhiteSpace(normalizedFailure)?string.Empty:" failure="+normalizedFailure);
+            if(state==VexforgeTier1PresentationState.FailedRetryable)
+                Debug.LogWarning(message,this);
+            else
+                Debug.Log(message,this);
             PresentationReadinessChanged?.Invoke();
-        }
-
-        private void LogReadinessFailure(string failure)
-        {
-            if(Time.unscaledTime<nextReadinessWarning)return;
-            nextReadinessWarning=Time.unscaledTime+30f;
-            Debug.LogWarning("VEXFORGE Tier1 readiness FailedRetryable. "+failure+" "+DescribeDiscoveredObjects());
-        }
-
-        private void Update()
-        {
-            if(PresentationState==VexforgeTier1PresentationState.Ready)
-            {
-                if(Time.unscaledTime<nextPresentationValidation)return;
-                nextPresentationValidation=Time.unscaledTime+ReadyValidationIntervalSeconds;
-                string reason;
-                if(!ValidatePublishedPresentation(out reason))
-                {
-                    ClearPublishedPresentation();
-                    SetPresentationState(VexforgeTier1PresentationState.FailedRetryable,reason);
-                    nextPresentationRetry=Time.unscaledTime+RetryIntervalSeconds;
-                }
-                return;
-            }
-
-            if(PresentationState==VexforgeTier1PresentationState.FailedRetryable&&
-                Time.unscaledTime>=nextPresentationRetry&&presentationBinding==null)
-                RetryPresentationBinding("reintento automático");
         }
 
         private void OnActiveSceneChanged(Scene previous,Scene next)
         {
-            if(presentationBinding!=null)StopCoroutine(presentationBinding);
-            presentationBinding=null;
-            presentationGeneration++;
-            ClearPublishedPresentation();
             var reason="Cambió la escena activa de '"+(previous.IsValid()?previous.name:"<sin escena>")+
-                "' a '"+(next.IsValid()?next.name:"<sin escena>")+"'; revalidando la presentación canónica.";
-            SetPresentationState(VexforgeTier1PresentationState.FailedRetryable,reason);
-            nextPresentationRetry=Time.unscaledTime;
+                "' a '"+(next.IsValid()?next.name:"<sin escena>")+"'; revalidando desde el propietario canónico.";
+            Debug.Log("[VEXFORGE][Lifecycle] VexforgeTier1Bootstrap phase=active-scene-changed",this);
+            FailPresentation(reason);
             RetryPresentationBinding("cambio de escena");
         }
 
         private static string SafeTrigger(string value)
         {
             return string.IsNullOrWhiteSpace(value)?"solicitud sin etiqueta":value.Trim();
-        }
-
-        private static string DescribeDiscoveredObjects()
-        {
-            var directors=FindObjectsByType<BattlePresentationDirector>(FindObjectsInactive.Include,FindObjectsSortMode.None);
-            var stages=FindObjectsByType<VexforgeBattlefieldStage>(FindObjectsInactive.Include,FindObjectsSortMode.None);
-            var cameras=FindObjectsByType<Camera>(FindObjectsInactive.Include,FindObjectsSortMode.None);
-            var directorNames=new System.Text.StringBuilder();
-            for(var i=0;i<directors.Length;i++)
-            {
-                if(i>0)directorNames.Append(", ");
-                directorNames.Append(directors[i]==null?"<destroyed>":directors[i].name+"[initialized="+directors[i].IsInitialized+"]");
-            }
-            return "Objetos encontrados: directors="+directors.Length+" ["+directorNames+
-                "], battlefieldStages="+stages.Length+", cameras="+cameras.Length+
-                ", activeScene='"+(SceneManager.GetActiveScene().IsValid()?SceneManager.GetActiveScene().name:"<sin escena>")+"'.";
         }
 
         private void OnAuth(Vexforge.Session.AuthState state)
@@ -380,9 +399,9 @@ namespace Vexforge.Tier1
 
         private void OnDestroy()
         {
+            CancelInvoke(nameof(HandleCanonicalBindingTimeout));
             SceneManager.activeSceneChanged -= OnActiveSceneChanged;
-            if(presentationBinding!=null)StopCoroutine(presentationBinding);
-            if(VexforgeApp.Instance!=null&&VexforgeApp.Instance.Session!=null)VexforgeApp.Instance.Session.StateChanged-=OnAuth;
+            if(app!=null&&app.Session!=null)app.Session.StateChanged-=OnAuth;
         }
     }
 }

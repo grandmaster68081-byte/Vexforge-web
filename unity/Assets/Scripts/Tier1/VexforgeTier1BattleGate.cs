@@ -36,6 +36,11 @@ namespace Vexforge.Tier1
         private bool busy;
         private bool replaying;
         private bool completionSubscribed;
+        private bool hasLoggedReadinessState;
+        private int lastLoggedReadinessGeneration = -1;
+        private int lastLoggedReadyGeneration = -1;
+        private VexforgeTier1PresentationState lastLoggedReadinessState;
+        private string lastLoggedReadinessFailure;
         private BattleResult pendingResult;
         private BattleResult lastCompletedResult;
         private string pendingOperation;
@@ -78,6 +83,11 @@ namespace Vexforge.Tier1
             canonicalBattle = director;
             assets = registry;
             presentationReadiness = readiness;
+            if (presentationReadiness != null)
+            {
+                presentationReadiness.PresentationReadinessChanged -= HandlePresentationReadinessChanged;
+                presentationReadiness.PresentationReadinessChanged += HandlePresentationReadinessChanged;
+            }
             journal = new VexforgeTier1OperationJournal();
             resultHud = gameObject.GetComponent<VexforgeTier1BattleResultHud>();
             if (resultHud == null) resultHud = gameObject.AddComponent<VexforgeTier1BattleResultHud>();
@@ -116,6 +126,14 @@ namespace Vexforge.Tier1
             }
 
             canonicalBattle = presentationReadiness.CanonicalBattle;
+            if (lastLoggedReadyGeneration != presentationReadiness.PresentationGeneration)
+            {
+                lastLoggedReadyGeneration = presentationReadiness.PresentationGeneration;
+                Debug.Log(
+                    "[VEXFORGE][Lifecycle] VexforgeTier1BattleGate phase=canonical-discovered generation=" +
+                    lastLoggedReadyGeneration,
+                    this);
+            }
             if (selectionPlaque != null) selectionPlaque.SetActive(true);
             if (readinessStatusRoot != null) readinessStatusRoot.SetActive(false);
 
@@ -255,6 +273,21 @@ namespace Vexforge.Tier1
 
             var state = presentationReadiness.PresentationState;
             var failure = presentationReadiness.PresentationFailure;
+            if (!hasLoggedReadinessState ||
+                lastLoggedReadinessState != state ||
+                lastLoggedReadinessGeneration != presentationReadiness.PresentationGeneration ||
+                !string.Equals(lastLoggedReadinessFailure, failure, StringComparison.Ordinal))
+            {
+                hasLoggedReadinessState = true;
+                lastLoggedReadinessState = state;
+                lastLoggedReadinessFailure = failure;
+                lastLoggedReadinessGeneration = presentationReadiness.PresentationGeneration;
+                Debug.Log(
+                    "[VEXFORGE][Lifecycle] VexforgeTier1BattleGate readiness=" + state +
+                    (string.IsNullOrWhiteSpace(failure) ? string.Empty : " failure=" + failure),
+                    this);
+            }
+
             if (state == VexforgeTier1PresentationState.FailedRetryable && !string.IsNullOrWhiteSpace(failure))
             {
                 var readable = failure.Length > 150 ? failure.Substring(0, 147) + "..." : failure;
@@ -268,11 +301,39 @@ namespace Vexforge.Tier1
             }
         }
 
+        private void HandlePresentationReadinessChanged()
+        {
+            if (!shown)
+                return;
+
+            if (presentationReadiness != null && presentationReadiness.IsPresentationReady)
+            {
+                canonicalBattle = presentationReadiness.CanonicalBattle;
+                Show();
+                return;
+            }
+
+            ShowReadinessWait();
+        }
+
         private void RetryPresentationBinding()
         {
-            if (presentationReadiness != null)
-                presentationReadiness.RetryPresentationBinding("botón Reintentar de Battle Gate");
-            ShowReadinessWait();
+            if (presentationReadiness == null)
+            {
+                ShowReadinessWait();
+                return;
+            }
+
+            var generationBeforeRetry = presentationReadiness.PresentationGeneration;
+            presentationReadiness.RetryPresentationBinding("botón Reintentar de Battle Gate");
+            if (!presentationReadiness.IsPresentationReady)
+            {
+                ShowReadinessWait();
+                return;
+            }
+
+            if (generationBeforeRetry == presentationReadiness.PresentationGeneration)
+                HandlePresentationReadinessChanged();
         }
 
         private void OpenTurnCombatTraining()
@@ -523,6 +584,8 @@ namespace Vexforge.Tier1
         private void OnDestroy()
         {
             UnsubscribeCompletion();
+            if (presentationReadiness != null)
+                presentationReadiness.PresentationReadinessChanged -= HandlePresentationReadinessChanged;
             if (resultHud != null)
             {
                 resultHud.ReplayRequested -= HandleReplayRequested;

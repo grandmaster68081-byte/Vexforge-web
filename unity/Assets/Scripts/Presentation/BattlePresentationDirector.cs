@@ -184,6 +184,10 @@ namespace Vexforge.Presentation
             if (initialized)
                 return;
 
+            Debug.Log(
+                "[VEXFORGE][Lifecycle] BattlePresentationDirector phase=initialize-start camera=" +
+                (camera != null) + " resolver=" + (resolver != null),
+                this);
             var stages = GetComponentsInChildren<VexforgeBattlefieldStage>(true);
             for (var i = 0; i < stages.Length; i++)
             {
@@ -203,6 +207,10 @@ namespace Vexforge.Presentation
 
             battlefield.Initialize(camera, resolver, cardLookup, localPlayerId);
             initialized = true;
+            Debug.Log(
+                "[VEXFORGE][Lifecycle] BattlePresentationDirector phase=initialized stage=" +
+                (battlefield != null ? battlefield.name : "<missing>"),
+                this);
         }
 
         public void SetLocalPlayerId(string playerId)

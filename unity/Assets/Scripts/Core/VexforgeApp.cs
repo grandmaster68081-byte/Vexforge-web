@@ -2,6 +2,7 @@ using System.Threading.Tasks;
 using UnityEngine;
 using Vexforge.Backend;
 using Vexforge.GameState;
+using Vexforge.Tier1;
 using Vexforge.Session;
 using Vexforge.UI;
 
@@ -17,6 +18,7 @@ namespace Vexforge.Core
         public SessionService Session { get; private set; }
         public GameStateStore GameState { get; private set; }
         public VexforgeRepository Repository { get; private set; }
+        public VexforgeTier1Bootstrap PresentationBootstrap { get; private set; }
         public bool IsInitialized { get; private set; }
         public string InitializationError { get; private set; }
 
@@ -54,10 +56,16 @@ namespace Vexforge.Core
             Services.Register(Navigation);
             Services.Register(PersistentState);
 
+            PresentationBootstrap = GetComponent<VexforgeTier1Bootstrap>();
+            if (PresentationBootstrap == null)
+                PresentationBootstrap = gameObject.AddComponent<VexforgeTier1Bootstrap>();
+
             if (GetComponent<GameShellController>() == null)
             {
                 gameObject.AddComponent<GameShellController>();
             }
+
+            TraceLifecycle("owner-awake");
         }
 
         public Task InitializeAsync()
@@ -71,11 +79,14 @@ namespace Vexforge.Core
 
         private async Task InitializeCore()
         {
+            TraceLifecycle("initialization-started");
             if (!RuntimeEnvironment.IsConfigured)
             {
                 InitializationError = "El servicio del juego no está disponible ahora.";
                 IsInitialized = true;
                 AppLogger.Warning(InitializationError);
+                PresentationBootstrap.Initialize(this);
+                TraceLifecycle("initialized-with-backend-unavailable");
                 return;
             }
 
@@ -84,7 +95,14 @@ namespace Vexforge.Core
                 await GameState.RefreshAsync();
             Navigation.Navigate(GameRoute.Nexus);
             IsInitialized = true;
+            PresentationBootstrap.Initialize(this);
             AppLogger.Info("Foundation inicializada; esperando sesión autenticada.");
+            TraceLifecycle("initialized");
+        }
+
+        private void TraceLifecycle(string phase)
+        {
+            Debug.Log("[VEXFORGE][Lifecycle] VexforgeApp phase=" + phase, this);
         }
 
         public async Task<bool> SignInAndSyncAsync(string email, string password)

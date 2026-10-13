@@ -63,16 +63,16 @@ namespace Vexforge.UI
             resolver = null;
             camera = null;
 
-            var activeScene = SceneManager.GetActiveScene();
+            var ownerScene = gameObject.scene;
             if (!isActiveAndEnabled || !gameObject.activeInHierarchy)
             {
                 reason = "GameShellController is not active and enabled.";
                 return false;
             }
 
-            if (!activeScene.IsValid() || !activeScene.isLoaded || gameObject.scene != activeScene)
+            if (!ownerScene.IsValid())
             {
-                reason = "GameShellController does not belong to the loaded active scene.";
+                reason = "GameShellController does not belong to a valid owner scene.";
                 return false;
             }
 
@@ -84,10 +84,10 @@ namespace Vexforge.UI
 
             camera = presentationCamera;
             if (camera == null || !camera.isActiveAndEnabled ||
-                !camera.gameObject.activeInHierarchy || camera.gameObject.scene != activeScene ||
+                !camera.gameObject.activeInHierarchy || !camera.gameObject.scene.IsValid() ||
                 Camera.main != camera)
             {
-                reason = "The active MainCamera for the presentation is missing, inactive, or belongs to another scene.";
+                reason = "The active MainCamera for the presentation is missing or inactive.";
                 return false;
             }
 
@@ -100,17 +100,17 @@ namespace Vexforge.UI
 
             director = battleDirector;
             if (director == null || !director.isActiveAndEnabled ||
-                !director.gameObject.activeInHierarchy || director.gameObject.scene != activeScene ||
+                !director.gameObject.activeInHierarchy || director.gameObject.scene != ownerScene ||
                 !director.IsInitialized)
             {
-                reason = "The canonical BattlePresentationDirector is missing, inactive, or not initialized in the active scene.";
+                reason = "The canonical BattlePresentationDirector is missing, inactive, or not initialized in the GameShellController owner scene.";
                 return false;
             }
 
             stage = director.GetComponentInChildren<VexforgeBattlefieldStage>(true);
-            if (stage == null || !stage.IsInitialized || stage.gameObject.scene != activeScene)
+            if (stage == null || !stage.IsInitialized || stage.gameObject.scene != ownerScene)
             {
-                reason = "The canonical VexforgeBattlefieldStage is missing, uninitialized, or outside the active scene.";
+                reason = "The canonical VexforgeBattlefieldStage is missing, uninitialized, or outside the GameShellController owner scene.";
                 return false;
             }
 
@@ -125,9 +125,12 @@ namespace Vexforge.UI
 
             await app.InitializeAsync();
             if (this == null || app == null) return;
+            TraceLifecycle("app-initialized");
 
             BuildPresentation();
+            TraceLifecycle("world-presentation-built");
             BuildBattlePresentationHost();
+            TraceLifecycle("battle-host-built");
             InitializeBattlePresentation();
             BuildCanvas();
             alphaHud = GetComponent<VexforgeAlphaHud>();
@@ -137,6 +140,7 @@ namespace Vexforge.UI
             Subscribe();
 
             Render();
+            TraceLifecycle("shell-ready");
         }
 
         private void BuildBattlePresentationHost()
@@ -178,6 +182,21 @@ namespace Vexforge.UI
                 throw new InvalidOperationException("VEXFORGE requires a BattlefieldStage under BattlePresentationHost.");
             alphaWorld.BindBattlefield(battlefield);
             battlePresentationInitialized = true;
+            TraceLifecycle("battle-presentation-initialized");
+
+            if (app.PresentationBootstrap == null)
+                throw new InvalidOperationException("VEXFORGE requires the app-owned Tier1 presentation bootstrap.");
+            app.PresentationBootstrap.BindCanonicalPresentation(
+                battleDirector,
+                battlefield,
+                artResolver,
+                presentationCamera,
+                "GameShellController.InitializeBattlePresentation");
+        }
+
+        private void TraceLifecycle(string phase)
+        {
+            Debug.Log("[VEXFORGE][Lifecycle] GameShellController phase=" + phase, this);
         }
 
         private void BuildPresentation()

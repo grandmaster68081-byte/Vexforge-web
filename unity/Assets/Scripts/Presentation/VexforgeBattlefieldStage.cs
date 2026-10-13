@@ -52,6 +52,10 @@ namespace Vexforge.Presentation
             if (initialized)
                 return;
 
+            Debug.Log(
+                "[VEXFORGE][Lifecycle] VexforgeBattlefieldStage phase=initialize-start camera=" +
+                (camera != null) + " resolver=" + (resolver != null),
+                this);
             targetCamera = camera != null ? camera : Camera.main;
             artResolver = resolver;
             cardLookup = lookup;
@@ -69,6 +73,10 @@ namespace Vexforge.Presentation
             BuildArena();
             initialized = true;
             gameObject.SetActive(false);
+            Debug.Log(
+                "[VEXFORGE][Lifecycle] VexforgeBattlefieldStage phase=initialized camera-bound=" +
+                (targetCamera != null) + " resolver-bound=" + (artResolver != null),
+                this);
         }
 
         public void SetLocalPlayerId(string playerId)
