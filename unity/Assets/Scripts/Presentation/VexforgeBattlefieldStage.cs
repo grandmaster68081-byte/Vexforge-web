@@ -89,6 +89,43 @@ namespace Vexforge.Presentation
             reducedMotion = enabled;
         }
 
+        public bool TryGetEventAnchor(BattleEvent battleEvent, out Vector3 position)
+        {
+            position = Vector3.zero;
+            if (!initialized || battleEvent == null)
+                return false;
+
+            var kind = BattlePresentationPolicy.Classify(battleEvent.event_type);
+            if ((kind == BattlePresentationKind.Boss || kind == BattlePresentationKind.Victory) &&
+                impactCore != null)
+            {
+                position = impactCore.position + Vector3.up * 0.35f;
+                return true;
+            }
+
+            var preferTarget = kind == BattlePresentationKind.Attack ||
+                               kind == BattlePresentationKind.Defeat ||
+                               kind == BattlePresentationKind.Heal ||
+                               kind == BattlePresentationKind.Status ||
+                               kind == BattlePresentationKind.Neutral;
+            var firstId = preferTarget ? battleEvent.target_id : battleEvent.actor_id;
+            var secondId = preferTarget ? battleEvent.actor_id : battleEvent.target_id;
+
+            if (TryGetSideAnchor(firstId, out position) ||
+                TryGetSideAnchor(secondId, out position))
+                return true;
+
+            // Events without participant IDs still belong to this authored arena. Use its
+            // central core rather than emitting an effect at world origin.
+            if (impactCore != null)
+            {
+                position = impactCore.position + Vector3.up * 0.35f;
+                return true;
+            }
+
+            return false;
+        }
+
         public void SetVisible(bool visible)
         {
             if (!initialized)
@@ -634,6 +671,20 @@ namespace Vexforge.Presentation
             return !string.IsNullOrWhiteSpace(actorId) &&
                    !string.IsNullOrWhiteSpace(localPlayerId) &&
                    string.Equals(actorId, localPlayerId, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private bool TryGetSideAnchor(string participantId, out Vector3 position)
+        {
+            position = Vector3.zero;
+            if (string.IsNullOrWhiteSpace(participantId))
+                return false;
+
+            var side = IsLocalActor(participantId) ? playerZone : opponentZone;
+            if (side == null)
+                return false;
+
+            position = side.position + Vector3.up * 0.65f;
+            return true;
         }
 
         private void ResetTransientPresentation()

@@ -219,6 +219,14 @@ namespace Vexforge.Presentation
                 battlefield.SetLocalPlayerId(playerId);
         }
 
+        public bool TryGetEventAnchor(BattleEvent battleEvent, out Vector3 position)
+        {
+            position = Vector3.zero;
+            return initialized &&
+                   battlefield != null &&
+                   battlefield.TryGetEventAnchor(battleEvent, out position);
+        }
+
         public void SetVisible(bool visible)
         {
             if (!visible)
