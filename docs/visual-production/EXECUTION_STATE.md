@@ -2,8 +2,8 @@
 
 ## Estado actual
 
-- HEAD de implementación: `b3875b8` (`main`, publicado en GitHub).
-- Bloque actual: **4 — Battlefield y VFX: anclaje a eventos y reutilización implementados en fuente; escena visual y validación de Editor pendientes**.
+- HEAD de implementación: `9dfbac5d` (`main`, publicado en GitHub).
+- Bloque actual: **4 — Battlefield: arena y núcleo con mallas originales integradas en fuente; VFX transitorios, escena visual y validación de Editor pendientes**.
 - Este estado sigue el HEAD de implementación; su propio commit sólo registra evidencia.
 - Unity declarado: `6000.3.0f1`; URP `17.3.0`; Input System `1.20.0`; UGUI `2.0.0`.
 - Proyecto Unity canónico: `unity/`; escena existente en Build Settings: `Assets/Scenes/VexforgeBootstrap.unity`.
@@ -45,12 +45,16 @@
 - **Implementado en fuente:** el director de presentación expone el ancla espacial del evento vigente. El escenario resuelve objetivo/actor usando `target_id`/`actor_id` y las zonas canónicas; eventos de jefe/victoria usan el núcleo del escenario.
 - **Implementado en fuente:** el director VFX reserva cinco sistemas de partículas al inicializar y los reutiliza; cada efecto usa el ancla del evento, respeta movimiento reducido y limpia/libera el sistema al terminar.
 - **Prueba estática:** `npm run verify:battle-vfx` — `PASS`; comprueba delegación de ancla, mapeo de actor/objetivo y reutilización. No prueba emisión ni posición dentro de Unity.
-- **No completado:** el escenario aún crea geometría visible mediante primitivas y anillos; no hay kit/escena/prefabs de Battlefield ni catálogo de VFX por tipo. Faltan importación, Play Mode, captura y medición real de rendimiento.
+- **Implementado en fuente:** kit OBJ original de arena y núcleo de batalla, con 1.032 y 164 triángulos; usa el catálogo compartido de mallas, URP/Lit, texturas locales y un fallo explícito si faltan recursos/materiales. El escenario carga ambos modelos y conserva los anclajes de jugador, rival y núcleo.
+- **Prueba estática:** `npm run verify:nexus-meshes` — `PASS`; comprueba las dos entradas del manifiesto, geometría, slots y que `BuildArena()` no crea primitivas/anillos como arquitectura. No demuestra la importación OBJ ni su apariencia.
+- **No completado:** los efectos transitorios y la manifestación de jefe aún crean algunas formas de runtime; faltan prefabs/escena serializada de producción, catálogo de VFX por tipo, importación, Play Mode, captura y medición real de rendimiento.
 - **Commit:** `b3875b8`, `fix(unity): anchor battle vfx and reuse particles`, publicado en `main`.
+- **Commit de assets e integración:** `9dfbac5d`, `feat(unity): add authored battlefield arena meshes`, publicado en `main`.
 
 ## Assets, escenas y bloques
 
-- Assets nuevos integrados: tres mallas 3D originales del Nexus, su generador determinista, cuatro texturas de material y el catálogo de carga.
+- Assets nuevos integrados: tres mallas 3D originales del Nexus y dos del Battlefield, total de 2.464 triángulos; generador determinista, texturas de material compartidas y catálogo estricto de carga.
+- Orden del usuario conservada en `docs/visual-production/EXECUTION_ORDER.md`; la herramienta opcional de Unity se conserva en `docs/visual-production/Tools/` y no se ejecutó.
 - Escenas de producción completadas: ninguna.
 - Los fondos y modelos existentes no se declaran como escenas de producción; sus campos descriptivos `quality: production` no se toman como evidencia.
 - Bloque 3: implementación de fuente parcial; gates de Unity y escena serializada pendientes.
@@ -61,21 +65,22 @@
 
 | Gate | Estado | Evidencia / motivo |
 |---|---|---|
-| Sincronización GitHub `main` | PASS | Push confirmado; el último cambio de fuente visual está en `b3875b8`. |
+| Sincronización GitHub `main` | PASS | Push confirmado; el último cambio de fuente visual está en `9dfbac5d`. |
 | Ciclo canónico de batalla, fuente | PASS | `node unity/verify-battle-presentation-lifecycle.mjs`; sólo contrato estático. |
 | Recursos locales declarados | PASS | `npm run verify:unity-assets`; verifica fuentes/metadatos, no AssetDatabase. |
 | Catálogo remoto completo y URLs accesibles | PASS | `npm run verify:card-art`; 127/127, sin descarga/decodificación de imagen. |
 | Mallas Nexus, fuentes y rutas estáticas | PASS | `npm run verify:nexus-meshes`; no reemplaza el importador ni una captura. |
 | Anclas de eventos y reutilización VFX, fuente | PASS | `npm run verify:battle-vfx`; no reemplaza Play Mode ni verifica efectos por tipo. |
+| Arena y núcleo Battlefield, geometría/fábrica/ruta fuente | PASS | Dos modelos OBJ nuevos; `BuildArena()` ya no crea arquitectura de primitivas. |
 | Compilación C# / AssetDatabase import | NOT_RUN | No hay Unity Editor/Hub ni compilador C# en este entorno. |
 | Importación OBJ, slots de material URP y aspecto real del Nexus | NOT_RUN | Requiere abrir el proyecto oficial con Unity `6000.3.0f1`. |
 | Decode y asignación de arte en Unity | NOT_RUN | Requiere ejecutar el gate de catálogo dentro del Editor. |
 | Play Mode, capturas Game View y rendimiento en Android | BLOCKED | Requiere Editor y dispositivo/runtime; no se infiere de pruebas estáticas. |
 | APK oficial | NOT_RUN | La orden reserva la build para release candidate; este source aún no ha llegado a ese gate. |
 | Escena serializada de Nexus / prefabs de producción | NOT_RUN | El runtime consume los modelos, pero aún no existe una escena de producción verificada ni capturas. |
-| Bloque 4 — escena, modelos y VFX reales | BLOCKED | La fuente aún conserva primitivas visibles; requiere kit de Battlefield, Unity Editor y validación visual. |
+| Bloque 4 — escena y VFX completos | BLOCKED | La arquitectura base usa modelos originales, pero quedan formas de VFX transitorias, escena/prefabs y validación visual en Editor. |
 | Bloques 5–8 | NOT_RUN | Cartas, demás dominios, cinematics/audio y hardening siguen abiertos. |
 
 ## Bloqueador real y siguiente acción exacta
 
-El entorno actual no contiene Unity Editor/Hub, por lo que la validación AssetDatabase y Play Mode no se puede ejecutar todavía. Para completar esos gates se necesita instalar `6000.3.0f1` y activarlo con una licencia válida del propietario; después importar modelos/texturas, validar shaders/slots, recorrer las escenas en Play Mode y guardar evidencia. Primero cerrar así el Bloque 3; continuar el kit de Battlefield sin primitivas y completar los bloques 4–8. El repositorio contiene los cambios y verificadores estáticos. Supabase y su catálogo oficial no se modificaron. No usar Unity Cloud Build ni copiar secretos Replit a GitHub Actions. La APK queda reservada para un candidato.
+El entorno actual no contiene Unity Editor/Hub, .NET ni Mono, por lo que la validación AssetDatabase y Play Mode no se puede ejecutar aquí. Para completar esos gates se necesita Unity `6000.3.0f1` activado con una licencia válida del propietario; luego importar modelos/texturas, comprobar shaders/slots, revisar Game View, guardar escenas/prefabs, recorrer Play Mode y registrar evidencia. Primero cerrar así el Bloque 3; después validar esta arena en el Editor, reemplazar las formas transitorias que sigan siendo placeholders y continuar los bloques 4–8. El repositorio contiene el orden del usuario, sus cambios y verificadores estáticos. Supabase y su catálogo oficial no se modificaron. No usar Unity Cloud Build ni copiar secretos Replit a GitHub Actions. La APK queda reservada para un candidato.
