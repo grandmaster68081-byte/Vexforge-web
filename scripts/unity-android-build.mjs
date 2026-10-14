@@ -8,6 +8,7 @@ const branch = 'main';
 const apiBase = `https://api.github.com/repos/${owner}/${repository}`;
 const pollIntervalMs = 30_000;
 const dispatchDiscoveryTimeoutMs = 120_000;
+const runTimeoutMs = 8 * 60 * 60 * 1_000;
 
 function printHelp() {
   console.log(
@@ -109,9 +110,13 @@ async function waitForDispatchedRun(expectedSha, dispatchTime) {
 
 async function waitForCompletion(run) {
   console.log(`Monitoring Unity build ${run.html_url}`);
+  const deadline = Date.now() + runTimeoutMs;
   while (true) {
     const { data } = await request(`/actions/runs/${run.id}`);
     if (data?.status === 'completed') return data;
+    if (Date.now() >= deadline) {
+      throw new Error(`Unity build did not finish within eight hours: ${run.html_url}`);
+    }
     console.log(`Unity build status: ${data?.status ?? 'unknown'}`);
     await delay(pollIntervalMs);
   }
@@ -157,6 +162,11 @@ async function main() {
     (run) => run.status !== 'completed' && run.event === 'workflow_dispatch',
   );
   if (activeRuns.length) {
+    if (activeRuns.length > 1) {
+      throw new Error(
+        `Multiple Unity builds are already active (${activeRuns.map((run) => run.html_url).join(', ')}). Refusing to choose one or start another.`,
+      );
+    }
     const activeRun = activeRuns[0];
     if (activeRun.head_sha !== expectedSha) {
       throw new Error(

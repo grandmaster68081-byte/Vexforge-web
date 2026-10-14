@@ -219,6 +219,10 @@ card rarity is unrelated and must remain intact.
 
 - The Replit container has .NET SDK 10 for auxiliary tooling, but it does not
   host Unity Editor or Unity Hub. Do not treat .NET as a Unity compiler.
+- A local `unityhub` Nix package attempt is not viable in this Replit sandbox:
+  its FHS launcher fails because `bwrap` capabilities are unavailable, and
+  bypassing that launcher exits with `SIGILL`. The unsupported local package was
+  removed; do not report local Hub/Editor availability or repeat that install.
 - Unity Editor and Android builds run on the official GitHub Actions runner via
   `.github/workflows/vexforge-unity-android-github.yml`. That workflow installs
   Unity Hub, the exact editor version from `unity/ProjectSettings/ProjectVersion.txt`,
