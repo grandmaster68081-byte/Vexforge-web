@@ -94,8 +94,13 @@ requireOrder(
 );
 requireOrder(
   sources.stage,
-  ['CreateMaterials();', 'BuildArena();', 'initialized = true;'],
+  ['BuildArena();', 'initialized = true;'],
   'VexforgeBattlefieldStage initialization',
+);
+requireText(
+  sources.stage,
+  'ResolveBattlefieldMeshMaterial',
+  'VexforgeBattlefieldStage authored material resolver',
 );
 
 // Bootstrap validates, publishes exactly those references, then reports Ready.

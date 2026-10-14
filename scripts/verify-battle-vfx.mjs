@@ -16,6 +16,10 @@ const vfx = fs.readFileSync(
   path.join(root, 'unity/Assets/Scripts/Tier1/VexforgeTier1VfxDirector.cs'),
   'utf8',
 );
+const bootstrap = fs.readFileSync(
+  path.join(root, 'unity/Assets/Scripts/Tier1/VexforgeTier1Bootstrap.cs'),
+  'utf8',
+);
 
 function methodBody(source, signature) {
   const start = source.indexOf(signature);
@@ -56,7 +60,10 @@ assert.match(directorAnchor, /battlefield\.TryGetEventAnchor\(battleEvent, out p
 
 const eventHandler = methodBody(vfx, 'private void OnEvent(BattleEvent evt)');
 assert.match(eventHandler, /director\.TryGetEventAnchor\(evt, out anchor\)/);
-assert.match(eventHandler, /Emit\(anchor,/);
+assert.match(eventHandler, /BattlePresentationPolicy\.Classify\(evt\.event_type\)/);
+assert.match(eventHandler, /ParticleSystemShapeType\.Circle/);
+assert.match(eventHandler, /ParticleSystemShapeType\.Cone/);
+assert.match(eventHandler, /Emit\(\s*anchor,/);
 assert.doesNotMatch(eventHandler, /Vector3\.up\s*\*\s*\.30f/);
 assert.doesNotMatch(eventHandler, /new GameObject/);
 
@@ -64,15 +71,21 @@ const initialize = methodBody(vfx, 'public void Initialize(Transform parent)');
 assert.match(initialize, /for \(var i = 0; i < PoolCapacity; i\+\+\)/);
 assert.match(initialize, /CreatePooledEffect\(i\)/);
 
-const emit = methodBody(vfx, 'private void Emit(Vector3 position, Color color, int count, float lifetime)');
+const emit = methodBody(vfx, 'private void Emit(');
 assert.match(emit, /!pool\[i\]\.InUse/);
 assert.match(emit, /StartCoroutine\(ReleaseAfter\(effect,/);
+assert.match(emit, /shape\.shapeType = shapeType/);
+assert.match(emit, /shape\.rotation = shapeRotation/);
+assert.match(emit, /main\.startSpeed = new ParticleSystem\.MinMaxCurve/);
+assert.match(emit, /main\.startSize = new ParticleSystem\.MinMaxCurve/);
 assert.doesNotMatch(emit, /new GameObject|Destroy\(/);
+assert.doesNotMatch(bootstrap, /VexforgeTier1CanonicalBattlefieldPolish/);
 
 const release = methodBody(vfx, 'private IEnumerator ReleaseAfter(PooledEffect effect, float seconds)');
 assert.match(release, /StopEmittingAndClear/);
 assert.match(release, /effect\.InUse = false/);
+assert.doesNotMatch(stage, /GameObject\.CreatePrimitive|CreatePrimitive\s*\(|CreateRing\s*\(|BuildRingMesh|PrimitiveType\./);
 
 console.log(
-  'BATTLE VFX SOURCE PASS — canonical event anchors are forwarded from the battlefield and particle systems are reused with deterministic release. Unity Editor runtime behavior remains a separate gate.',
+  'BATTLE VFX SOURCE PASS — canonical event anchors feed typed, pooled particle profiles; the battlefield stage contains no procedural primitive/ring effect placeholders. Unity Editor runtime behavior remains a separate gate.',
 );

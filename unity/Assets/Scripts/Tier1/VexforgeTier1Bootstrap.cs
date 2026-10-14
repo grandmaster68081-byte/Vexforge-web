@@ -291,9 +291,6 @@ namespace Vexforge.Tier1
             var audio=GetComponent<VexforgeTier1AudioDirector>();if(audio!=null)audio.Bind(director);
             var haptics=GetComponent<VexforgeHapticsService>();if(haptics!=null)haptics.Bind(director);
 
-            var polish=GetComponent<VexforgeTier1CanonicalBattlefieldPolish>();
-            if(polish==null)polish=gameObject.AddComponent<VexforgeTier1CanonicalBattlefieldPolish>();
-            polish.Initialize(director,stage,assets);
             var encounter=GetComponent<VexforgeTier1EncounterPresentationDirector>();
             if(encounter==null)encounter=gameObject.AddComponent<VexforgeTier1EncounterPresentationDirector>();
             encounter.Initialize(director,stage);

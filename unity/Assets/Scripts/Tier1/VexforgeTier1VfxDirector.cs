@@ -53,16 +53,123 @@ namespace Vexforge.Tier1
             if (!director.TryGetEventAnchor(evt, out anchor)) return;
 
             var kind = BattlePresentationPolicy.Classify(evt.event_type);
-            var color = new Color(.72f,.26f,.10f,1f);
-            var count = 12; var life = .34f;
-            if (kind == BattlePresentationKind.Boss) { color = new Color(.48f,.34f,.88f,1f); count = 18; life = .62f; }
-            else if (kind == BattlePresentationKind.Guard) { color = new Color(.17f,.52f,.82f,1f); count = 14; life = .40f; }
-            else if (kind == BattlePresentationKind.Heal) { color = new Color(.20f,.78f,.62f,1f); count = 14; life = .44f; }
-            else if (kind == BattlePresentationKind.Cast) { color = new Color(.26f,.48f,.95f,1f); count = 16; life = .46f; }
-            else if (kind == BattlePresentationKind.Status) { color = new Color(.64f,.28f,.78f,1f); count = 12; life = .38f; }
-            else if (kind == BattlePresentationKind.Victory) { color = new Color(.85f,.62f,.18f,1f); count = 20; life = .72f; }
-            else if (kind == BattlePresentationKind.Defeat) { color = new Color(.48f,.06f,.08f,1f); count = 20; life = .62f; }
-            Emit(anchor, color, count, life);
+            var color = new Color(0.96f, 0.28f, 0.12f, 1f);
+            var count = 14;
+            var lifetime = 0.42f;
+            var shapeType = ParticleSystemShapeType.Cone;
+            var shapeRotation = new Vector3(-90f, 0f, 0f);
+            var radius = 0.18f;
+            var angle = 14f;
+            var minSpeed = 0.55f;
+            var maxSpeed = 1.40f;
+            var minSize = 0.025f;
+            var maxSize = 0.07f;
+
+            switch (kind)
+            {
+                case BattlePresentationKind.Boss:
+                    color = new Color(0.55f, 0.30f, 0.98f, 1f);
+                    count = 24;
+                    lifetime = 0.95f;
+                    shapeType = ParticleSystemShapeType.Cone;
+                    radius = 0.35f;
+                    angle = 20f;
+                    minSpeed = 0.75f;
+                    maxSpeed = 1.75f;
+                    minSize = 0.035f;
+                    maxSize = 0.11f;
+                    break;
+                case BattlePresentationKind.Guard:
+                    color = new Color(0.18f, 0.70f, 0.98f, 1f);
+                    count = 18;
+                    lifetime = 0.52f;
+                    shapeType = ParticleSystemShapeType.Circle;
+                    shapeRotation = new Vector3(90f, 0f, 0f);
+                    radius = 0.78f;
+                    angle = 0f;
+                    minSpeed = 0.05f;
+                    maxSpeed = 0.16f;
+                    minSize = 0.035f;
+                    maxSize = 0.075f;
+                    break;
+                case BattlePresentationKind.Heal:
+                    color = new Color(0.20f, 0.86f, 0.62f, 1f);
+                    count = 18;
+                    lifetime = 0.66f;
+                    shapeType = ParticleSystemShapeType.Sphere;
+                    shapeRotation = Vector3.zero;
+                    radius = 0.42f;
+                    angle = 0f;
+                    minSpeed = 0.24f;
+                    maxSpeed = 0.88f;
+                    minSize = 0.03f;
+                    maxSize = 0.08f;
+                    break;
+                case BattlePresentationKind.Cast:
+                    color = new Color(0.28f, 0.52f, 1f, 1f);
+                    count = 20;
+                    lifetime = 0.62f;
+                    shapeType = ParticleSystemShapeType.Cone;
+                    radius = 0.14f;
+                    angle = 10f;
+                    minSpeed = 0.55f;
+                    maxSpeed = 1.25f;
+                    minSize = 0.03f;
+                    maxSize = 0.075f;
+                    break;
+                case BattlePresentationKind.Status:
+                    color = new Color(0.74f, 0.32f, 0.96f, 1f);
+                    count = 16;
+                    lifetime = 0.54f;
+                    shapeType = ParticleSystemShapeType.Circle;
+                    shapeRotation = new Vector3(90f, 0f, 0f);
+                    radius = 0.48f;
+                    angle = 0f;
+                    minSpeed = 0.12f;
+                    maxSpeed = 0.42f;
+                    minSize = 0.025f;
+                    maxSize = 0.065f;
+                    break;
+                case BattlePresentationKind.Victory:
+                    color = new Color(0.98f, 0.75f, 0.20f, 1f);
+                    count = 24;
+                    lifetime = 0.90f;
+                    shapeType = ParticleSystemShapeType.Cone;
+                    radius = 0.32f;
+                    angle = 24f;
+                    minSpeed = 0.45f;
+                    maxSpeed = 1.30f;
+                    minSize = 0.035f;
+                    maxSize = 0.11f;
+                    break;
+                case BattlePresentationKind.Defeat:
+                    color = new Color(0.78f, 0.08f, 0.13f, 1f);
+                    count = 22;
+                    lifetime = 0.74f;
+                    shapeType = ParticleSystemShapeType.Sphere;
+                    shapeRotation = Vector3.zero;
+                    radius = 0.44f;
+                    angle = 0f;
+                    minSpeed = 0.35f;
+                    maxSpeed = 1.05f;
+                    minSize = 0.04f;
+                    maxSize = 0.12f;
+                    break;
+            }
+
+            Emit(
+                anchor,
+                color,
+                count,
+                lifetime,
+                shapeType,
+                shapeRotation,
+                radius,
+                angle,
+                minSpeed,
+                maxSpeed,
+                minSize,
+                maxSize);
         }
 
         private PooledEffect CreatePooledEffect(int index)
@@ -88,12 +195,26 @@ namespace Vexforge.Tier1
             var renderer = ps.GetComponent<ParticleSystemRenderer>();
             renderer.sharedMaterial = particleMaterial;
             renderer.renderMode = ParticleSystemRenderMode.Billboard;
+            ps.useAutoRandomSeed = false;
+            ps.randomSeed = (uint)(index + 1);
             ps.Stop(true, ParticleSystemStopBehavior.StopEmittingAndClear);
 
             return new PooledEffect { System = ps };
         }
 
-        private void Emit(Vector3 position, Color color, int count, float lifetime)
+        private void Emit(
+            Vector3 position,
+            Color color,
+            int count,
+            float lifetime,
+            ParticleSystemShapeType shapeType,
+            Vector3 shapeRotation,
+            float radius,
+            float angle,
+            float minSpeed,
+            float maxSpeed,
+            float minSize,
+            float maxSize)
         {
             if (particleMaterial == null)
                 return;
@@ -117,8 +238,15 @@ namespace Vexforge.Tier1
             ps.Clear(true);
             var main = ps.main;
             main.duration = lifetime;
-            main.startLifetime = new ParticleSystem.MinMaxCurve(lifetime * .35f, lifetime);
+            main.startLifetime = new ParticleSystem.MinMaxCurve(lifetime * 0.55f, lifetime);
             main.startColor = color;
+            main.startSpeed = new ParticleSystem.MinMaxCurve(minSpeed, maxSpeed);
+            main.startSize = new ParticleSystem.MinMaxCurve(minSize, maxSize);
+            var shape = ps.shape;
+            shape.shapeType = shapeType;
+            shape.rotation = shapeRotation;
+            shape.radius = radius;
+            shape.angle = angle;
             ps.Emit(Mathf.Min(24, count));
             ps.Play();
             effect.ReleaseRoutine = StartCoroutine(ReleaseAfter(effect, lifetime + .18f));
