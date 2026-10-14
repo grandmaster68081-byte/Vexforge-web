@@ -2,8 +2,8 @@
 
 ## Estado actual
 
-- HEAD de implementación: `7f4c86b` (`main`, publicado en GitHub).
-- Bloque actual: **2 — manifiesto, asset import y telemetría de arte de cartas**; cambios fuente comprometidos; gates de Editor pendientes.
+- HEAD de implementación: `53fdc01` (`main`, publicado en GitHub).
+- Bloque actual: **3 — Nexus: kit de mallas originales integrado al runtime; validación de Editor y escena de producción pendientes**.
 - Este estado sigue el HEAD de implementación; su propio commit sólo registra evidencia.
 - Unity declarado: `6000.3.0f1`; URP `17.3.0`; Input System `1.20.0`; UGUI `2.0.0`.
 - Proyecto Unity canónico: `unity/`; escena existente en Build Settings: `Assets/Scenes/VexforgeBootstrap.unity`.
@@ -30,27 +30,41 @@
 - **Importación AssetDatabase, decode/assign de las 127 texturas dentro de Unity:** `NOT_RUN`; el gate de Editor existe, pero Unity Editor no está instalado.
 - **Commit:** `7f4c86b`, `fix(unity): enforce visual asset domains and card art validation`, publicado en `main`.
 
+## Bloque 3 — Nexus y kit visual propio
+
+- **Implementado en fuente:** generador determinista para tres mallas OBJ originales del Nexus (dais, espina de la ciudadela y portal), con 1.268 triángulos, cinco slots de material, biblioteca MTL y cuatro texturas de 256 × 256.
+- **Implementado en fuente:** manifiesto independiente de mallas y fábrica Unity que exige registro, geometría importada y todos los slots declarados; si falta un recurso crítico o su material, falla explícitamente en lugar de mostrar primitivas.
+- **Integrado al runtime:** tanto el director activo `VexforgeAlphaWorldDirector` como `NexusPresentationRoot` cargan el kit. Se mantienen los hotspots, colliders y navegación existentes; los dos constructores ya no dibujan primitivas ni rótulos `TextMesh` para el Nexus.
+- **Prueba estática:** `npm run verify:nexus-meshes` — `PASS`; valida mallas, índices, triángulos, materiales, texturas y las rutas de runtime. No demuestra importación en Unity.
+- **Verificación conjunta:** `npm run verify:visual-production` — `PASS`; también verificó ciclo de Battle, presentación de cartas, recursos locales y 127/127 objetos oficiales de Storage alcanzables.
+- **No completado:** Unity AssetDatabase/importación OBJ, resolución real de slots y shaders, Game View, Play Mode, capturas, escena serializada y prefabs. El bloque 3 sigue abierto hasta esas comprobaciones visuales.
+- **Commit:** `53fdc01`, `feat(unity): add authored VEXFORGE Nexus mesh kit`, publicado en `main`.
+
 ## Assets, escenas y bloques
 
-- Assets 3D nuevos integrados: ninguno.
+- Assets nuevos integrados: tres mallas 3D originales del Nexus, su generador determinista, cuatro texturas de material y el catálogo de carga.
 - Escenas de producción completadas: ninguna.
 - Los fondos y modelos existentes no se declaran como escenas de producción; sus campos descriptivos `quality: production` no se toman como evidencia.
-- Bloques 3–8: `NOT_RUN`; no se han sustituido las representaciones provisionales ni verificado escenas/runtime.
+- Bloque 3: implementación de fuente parcial; gates de Unity y escena serializada pendientes.
+- Bloques 4–8: `NOT_RUN`; Battlefield, cartas, demás dominios, cinematics/audio y hardening siguen abiertos.
 
 ## Gates
 
 | Gate | Estado | Evidencia / motivo |
 |---|---|---|
-| Sincronización GitHub `main` | PASS | Push confirmado; el código del Bloque 2 está en `7f4c86b`. |
+| Sincronización GitHub `main` | PASS | Push confirmado; el kit de Nexus está en `53fdc01`. |
 | Ciclo canónico de batalla, fuente | PASS | `node unity/verify-battle-presentation-lifecycle.mjs`; sólo contrato estático. |
 | Recursos locales declarados | PASS | `npm run verify:unity-assets`; verifica fuentes/metadatos, no AssetDatabase. |
 | Catálogo remoto completo y URLs accesibles | PASS | `npm run verify:card-art`; 127/127, sin descarga/decodificación de imagen. |
+| Mallas Nexus, fuentes y rutas estáticas | PASS | `npm run verify:nexus-meshes`; no reemplaza el importador ni una captura. |
 | Compilación C# / AssetDatabase import | NOT_RUN | No hay Unity Editor/Hub ni compilador C# en este entorno. |
+| Importación OBJ, slots de material URP y aspecto real del Nexus | NOT_RUN | Requiere abrir el proyecto oficial con Unity `6000.3.0f1`. |
 | Decode y asignación de arte en Unity | NOT_RUN | Requiere ejecutar el gate de catálogo dentro del Editor. |
 | Play Mode, capturas Game View y rendimiento en Android | BLOCKED | Requiere Editor y dispositivo/runtime; no se infiere de pruebas estáticas. |
 | APK oficial | NOT_RUN | La orden reserva la build para release candidate; este source aún no ha llegado a ese gate. |
-| Bloques 3–8 | NOT_RUN | Nexus, Battlefield, cartas, demás dominios, cinematics/audio y hardening siguen abiertos. |
+| Escena serializada de Nexus / prefabs de producción | NOT_RUN | El runtime consume los modelos, pero aún no existe una escena de producción verificada ni capturas. |
+| Bloques 4–8 | NOT_RUN | Battlefield, cartas, demás dominios, cinematics/audio y hardening siguen abiertos. |
 
 ## Bloqueador real y siguiente acción exacta
 
-La validación del Bloque 2 que falta es Unity Editor: abrir `unity/` con `6000.3.0f1`, ejecutar `VEXFORGE/Tier1/Validate Production Closure V15.1` y `VEXFORGE/Production/Verify Official Card Art Catalog`, corregir errores de import/decode/asignación y conservar el resultado. Después continuar con el kit original y la escena autorada de Nexus del Bloque 3. No usar Unity Cloud Build. La única ruta de APK es el workflow manual de GitHub y sigue reservada para un candidato; las credenciales Replit no se copian a GitHub Actions.
+La validación restante del Bloque 3 requiere abrir `unity/` con `6000.3.0f1`, importar las mallas y texturas, confirmar los slots y shaders reales, probar cada hotspot en Play Mode y guardar capturas. Después crear/verificar la escena serializada y prefabs de producción del Nexus; luego continuar con Battlefield y los bloques restantes. La orden de GitHub ya contiene el kit de fuente y el verificador. Supabase y el catálogo oficial no se modificaron. No usar Unity Cloud Build. La APK queda reservada para un candidato; las credenciales Replit no se copian a GitHub Actions.
