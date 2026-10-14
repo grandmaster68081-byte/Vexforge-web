@@ -217,13 +217,26 @@ card rarity is unrelated and must remain intact.
 
 ## Run & verify
 
-Unity Editor/device validation is not available in this environment. Do not
-claim Unity compilation, Android behavior, or parity without corresponding
-evidence. The promoted official workflow is manual; it was not run as part of the
-promotion. Historical Bootstrap APKs do not verify the promoted official state.
-
-The root `npm run verify`, `npm run typecheck`, and `npm run build` commands
-apply to the web portal, not to Unity.
+- The Replit container has .NET SDK 10 for auxiliary tooling, but it does not
+  host Unity Editor or Unity Hub. Do not treat .NET as a Unity compiler.
+- Unity Editor and Android builds run on the official GitHub Actions runner via
+  `.github/workflows/vexforge-unity-android-github.yml`. That workflow installs
+  Unity Hub, the exact editor version from `unity/ProjectSettings/ProjectVersion.txt`,
+  and Android modules before compiling/building the official project.
+- Use `npm run unity:android` to dispatch and monitor that workflow. It requires
+  a clean local `main`, `HEAD` synchronized with GitHub `main`, and the Replit
+  Secret `GITHUB_PAT`. It reuses a run for the same commit and refuses to start
+  a concurrent build for a different commit. Unity license credentials remain
+  in GitHub Actions Secrets; never copy Replit secret values to GitHub.
+- The workflow proves only the gates it actually runs. It performs a batch
+  Android build; it does not by itself prove interactive Game View, Play Mode,
+  real-device performance, or a ten-minute device soak. Check workflow logs and
+  artifacts before reporting any gate as passed.
+- Before dispatching manually or with the helper, inspect Actions for an
+  already-running build. Avoid duplicate Unity installations/builds.
+- `npm run verify:visual-production`, `npm run verify`, `npm run typecheck`, and
+  `npm run build` are source/portal checks; only the first checks Unity source
+  contracts, and none substitutes for Unity Editor or device evidence.
 
 ## Runtime stack
 
