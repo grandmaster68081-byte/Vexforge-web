@@ -2,8 +2,8 @@
 
 ## Estado actual
 
-- HEAD de implementación: `53fdc01` (`main`, publicado en GitHub).
-- Bloque actual: **3 — Nexus: kit de mallas originales integrado al runtime; validación de Editor y escena de producción pendientes**.
+- HEAD de implementación: `b3875b8` (`main`, publicado en GitHub).
+- Bloque actual: **4 — Battlefield y VFX: anclaje a eventos y reutilización implementados en fuente; escena visual y validación de Editor pendientes**.
 - Este estado sigue el HEAD de implementación; su propio commit sólo registra evidencia.
 - Unity declarado: `6000.3.0f1`; URP `17.3.0`; Input System `1.20.0`; UGUI `2.0.0`.
 - Proyecto Unity canónico: `unity/`; escena existente en Build Settings: `Assets/Scenes/VexforgeBootstrap.unity`.
@@ -40,31 +40,42 @@
 - **No completado:** Unity AssetDatabase/importación OBJ, resolución real de slots y shaders, Game View, Play Mode, capturas, escena serializada y prefabs. El bloque 3 sigue abierto hasta esas comprobaciones visuales.
 - **Commit:** `53fdc01`, `feat(unity): add authored VEXFORGE Nexus mesh kit`, publicado en `main`.
 
+## Bloque 4 — Battlefield y VFX (parcial)
+
+- **Implementado en fuente:** el director de presentación expone el ancla espacial del evento vigente. El escenario resuelve objetivo/actor usando `target_id`/`actor_id` y las zonas canónicas; eventos de jefe/victoria usan el núcleo del escenario.
+- **Implementado en fuente:** el director VFX reserva cinco sistemas de partículas al inicializar y los reutiliza; cada efecto usa el ancla del evento, respeta movimiento reducido y limpia/libera el sistema al terminar.
+- **Prueba estática:** `npm run verify:battle-vfx` — `PASS`; comprueba delegación de ancla, mapeo de actor/objetivo y reutilización. No prueba emisión ni posición dentro de Unity.
+- **No completado:** el escenario aún crea geometría visible mediante primitivas y anillos; no hay kit/escena/prefabs de Battlefield ni catálogo de VFX por tipo. Faltan importación, Play Mode, captura y medición real de rendimiento.
+- **Commit:** `b3875b8`, `fix(unity): anchor battle vfx and reuse particles`, publicado en `main`.
+
 ## Assets, escenas y bloques
 
 - Assets nuevos integrados: tres mallas 3D originales del Nexus, su generador determinista, cuatro texturas de material y el catálogo de carga.
 - Escenas de producción completadas: ninguna.
 - Los fondos y modelos existentes no se declaran como escenas de producción; sus campos descriptivos `quality: production` no se toman como evidencia.
 - Bloque 3: implementación de fuente parcial; gates de Unity y escena serializada pendientes.
-- Bloques 4–8: `NOT_RUN`; Battlefield, cartas, demás dominios, cinematics/audio y hardening siguen abiertos.
+- Bloque 4: implementación de fuente parcial; geometría, arte final y gates de Unity pendientes.
+- Bloques 5–8: `NOT_RUN`; cartas, demás dominios, cinematics/audio y hardening siguen abiertos.
 
 ## Gates
 
 | Gate | Estado | Evidencia / motivo |
 |---|---|---|
-| Sincronización GitHub `main` | PASS | Push confirmado; el kit de Nexus está en `53fdc01`. |
+| Sincronización GitHub `main` | PASS | Push confirmado; el último cambio de fuente visual está en `b3875b8`. |
 | Ciclo canónico de batalla, fuente | PASS | `node unity/verify-battle-presentation-lifecycle.mjs`; sólo contrato estático. |
 | Recursos locales declarados | PASS | `npm run verify:unity-assets`; verifica fuentes/metadatos, no AssetDatabase. |
 | Catálogo remoto completo y URLs accesibles | PASS | `npm run verify:card-art`; 127/127, sin descarga/decodificación de imagen. |
 | Mallas Nexus, fuentes y rutas estáticas | PASS | `npm run verify:nexus-meshes`; no reemplaza el importador ni una captura. |
+| Anclas de eventos y reutilización VFX, fuente | PASS | `npm run verify:battle-vfx`; no reemplaza Play Mode ni verifica efectos por tipo. |
 | Compilación C# / AssetDatabase import | NOT_RUN | No hay Unity Editor/Hub ni compilador C# en este entorno. |
 | Importación OBJ, slots de material URP y aspecto real del Nexus | NOT_RUN | Requiere abrir el proyecto oficial con Unity `6000.3.0f1`. |
 | Decode y asignación de arte en Unity | NOT_RUN | Requiere ejecutar el gate de catálogo dentro del Editor. |
 | Play Mode, capturas Game View y rendimiento en Android | BLOCKED | Requiere Editor y dispositivo/runtime; no se infiere de pruebas estáticas. |
 | APK oficial | NOT_RUN | La orden reserva la build para release candidate; este source aún no ha llegado a ese gate. |
 | Escena serializada de Nexus / prefabs de producción | NOT_RUN | El runtime consume los modelos, pero aún no existe una escena de producción verificada ni capturas. |
-| Bloques 4–8 | NOT_RUN | Battlefield, cartas, demás dominios, cinematics/audio y hardening siguen abiertos. |
+| Bloque 4 — escena, modelos y VFX reales | BLOCKED | La fuente aún conserva primitivas visibles; requiere kit de Battlefield, Unity Editor y validación visual. |
+| Bloques 5–8 | NOT_RUN | Cartas, demás dominios, cinematics/audio y hardening siguen abiertos. |
 
 ## Bloqueador real y siguiente acción exacta
 
-La validación restante del Bloque 3 requiere abrir `unity/` con `6000.3.0f1`, importar las mallas y texturas, confirmar los slots y shaders reales, probar cada hotspot en Play Mode y guardar capturas. Después crear/verificar la escena serializada y prefabs de producción del Nexus; luego continuar con Battlefield y los bloques restantes. La orden de GitHub ya contiene el kit de fuente y el verificador. Supabase y el catálogo oficial no se modificaron. No usar Unity Cloud Build. La APK queda reservada para un candidato; las credenciales Replit no se copian a GitHub Actions.
+El entorno actual no contiene Unity Editor/Hub, por lo que la validación AssetDatabase y Play Mode no se puede ejecutar todavía. Para completar esos gates se necesita instalar `6000.3.0f1` y activarlo con una licencia válida del propietario; después importar modelos/texturas, validar shaders/slots, recorrer las escenas en Play Mode y guardar evidencia. Primero cerrar así el Bloque 3; continuar el kit de Battlefield sin primitivas y completar los bloques 4–8. El repositorio contiene los cambios y verificadores estáticos. Supabase y su catálogo oficial no se modificaron. No usar Unity Cloud Build ni copiar secretos Replit a GitHub Actions. La APK queda reservada para un candidato.
