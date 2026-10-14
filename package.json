@@ -28,7 +28,8 @@
     "verify:unity-assets": "node scripts/verify-tier1-unity-assets.mjs",
     "verify:unity-lifecycle": "node scripts/verify-unity-battle-lifecycle.mjs",
     "verify:unity-card-presentation": "node scripts/verify-unity-card-presentation.mjs",
-    "verify:visual-production": "npm run verify:unity-lifecycle && npm run verify:unity-card-presentation && npm run verify:unity-assets && npm run verify:card-art"
+    "verify:nexus-meshes": "node scripts/verify-vexforge-nexus-meshes.mjs",
+    "verify:visual-production": "npm run verify:unity-lifecycle && npm run verify:unity-card-presentation && npm run verify:unity-assets && npm run verify:nexus-meshes && npm run verify:card-art"
   },
   "dependencies": {
     "react": "18.3.1",

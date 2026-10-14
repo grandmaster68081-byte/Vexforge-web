@@ -145,11 +145,20 @@ namespace Vexforge.Presentation
 
         private void BuildNexus()
         {
-            var floor = CreatePrimitive("NexusFloor", PrimitiveType.Cube, new Vector3(0f, -1.1f, 3.6f), new Vector3(30f, 0.75f, 28f), GetMaterial(0), nexusRoot);
-            CreateRing("NexusRing", new Vector3(0f, -0.67f, 5.0f), 8.2f, 0.14f, GetMaterial(2), nexusRoot);
-            CreateRing("NexusInnerRing", new Vector3(0f, -0.50f, 5.0f), 3.5f, 0.10f, GetMaterial(1), nexusRoot);
-            CreatePrimitive("NexusCore", PrimitiveType.Cylinder, new Vector3(0f, 0.05f, 5f), new Vector3(3.1f, 0.42f, 3.1f), GetMaterial(1), nexusRoot);
-            CreatePrimitive("NexusMonument", PrimitiveType.Cube, new Vector3(0f, 5.5f, 11f), new Vector3(2.4f, 9f, 1.7f), GetMaterial(0), nexusRoot);
+            VexforgeWorldMeshFactory.Instantiate(
+                "VF_NEXUS_CITADEL_DAIS",
+                nexusRoot,
+                new Vector3(0f, -0.05f, 3.6f),
+                Quaternion.identity,
+                Vector3.one,
+                name => ResolveWorldMeshMaterial(name, new Color(0.18f, 0.68f, 0.90f, 1f)));
+            VexforgeWorldMeshFactory.Instantiate(
+                "VF_NEXUS_CITADEL_SPINE",
+                nexusRoot,
+                new Vector3(0f, 0.04f, 10.3f),
+                Quaternion.identity,
+                Vector3.one,
+                name => ResolveWorldMeshMaterial(name, new Color(0.18f, 0.68f, 0.90f, 1f)));
 
             CreateNexusLight(new Vector3(0f, 5f, 3.2f), new Color(1f, 0.65f, 0.28f, 1f), 3.2f, 14f);
             CreateNexusLight(new Vector3(-7f, 3f, 5f), new Color(0.20f, 0.50f, 0.85f, 1f), 2.2f, 10f);
@@ -260,29 +269,16 @@ namespace Vexforge.Presentation
             hotspot.RouteRequested += HandleRouteRequested;
 
             var collider = root.GetComponent<BoxCollider>();
-            collider.size = new Vector3(3f, 2.8f, 3f);
-            collider.center = new Vector3(0f, 1.2f, 0f);
+            collider.size = new Vector3(3.4f, 3.8f, 1.6f);
+            collider.center = new Vector3(0f, 1.82f, 0f);
 
-            CreatePrimitive(spec.Label + "Pedestal", PrimitiveType.Cylinder, Vector3.zero, new Vector3(2.4f, 0.35f, 2.4f), GetMaterial(0), root.transform);
-            var portalMaterial = CreateMaterial(spec.Accent, true);
-            materials.Add(portalMaterial);
-            var rune = CreateRing(spec.Label + "Rune", new Vector3(0f, 0.42f, 0f), 1.35f, 0.10f, portalMaterial, root.transform);
-            var monolith = CreatePrimitive(spec.Label + "Monolith", PrimitiveType.Cube, new Vector3(0f, 1.55f, 0f), new Vector3(0.55f, 2.25f, 0.55f), portalMaterial, root.transform);
-            monolith.transform.localRotation = Quaternion.Euler(0f, 45f, 0f);
-            var pulse = root.AddComponent<VexforgePortalPulse>();
-            pulse.Configure(rune, monolith.transform);
-
-            var textObject = new GameObject(spec.Label + "Label");
-            textObject.transform.SetParent(root.transform, false);
-            textObject.transform.localPosition = new Vector3(0f, 3.05f, 0f);
-            textObject.transform.localRotation = Quaternion.Euler(62f, 0f, 0f);
-            var text = textObject.AddComponent<TextMesh>();
-            text.text = spec.Label;
-            text.anchor = TextAnchor.MiddleCenter;
-            text.alignment = TextAlignment.Center;
-            text.fontSize = 42;
-            text.characterSize = 0.03f;
-            text.color = spec.Accent;
+            VexforgeWorldMeshFactory.Instantiate(
+                "VF_NEXUS_PORTAL_GATE",
+                root.transform,
+                Vector3.zero,
+                Quaternion.identity,
+                Vector3.one,
+                materialName => ResolveWorldMeshMaterial(materialName, spec.Accent));
         }
 
         private void BuildCameraAnchors()
@@ -358,14 +354,66 @@ namespace Vexforge.Presentation
 
         private void CreateMaterials()
         {
-            materials.Add(CreateMaterial(new Color(0.032f, 0.025f, 0.041f, 1f), false));
-            materials.Add(CreateMaterial(new Color(0.26f, 0.13f, 0.065f, 1f), true));
-            materials.Add(CreateMaterial(new Color(0.22f, 0.42f, 0.58f, 1f), true));
-            materials.Add(CreateMaterial(new Color(0.08f, 0.10f, 0.13f, 1f), false));
-            materials.Add(CreateMaterial(new Color(0.74f, 0.56f, 0.26f, 1f), true));
+            materials.Add(CreateMaterial(
+                new Color(0.68f, 0.63f, 0.78f, 1f),
+                false,
+                RequireMeshTexture("VF_NEXUS_OBSIDIAN_ALBEDO")));
+            materials.Add(CreateMaterial(
+                new Color(0.90f, 0.58f, 0.23f, 1f),
+                true,
+                RequireMeshTexture("VF_NEXUS_BRASS_ALBEDO")));
+            materials.Add(CreateMaterial(
+                new Color(0.66f, 0.88f, 0.96f, 1f),
+                true,
+                RequireMeshTexture("VF_NEXUS_CYAN_ALBEDO")));
+            materials.Add(CreateMaterial(
+                new Color(0.74f, 0.78f, 0.84f, 1f),
+                false,
+                RequireMeshTexture("VF_NEXUS_IRON_ALBEDO")));
+            materials.Add(CreateMaterial(
+                new Color(0.90f, 0.78f, 0.52f, 1f),
+                true,
+                RequireMeshTexture("VF_NEXUS_BRASS_ALBEDO")));
             materials.Add(CreateMaterial(new Color(0.36f, 0.23f, 0.10f, 1f), true));
             materials.Add(CreateMaterial(new Color(0.12f, 0.32f, 0.20f, 1f), true));
             materials.Add(CreateMaterial(new Color(0.25f, 0.18f, 0.42f, 1f), true));
+        }
+
+        private Material ResolveWorldMeshMaterial(string importedName, Color routeAccent)
+        {
+            if (string.IsNullOrWhiteSpace(importedName))
+                throw new InvalidOperationException("VEXFORGE world mesh contains an unnamed material.");
+            if (importedName.IndexOf("VEXFORGE_OBSIDIAN", StringComparison.Ordinal) >= 0)
+                return GetMaterial(0);
+            if (importedName.IndexOf("VEXFORGE_IRON", StringComparison.Ordinal) >= 0)
+                return GetMaterial(3);
+            if (importedName.IndexOf("VEXFORGE_BRASS", StringComparison.Ordinal) >= 0)
+                return GetMaterial(4);
+            if (importedName.IndexOf("VEXFORGE_CYAN", StringComparison.Ordinal) >= 0)
+                return GetMaterial(2);
+            if (importedName.IndexOf("VEXFORGE_ACCENT", StringComparison.Ordinal) >= 0)
+            {
+                var accent = CreateMaterial(routeAccent, true);
+                materials.Add(accent);
+                return accent;
+            }
+
+            throw new InvalidOperationException(
+                "VEXFORGE world mesh material is not in the approved palette: " +
+                importedName);
+        }
+
+        private static Texture2D RequireMeshTexture(string assetId)
+        {
+            var texture = Resources.Load<Texture2D>(
+                "VexforgeTier1/Models/" + assetId);
+            if (texture == null)
+            {
+                throw new InvalidOperationException(
+                    "VEXFORGE critical mesh texture is missing: asset_id=" + assetId);
+            }
+
+            return texture;
         }
 
         private Material GetMaterial(int index)
@@ -373,16 +421,28 @@ namespace Vexforge.Presentation
             return index >= 0 && index < materials.Count ? materials[index] : null;
         }
 
-        private static Material CreateMaterial(Color color, bool emission)
+        private static Material CreateMaterial(
+            Color color,
+            bool emission,
+            Texture2D baseMap = null)
         {
             var shader = Shader.Find("Universal Render Pipeline/Lit");
             if (shader == null)
-                shader = Shader.Find("Standard");
-            if (shader == null)
-                return null;
+            {
+                throw new InvalidOperationException(
+                    "VEXFORGE requires the installed Universal Render Pipeline/Lit shader.");
+            }
+
             var material = new Material(shader);
             if (material.HasProperty("_BaseColor")) material.SetColor("_BaseColor", color);
             if (material.HasProperty("_Color")) material.SetColor("_Color", color);
+            if (baseMap != null)
+            {
+                if (material.HasProperty("_BaseMap"))
+                    material.SetTexture("_BaseMap", baseMap);
+                else if (material.HasProperty("_MainTex"))
+                    material.SetTexture("_MainTex", baseMap);
+            }
             if (emission && material.HasProperty("_EmissionColor"))
             {
                 material.EnableKeyword("_EMISSION");

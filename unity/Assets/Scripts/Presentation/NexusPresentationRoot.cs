@@ -6,14 +6,14 @@ namespace Vexforge.Presentation
 {
     /// <summary>
     /// Canonical world-space Nexus foundation.
-    /// It is structural presentation, not final art. Navigation is forwarded to the existing
-    /// NavigationService; no alternate route state machine is created here.
+    /// It loads authored VEXFORGE meshes and forwards navigation to the existing service.
     /// </summary>
     public sealed class NexusPresentationRoot : MonoBehaviour
     {
         private NavigationService navigation;
-        private VexforgePresentationResources resources;
         private readonly List<Material> runtimeMaterials = new List<Material>();
+        private readonly Dictionary<string, Material> meshMaterials =
+            new Dictionary<string, Material>(System.StringComparer.Ordinal);
 
         private bool built;
         private bool savedFog;
@@ -25,7 +25,6 @@ namespace Vexforge.Presentation
             if (built) return;
 
             navigation = navigationService;
-            resources = VexforgePresentationResources.LoadRuntime();
             SaveRenderSettings();
             BuildWorld();
             built = true;
@@ -40,33 +39,20 @@ namespace Vexforge.Presentation
 
             ConfigureLighting();
 
-            CreatePrimitive(
-                "NexusStoneFloor",
-                PrimitiveType.Cube,
-                new Vector3(0f, -1.2f, 3.0f),
-                new Vector3(24f, 0.7f, 22f),
-                resources == null ? null : resources.WorldSurfaceMaterial);
-
-            CreatePrimitive(
-                "NexusInnerRing",
-                PrimitiveType.Cylinder,
-                new Vector3(0f, -0.72f, 4.0f),
-                new Vector3(10f, 0.24f, 10f),
-                resources == null ? null : resources.CardBodyMaterial);
-
-            CreatePrimitive(
-                "NexusForgeCore",
-                PrimitiveType.Cylinder,
-                new Vector3(0f, 0.32f, 4.1f),
-                new Vector3(3.2f, 0.48f, 3.2f),
-                resources == null ? null : resources.WorldAccentMaterial);
-
-            CreatePrimitive(
-                "NexusObelisk",
-                PrimitiveType.Cube,
-                new Vector3(0f, 3.5f, 10.5f),
-                new Vector3(2.2f, 7.0f, 1.4f),
-                resources == null ? null : resources.WorldSurfaceMaterial);
+            VexforgeWorldMeshFactory.Instantiate(
+                "VF_NEXUS_CITADEL_DAIS",
+                transform,
+                new Vector3(0f, -0.05f, 3.6f),
+                Quaternion.identity,
+                Vector3.one,
+                name => ResolveWorldMeshMaterial(name, new Color(0.18f, 0.68f, 0.90f, 1f)));
+            VexforgeWorldMeshFactory.Instantiate(
+                "VF_NEXUS_CITADEL_SPINE",
+                transform,
+                new Vector3(0f, 0.04f, 10.3f),
+                Quaternion.identity,
+                Vector3.one,
+                name => ResolveWorldMeshMaterial(name, new Color(0.18f, 0.68f, 0.90f, 1f)));
 
             var routes = new[]
             {
@@ -125,53 +111,18 @@ namespace Vexforge.Presentation
             hotspot.RouteRequested += HandleRouteRequested;
 
             var collider = root.GetComponent<BoxCollider>();
-            collider.size = new Vector3(2.6f, 2.5f, 2.6f);
-            collider.center = new Vector3(0f, 1.15f, 0f);
+            collider.size = new Vector3(3.4f, 3.8f, 1.6f);
+            collider.center = new Vector3(0f, 1.82f, 0f);
             collider.enabled = true;
             collider.isTrigger = false;
 
-            CreatePrimitive(
-                definition.Name + "_Pedestal",
-                PrimitiveType.Cylinder,
-                new Vector3(0f, 0.0f, 0f),
-                new Vector3(2.25f, 0.35f, 2.25f),
-                resources == null ? null : resources.WorldSurfaceMaterial,
-                root.transform);
-
-            CreatePrimitive(
-                definition.Name + "_Sigil",
-                PrimitiveType.Cylinder,
-                new Vector3(0f, 0.38f, 0f),
-                new Vector3(1.5f, 0.16f, 1.5f),
-                CreateAccentMaterial(definition.Accent),
-                root.transform);
-
-            var monolith = CreatePrimitive(
-                definition.Name + "_Monument",
-                PrimitiveType.Cube,
-                new Vector3(0f, 1.35f, 0f),
-                new Vector3(0.28f, 1.65f, 0.28f),
-                CreateAccentMaterial(definition.Accent),
-                root.transform);
-
-            monolith.transform.localRotation = Quaternion.Euler(0f, 45f, 0f);
-            CreateWorldLabel(root.transform, definition.Title + "\n" + definition.Subtitle, definition.Accent);
-        }
-
-        private void CreateWorldLabel(Transform parent, string text, Color color)
-        {
-            var labelObject = new GameObject("WorldLabel");
-            labelObject.transform.SetParent(parent, false);
-            labelObject.transform.localPosition = new Vector3(0f, 2.65f, 0f);
-            labelObject.transform.localRotation = Quaternion.Euler(62f, 0f, 0f);
-
-            var label = labelObject.AddComponent<TextMesh>();
-            label.text = text;
-            label.anchor = TextAnchor.MiddleCenter;
-            label.alignment = TextAlignment.Center;
-            label.characterSize = 0.025f;
-            label.fontSize = 44;
-            label.color = color;
+            VexforgeWorldMeshFactory.Instantiate(
+                "VF_NEXUS_PORTAL_GATE",
+                root.transform,
+                Vector3.zero,
+                Quaternion.identity,
+                Vector3.one,
+                name => ResolveWorldMeshMaterial(name, definition.Accent));
         }
 
         private void HandleRouteRequested(GameRoute route)
@@ -182,48 +133,93 @@ namespace Vexforge.Presentation
             }
         }
 
-        private GameObject CreatePrimitive(
-            string objectName,
-            PrimitiveType type,
-            Vector3 position,
-            Vector3 scale,
-            Material material,
-            Transform parent = null)
+        private Material ResolveWorldMeshMaterial(string importedName, Color accent)
         {
-            var target = GameObject.CreatePrimitive(type);
-            target.name = objectName;
-            target.transform.SetParent(parent == null ? transform : parent, false);
-            target.transform.localPosition = position;
-            target.transform.localScale = scale;
+            if (string.IsNullOrWhiteSpace(importedName))
+                throw new System.InvalidOperationException(
+                    "VEXFORGE world mesh contains an unnamed material.");
 
-            var collider = target.GetComponent<Collider>();
-            if (collider != null)
+            string palette;
+            Texture2D texture;
+            Color color;
+            var emission = false;
+            if (importedName.IndexOf("VEXFORGE_OBSIDIAN", System.StringComparison.Ordinal) >= 0)
             {
-                // Only the hotspot root is interactive. Decorative primitives must
-                // never steal the pointer ray from the portal collider.
-                Destroy(collider);
+                palette = "VEXFORGE_OBSIDIAN";
+                texture = RequireWorldTexture("VF_NEXUS_OBSIDIAN_ALBEDO");
+                color = new Color(0.68f, 0.63f, 0.78f, 1f);
+            }
+            else if (importedName.IndexOf("VEXFORGE_IRON", System.StringComparison.Ordinal) >= 0)
+            {
+                palette = "VEXFORGE_IRON";
+                texture = RequireWorldTexture("VF_NEXUS_IRON_ALBEDO");
+                color = new Color(0.74f, 0.78f, 0.84f, 1f);
+            }
+            else if (importedName.IndexOf("VEXFORGE_BRASS", System.StringComparison.Ordinal) >= 0)
+            {
+                palette = "VEXFORGE_BRASS";
+                texture = RequireWorldTexture("VF_NEXUS_BRASS_ALBEDO");
+                color = new Color(0.90f, 0.78f, 0.52f, 1f);
+            }
+            else if (importedName.IndexOf("VEXFORGE_CYAN", System.StringComparison.Ordinal) >= 0)
+            {
+                palette = "VEXFORGE_CYAN";
+                texture = RequireWorldTexture("VF_NEXUS_CYAN_ALBEDO");
+                color = new Color(0.66f, 0.88f, 0.96f, 1f);
+                emission = true;
+            }
+            else if (importedName.IndexOf("VEXFORGE_ACCENT", System.StringComparison.Ordinal) >= 0)
+            {
+                palette = "VEXFORGE_ACCENT:" + ColorUtility.ToHtmlStringRGBA(accent);
+                texture = null;
+                color = accent;
+                emission = true;
+            }
+            else
+            {
+                throw new System.InvalidOperationException(
+                    "VEXFORGE world mesh material is not in the approved palette: " +
+                    importedName);
             }
 
-            var renderer = target.GetComponent<Renderer>();
-            if (renderer != null && material != null)
+            Material cached;
+            if (meshMaterials.TryGetValue(palette, out cached) && cached != null)
+                return cached;
+
+            var shader = Shader.Find("Universal Render Pipeline/Lit");
+            if (shader == null)
             {
-                renderer.sharedMaterial = material;
+                throw new System.InvalidOperationException(
+                    "VEXFORGE requires the installed Universal Render Pipeline/Lit shader.");
             }
 
-            return target;
+            var material = new Material(shader);
+            if (material.HasProperty("_BaseColor")) material.SetColor("_BaseColor", color);
+            if (material.HasProperty("_Color")) material.SetColor("_Color", color);
+            if (texture != null && material.HasProperty("_BaseMap"))
+                material.SetTexture("_BaseMap", texture);
+            if (emission && material.HasProperty("_EmissionColor"))
+            {
+                material.EnableKeyword("_EMISSION");
+                material.SetColor("_EmissionColor", color * 1.6f);
+            }
+
+            runtimeMaterials.Add(material);
+            meshMaterials.Add(palette, material);
+            return material;
         }
 
-        private Material CreateAccentMaterial(Color accent)
+        private static Texture2D RequireWorldTexture(string assetId)
         {
-            if (resources == null || resources.WorldAccentMaterial == null)
-                return null;
+            var texture = Resources.Load<Texture2D>(
+                "VexforgeTier1/Models/" + assetId);
+            if (texture == null)
+            {
+                throw new System.InvalidOperationException(
+                    "VEXFORGE critical mesh texture is missing: asset_id=" + assetId);
+            }
 
-            var instance = new Material(resources.WorldAccentMaterial);
-            if (instance.HasProperty("_BaseColor"))
-                instance.SetColor("_BaseColor", accent);
-
-            runtimeMaterials.Add(instance);
-            return instance;
+            return texture;
         }
 
         private void CreatePointLight(
@@ -279,6 +275,7 @@ namespace Vexforge.Presentation
             }
 
             runtimeMaterials.Clear();
+            meshMaterials.Clear();
 
             if (built)
             {

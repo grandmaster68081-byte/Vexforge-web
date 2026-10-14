@@ -1,0 +1,44 @@
+newmtl VEXFORGE_OBSIDIAN
+Ka 0.08 0.08 0.08
+Kd 0.68 0.63 0.78
+Ks 0.30 0.32 0.42
+Ns 96
+d 1.0
+illum 2
+map_Kd VF_NEXUS_OBSIDIAN_ALBEDO.png
+
+newmtl VEXFORGE_IRON
+Ka 0.08 0.08 0.08
+Kd 0.74 0.78 0.84
+Ks 0.48 0.52 0.62
+Ns 96
+d 1.0
+illum 2
+map_Kd VF_NEXUS_IRON_ALBEDO.png
+
+newmtl VEXFORGE_BRASS
+Ka 0.08 0.08 0.08
+Kd 0.90 0.78 0.52
+Ks 0.72 0.52 0.22
+Ns 96
+d 1.0
+illum 2
+map_Kd VF_NEXUS_BRASS_ALBEDO.png
+
+newmtl VEXFORGE_CYAN
+Ka 0.08 0.08 0.08
+Kd 0.66 0.88 0.96
+Ks 0.26 0.78 0.96
+Ns 96
+d 1.0
+illum 2
+map_Kd VF_NEXUS_CYAN_ALBEDO.png
+
+newmtl VEXFORGE_ACCENT
+Ka 0.08 0.08 0.08
+Kd 0.92 0.78 0.48
+Ks 0.85 0.54 0.18
+Ns 96
+d 1.0
+illum 2
+map_Kd VF_NEXUS_BRASS_ALBEDO.png

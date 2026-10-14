@@ -1,0 +1,64 @@
+{
+  "schema_version": "1.0",
+  "product": "VEXFORGE",
+  "source_of_truth": "scripts/generate-vexforge-nexus-meshes.mjs",
+  "intent": "Original Unity mesh assets; no official card art or remote backgrounds.",
+  "materials": [
+    "VEXFORGE_OBSIDIAN",
+    "VEXFORGE_IRON",
+    "VEXFORGE_BRASS",
+    "VEXFORGE_CYAN",
+    "VEXFORGE_ACCENT"
+  ],
+  "assets": [
+    {
+      "asset_id": "VF_NEXUS_CITADEL_DAIS",
+      "domain": "world/environment",
+      "resources_key": "VexforgeTier1/Models/VF_NEXUS_CITADEL_DAIS",
+      "source_file": "VF_NEXUS_CITADEL_DAIS.obj",
+      "material_slots": [
+        "VEXFORGE_OBSIDIAN",
+        "VEXFORGE_IRON",
+        "VEXFORGE_BRASS"
+      ],
+      "consumers": [
+        "VexforgeAlphaWorldDirector",
+        "NexusPresentationRoot"
+      ]
+    },
+    {
+      "asset_id": "VF_NEXUS_CITADEL_SPINE",
+      "domain": "world/environment",
+      "resources_key": "VexforgeTier1/Models/VF_NEXUS_CITADEL_SPINE",
+      "source_file": "VF_NEXUS_CITADEL_SPINE.obj",
+      "material_slots": [
+        "VEXFORGE_OBSIDIAN",
+        "VEXFORGE_IRON",
+        "VEXFORGE_BRASS",
+        "VEXFORGE_CYAN",
+        "VEXFORGE_ACCENT"
+      ],
+      "consumers": [
+        "VexforgeAlphaWorldDirector",
+        "NexusPresentationRoot"
+      ]
+    },
+    {
+      "asset_id": "VF_NEXUS_PORTAL_GATE",
+      "domain": "world/portal",
+      "resources_key": "VexforgeTier1/Models/VF_NEXUS_PORTAL_GATE",
+      "source_file": "VF_NEXUS_PORTAL_GATE.obj",
+      "material_slots": [
+        "VEXFORGE_OBSIDIAN",
+        "VEXFORGE_IRON",
+        "VEXFORGE_BRASS",
+        "VEXFORGE_CYAN",
+        "VEXFORGE_ACCENT"
+      ],
+      "consumers": [
+        "VexforgeAlphaWorldDirector",
+        "NexusPresentationRoot"
+      ]
+    }
+  ]
+}
