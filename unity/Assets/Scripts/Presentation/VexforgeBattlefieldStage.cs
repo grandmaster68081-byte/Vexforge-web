@@ -17,6 +17,8 @@ namespace Vexforge.Presentation
         private readonly List<GameObject> transientObjects = new List<GameObject>();
         private readonly List<Material> ownedMaterials = new List<Material>();
         private readonly List<Mesh> ownedMeshes = new List<Mesh>();
+        private readonly Dictionary<string, Material> battlefieldMeshMaterials =
+            new Dictionary<string, Material>();
         private Transform arenaRoot;
         private Transform playerZone;
         private Transform opponentZone;
@@ -243,58 +245,47 @@ namespace Vexforge.Presentation
         {
             arenaRoot = new GameObject("BattlefieldArena").transform;
             arenaRoot.SetParent(transform, false);
+            arenaRoot.localPosition = new Vector3(0f, 0f, 5.1f);
 
-            CreatePrimitive(
-                "ArenaFloor",
-                PrimitiveType.Cube,
-                new Vector3(0f, -0.65f, 5.1f),
-                new Vector3(18f, 0.55f, 15f),
-                boardMaterial,
-                arenaRoot);
+            VexforgeWorldMeshFactory.Instantiate(
+                "VF_BATTLE_CITADEL_ARENA",
+                arenaRoot,
+                Vector3.zero,
+                Quaternion.identity,
+                Vector3.one,
+                ResolveBattlefieldMeshMaterial);
 
-            CreateRing("ArenaOuterRing", new Vector3(0f, -0.34f, 5.0f), 7.0f, 0.10f, accentMaterial, arenaRoot);
-            CreateRing("ArenaCoreRing", new Vector3(0f, -0.24f, 5.0f), 2.9f, 0.08f, neutralMaterial, arenaRoot);
-
-            playerZone = CreateZone("PlayerZone", new Vector3(0f, -0.18f, 2.15f), 5.8f, new Color(0.10f, 0.34f, 0.44f, 1f));
-            opponentZone = CreateZone("OpponentZone", new Vector3(0f, -0.18f, 7.95f), 5.8f, new Color(0.38f, 0.12f, 0.18f, 1f));
+            playerZone = CreateAnchor(
+                "PlayerZone",
+                new Vector3(0f, -0.10f, -2.95f));
+            opponentZone = CreateAnchor(
+                "OpponentZone",
+                new Vector3(0f, -0.10f, 2.95f));
 
             var lightObject = new GameObject("BattleAtmosphereLight");
             lightObject.transform.SetParent(arenaRoot, false);
-            lightObject.transform.localPosition = new Vector3(0f, 4.5f, 5.0f);
+            lightObject.transform.localPosition = new Vector3(0f, 4.5f, 0f);
             atmosphereLight = lightObject.AddComponent<Light>();
             atmosphereLight.type = LightType.Point;
             atmosphereLight.range = 12f;
             atmosphereLight.intensity = baseAtmosphereIntensity;
             atmosphereLight.color = baseAtmosphereColor;
 
-            impactCore = CreatePrimitive(
-                "BattleCore",
-                PrimitiveType.Cylinder,
-                new Vector3(0f, 0.05f, 5.0f),
-                new Vector3(1.3f, 0.28f, 1.3f),
-                accentMaterial,
-                arenaRoot).transform;
-
-            for (var i = 0; i < 4; i++)
-            {
-                var angle = (i / 4f) * Mathf.PI * 2f;
-                var p = new Vector3(Mathf.Cos(angle) * 6.2f, 0.15f, 5f + Mathf.Sin(angle) * 6.2f);
-                CreatePrimitive("ArenaObelisk_" + i, PrimitiveType.Cube, p, new Vector3(0.35f, 2.3f, 0.35f), hostileMaterial, arenaRoot);
-            }
+            impactCore = VexforgeWorldMeshFactory.Instantiate(
+                "VF_BATTLE_CITADEL_CORE",
+                arenaRoot,
+                new Vector3(0f, -0.06f, 0f),
+                Quaternion.identity,
+                Vector3.one,
+                ResolveBattlefieldMeshMaterial).transform;
         }
 
-        private Transform CreateZone(string name, Vector3 position, float width, Color accent)
+        private Transform CreateAnchor(string name, Vector3 position)
         {
-            var zone = new GameObject(name).transform;
-            zone.SetParent(arenaRoot, false);
-            zone.localPosition = position;
-            var ringMaterial = CreateMaterial(accent, true);
-            ownedMaterials.Add(ringMaterial);
-            CreateRing(name + "Ring", position + Vector3.up * 0.08f, width * 0.42f, 0.08f, ringMaterial, arenaRoot);
-            var markerMaterial = CreateMaterial(new Color(accent.r, accent.g, accent.b, 0.34f), true);
-            ownedMaterials.Add(markerMaterial);
-            CreatePrimitive(name + "Marker", PrimitiveType.Cube, position, new Vector3(width, 0.06f, 1.9f), markerMaterial, arenaRoot);
-            return zone;
+            var anchor = new GameObject(name).transform;
+            anchor.SetParent(arenaRoot, false);
+            anchor.localPosition = position;
+            return anchor;
         }
 
         private void SetAtmosphere(Color color, float intensity)
@@ -554,8 +545,8 @@ namespace Vexforge.Presentation
             if (impactCore == null)
                 yield break;
 
-            var renderer = impactCore.GetComponent<Renderer>();
-            if (renderer == null)
+            var renderers = impactCore.GetComponentsInChildren<Renderer>();
+            if (renderers == null || renderers.Length == 0)
                 yield break;
 
             if (pulseBlock == null)
@@ -572,20 +563,31 @@ namespace Vexforge.Presentation
                 var n = Mathf.Clamp01(t);
                 var envelope = Mathf.Sin(n * Mathf.PI);
                 impactCore.localScale = baseScale * (1f + envelope * 0.42f);
-                pulseBlock.Clear();
-                var material = renderer.sharedMaterial;
-                if (material != null)
+                for (var i = 0; i < renderers.Length; i++)
                 {
-                    if (material.HasProperty("_BaseColor"))
-                        pulseBlock.SetColor("_BaseColor", Color.Lerp(material.GetColor("_BaseColor"), pulseColor, envelope));
-                    if (material.HasProperty("_EmissionColor"))
-                        pulseBlock.SetColor("_EmissionColor", pulseColor * (1.2f + envelope * 2.0f));
+                    var renderer = renderers[i];
+                    if (renderer == null)
+                        continue;
+
+                    pulseBlock.Clear();
+                    var material = renderer.sharedMaterial;
+                    if (material != null)
+                    {
+                        if (material.HasProperty("_BaseColor"))
+                            pulseBlock.SetColor("_BaseColor", Color.Lerp(material.GetColor("_BaseColor"), pulseColor, envelope));
+                        if (material.HasProperty("_EmissionColor"))
+                            pulseBlock.SetColor("_EmissionColor", pulseColor * (1.2f + envelope * 2.0f));
+                    }
+                    renderer.SetPropertyBlock(pulseBlock);
                 }
-                renderer.SetPropertyBlock(pulseBlock);
                 yield return null;
             }
             impactCore.localScale = baseScale;
-            renderer.SetPropertyBlock(null);
+            for (var i = 0; i < renderers.Length; i++)
+            {
+                if (renderers[i] != null)
+                    renderers[i].SetPropertyBlock(null);
+            }
         }
 
         private IEnumerator CameraImpulse(float duration, float amplitude)
@@ -739,6 +741,114 @@ namespace Vexforge.Presentation
             ownedMaterials.Add(neutralMaterial);
         }
 
+        private Material ResolveBattlefieldMeshMaterial(string importedName)
+        {
+            if (string.IsNullOrWhiteSpace(importedName))
+            {
+                throw new InvalidOperationException(
+                    "VEXFORGE battlefield mesh contains an unnamed material.");
+            }
+
+            string palette;
+            string textureId;
+            Color color;
+            float metallic;
+            float smoothness;
+            var emission = false;
+            if (importedName.IndexOf("VEXFORGE_OBSIDIAN", StringComparison.Ordinal) >= 0)
+            {
+                palette = "VEXFORGE_OBSIDIAN";
+                textureId = "VF_NEXUS_OBSIDIAN_ALBEDO";
+                color = new Color(0.68f, 0.63f, 0.78f, 1f);
+                metallic = 0.28f;
+                smoothness = 0.43f;
+            }
+            else if (importedName.IndexOf("VEXFORGE_IRON", StringComparison.Ordinal) >= 0)
+            {
+                palette = "VEXFORGE_IRON";
+                textureId = "VF_NEXUS_IRON_ALBEDO";
+                color = new Color(0.74f, 0.78f, 0.84f, 1f);
+                metallic = 0.72f;
+                smoothness = 0.56f;
+            }
+            else if (importedName.IndexOf("VEXFORGE_BRASS", StringComparison.Ordinal) >= 0)
+            {
+                palette = "VEXFORGE_BRASS";
+                textureId = "VF_NEXUS_BRASS_ALBEDO";
+                color = new Color(0.90f, 0.78f, 0.52f, 1f);
+                metallic = 0.82f;
+                smoothness = 0.64f;
+            }
+            else if (importedName.IndexOf("VEXFORGE_CYAN", StringComparison.Ordinal) >= 0)
+            {
+                palette = "VEXFORGE_CYAN";
+                textureId = "VF_NEXUS_CYAN_ALBEDO";
+                color = new Color(0.66f, 0.88f, 0.96f, 1f);
+                metallic = 0.32f;
+                smoothness = 0.52f;
+                emission = true;
+            }
+            else if (importedName.IndexOf("VEXFORGE_ACCENT", StringComparison.Ordinal) >= 0)
+            {
+                palette = "VEXFORGE_ACCENT";
+                textureId = "VF_NEXUS_BRASS_ALBEDO";
+                color = new Color(0.92f, 0.48f, 0.22f, 1f);
+                metallic = 0.55f;
+                smoothness = 0.48f;
+                emission = true;
+            }
+            else
+            {
+                throw new InvalidOperationException(
+                    "VEXFORGE battlefield material is not in the approved palette: " +
+                    importedName);
+            }
+
+            Material cached;
+            if (battlefieldMeshMaterials.TryGetValue(palette, out cached) && cached != null)
+                return cached;
+
+            var shader = Shader.Find("Universal Render Pipeline/Lit");
+            if (shader == null)
+            {
+                throw new InvalidOperationException(
+                    "VEXFORGE battlefield requires the installed Universal Render Pipeline/Lit shader.");
+            }
+
+            var texture = Resources.Load<Texture2D>(
+                "VexforgeTier1/Models/" + textureId);
+            if (texture == null)
+            {
+                throw new InvalidOperationException(
+                    "VEXFORGE battlefield material texture is missing: asset_id=" +
+                    textureId);
+            }
+
+            var material = new Material(shader)
+            {
+                name = "VexforgeBattlefield_" + palette,
+            };
+            if (material.HasProperty("_BaseColor"))
+                material.SetColor("_BaseColor", color);
+            if (material.HasProperty("_Color"))
+                material.SetColor("_Color", color);
+            if (material.HasProperty("_BaseMap"))
+                material.SetTexture("_BaseMap", texture);
+            if (material.HasProperty("_Metallic"))
+                material.SetFloat("_Metallic", metallic);
+            if (material.HasProperty("_Smoothness"))
+                material.SetFloat("_Smoothness", smoothness);
+            if (emission && material.HasProperty("_EmissionColor"))
+            {
+                material.EnableKeyword("_EMISSION");
+                material.SetColor("_EmissionColor", color * 1.25f);
+            }
+
+            ownedMaterials.Add(material);
+            battlefieldMeshMaterials.Add(palette, material);
+            return material;
+        }
+
         private static Material CreateMaterial(Color color, bool emission)
         {
             var shader = Shader.Find("Universal Render Pipeline/Lit");
@@ -885,9 +995,14 @@ namespace Vexforge.Presentation
             ResetTransientPresentation();
             if (impactCore != null)
             {
-                var renderer = impactCore.GetComponent<Renderer>();
-                if (renderer != null) renderer.SetPropertyBlock(null);
+                var renderers = impactCore.GetComponentsInChildren<Renderer>();
+                for (var i = 0; i < renderers.Length; i++)
+                {
+                    if (renderers[i] != null)
+                        renderers[i].SetPropertyBlock(null);
+                }
             }
+            battlefieldMeshMaterials.Clear();
             for (var i = ownedMeshes.Count - 1; i >= 0; i--)
             {
                 if (ownedMeshes[i] != null)

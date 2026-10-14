@@ -13,6 +13,8 @@ const expectedAssets = [
   'VF_NEXUS_CITADEL_DAIS',
   'VF_NEXUS_CITADEL_SPINE',
   'VF_NEXUS_PORTAL_GATE',
+  'VF_BATTLE_CITADEL_ARENA',
+  'VF_BATTLE_CITADEL_CORE',
 ];
 const allowedMaterials = new Set([
   'VEXFORGE_OBSIDIAN',
@@ -203,15 +205,20 @@ const factorySource = readText(
   path.join(root, 'unity/Assets/Scripts/Presentation/VexforgeWorldMeshFactory.cs'),
   'world-mesh factory',
 );
+const battlefieldSource = readText(
+  path.join(root, 'unity/Assets/Scripts/Presentation/VexforgeBattlefieldStage.cs'),
+  'Battlefield presentation stage',
+);
 const runtimeGates = [
   [extractMethod(alphaSource, 'private void BuildNexus()', 'Alpha Nexus'), 'Alpha Nexus'],
   [extractMethod(alphaSource, 'private void BuildPortal(PortalSpec spec)', 'Alpha portal'), 'Alpha portal'],
   [extractMethod(nexusSource, 'private void BuildWorld()', 'Nexus foundation'), 'Nexus foundation'],
   [extractMethod(nexusSource, 'private void CreatePortal(PortalDefinition definition)', 'Nexus portal'), 'Nexus portal'],
+  [extractMethod(battlefieldSource, 'private void BuildArena()', 'Battlefield arena'), 'Battlefield arena'],
 ];
 for (const [method, label] of runtimeGates) {
   if (/\b(?:GameObject\.CreatePrimitive|CreatePrimitive\s*\(|CreateRing\s*\(|TextMesh|PrimitiveType\.)/.test(method)) {
-    failures.push(`${label}: production Nexus path still uses primitive/text placeholder geometry`);
+    failures.push(`${label}: production environment path still uses primitive/text placeholder geometry`);
   }
 }
 if (!alphaSource.includes('hotspot.RouteRequested += HandleRouteRequested') ||
@@ -226,9 +233,14 @@ if (!factorySource.includes('Resources.Load<GameObject>') ||
 if (!factorySource.includes('materialResolver(imported.name)')) {
   failures.push('runtime factory does not map imported material slots');
 }
+if (!battlefieldSource.includes('"VF_BATTLE_CITADEL_ARENA"') ||
+    !battlefieldSource.includes('"VF_BATTLE_CITADEL_CORE"') ||
+    !battlefieldSource.includes('ResolveBattlefieldMeshMaterial')) {
+  failures.push('Battlefield runtime does not load its registered authored arena and core meshes');
+}
 
 if (failures.length) {
-  console.error('NEXUS MESH SOURCE VERIFY FAILED');
+  console.error('VEXFORGE WORLD MESH SOURCE VERIFY FAILED');
   failures.forEach((failure) => console.error(`- ${failure}`));
   process.exit(1);
 }
@@ -238,7 +250,7 @@ const triangles = (manifest.assets || []).reduce(
   0,
 );
 console.log(
-  `NEXUS MESH SOURCE PASS — ${manifest.assets.length} original OBJ models, ` +
-  `${triangles} authored triangles, deterministic textures/material slots, and no primitive/text placeholder in either Nexus route. ` +
+  `VEXFORGE WORLD MESH SOURCE PASS — ${manifest.assets.length} original OBJ models, ` +
+  `${triangles} authored triangles, deterministic textures/material slots, and no primitive/text placeholder in Nexus or the static Battlefield arena. ` +
   'Unity model import, material assignment, and Game View remain separate Editor gates.',
 );

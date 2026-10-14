@@ -59,6 +59,38 @@
         "VexforgeAlphaWorldDirector",
         "NexusPresentationRoot"
       ]
+    },
+    {
+      "asset_id": "VF_BATTLE_CITADEL_ARENA",
+      "domain": "world/environment",
+      "resources_key": "VexforgeTier1/Models/VF_BATTLE_CITADEL_ARENA",
+      "source_file": "VF_BATTLE_CITADEL_ARENA.obj",
+      "material_slots": [
+        "VEXFORGE_OBSIDIAN",
+        "VEXFORGE_IRON",
+        "VEXFORGE_BRASS",
+        "VEXFORGE_CYAN",
+        "VEXFORGE_ACCENT"
+      ],
+      "consumers": [
+        "VexforgeBattlefieldStage"
+      ]
+    },
+    {
+      "asset_id": "VF_BATTLE_CITADEL_CORE",
+      "domain": "world/prop",
+      "resources_key": "VexforgeTier1/Models/VF_BATTLE_CITADEL_CORE",
+      "source_file": "VF_BATTLE_CITADEL_CORE.obj",
+      "material_slots": [
+        "VEXFORGE_OBSIDIAN",
+        "VEXFORGE_IRON",
+        "VEXFORGE_BRASS",
+        "VEXFORGE_CYAN",
+        "VEXFORGE_ACCENT"
+      ],
+      "consumers": [
+        "VexforgeBattlefieldStage"
+      ]
     }
   ]
 }

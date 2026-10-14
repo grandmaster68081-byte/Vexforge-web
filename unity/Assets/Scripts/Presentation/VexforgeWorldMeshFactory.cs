@@ -52,10 +52,11 @@ namespace Vexforge.Presentation
             var entry = FindEntry(assetId);
             if (entry == null ||
                 !string.Equals(entry.domain, "world/environment", StringComparison.OrdinalIgnoreCase) &&
-                !string.Equals(entry.domain, "world/portal", StringComparison.OrdinalIgnoreCase))
+                !string.Equals(entry.domain, "world/portal", StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(entry.domain, "world/prop", StringComparison.OrdinalIgnoreCase))
             {
                 throw new InvalidOperationException(
-                    "VEXFORGE world mesh is not registered for an environment domain: " + assetId);
+                    "VEXFORGE world mesh is not registered for an approved world domain: " + assetId);
             }
 
             if (string.IsNullOrWhiteSpace(entry.resources_key) ||

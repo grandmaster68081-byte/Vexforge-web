@@ -519,6 +519,255 @@ function buildPortalGate() {
   return mesh.write();
 }
 
+function battleOvalPoint(radiusX, radiusZ, angle, y) {
+  return [
+    Math.cos(angle) * radiusX,
+    y,
+    Math.sin(angle) * radiusZ,
+  ];
+}
+
+function addBattleStack(mesh, name, centerX, centerZ, levels, sides = 8) {
+  mesh.object(name);
+  const rings = levels.map((level) =>
+    Array.from({ length: sides }, (_, index) => {
+      const angle = (index / sides) * Math.PI * 2 + Math.PI / sides;
+      return [
+        centerX + Math.cos(angle) * level.radius,
+        level.y,
+        centerZ + Math.sin(angle) * level.radius,
+      ];
+    }),
+  );
+
+  for (let levelIndex = 0; levelIndex < levels.length - 1; levelIndex++) {
+    const current = levels[levelIndex];
+    const next = levels[levelIndex + 1];
+    for (let index = 0; index < sides; index++) {
+      const nextIndex = (index + 1) % sides;
+      const angle = ((index + 0.5) / sides) * Math.PI * 2 + Math.PI / sides;
+      mesh.quad(
+        [
+          rings[levelIndex][index],
+          rings[levelIndex][nextIndex],
+          rings[levelIndex + 1][nextIndex],
+          rings[levelIndex + 1][index],
+        ],
+        current.material,
+        [Math.cos(angle), 0, Math.sin(angle)],
+      );
+    }
+  }
+
+  const top = rings[rings.length - 1];
+  const topY = levels[levels.length - 1].y;
+  for (let index = 0; index < sides; index++) {
+    const nextIndex = (index + 1) % sides;
+    mesh.triangle(
+      [
+        [centerX, topY, centerZ],
+        top[index],
+        top[nextIndex],
+      ],
+      levels[levels.length - 1].material,
+      [0, 1, 0],
+    );
+  }
+}
+
+function addBattleGate(mesh, centerZ, name) {
+  const outer = [
+    [-1.74, -0.18], [-1.74, 1.48], [-1.51, 2.02], [-1.06, 2.49],
+    [-0.54, 2.83], [0, 3.00], [0.54, 2.83], [1.06, 2.49],
+    [1.51, 2.02], [1.74, 1.48], [1.74, -0.18],
+  ];
+  const inner = [
+    [-1.26, -0.18], [-1.26, 1.43], [-1.08, 1.83], [-0.72, 2.18],
+    [-0.36, 2.41], [0, 2.55], [0.36, 2.41], [0.72, 2.18],
+    [1.08, 1.83], [1.26, 1.43], [1.26, -0.18],
+  ];
+  const frontZ = centerZ - 0.32;
+  const backZ = centerZ + 0.32;
+  mesh.object(name);
+
+  for (let index = 0; index < outer.length - 1; index++) {
+    const frontOuter = [outer[index][0], outer[index][1], frontZ];
+    const frontNextOuter = [outer[index + 1][0], outer[index + 1][1], frontZ];
+    const frontInner = [inner[index][0], inner[index][1], frontZ];
+    const frontNextInner = [inner[index + 1][0], inner[index + 1][1], frontZ];
+    const backOuter = [outer[index][0], outer[index][1], backZ];
+    const backNextOuter = [outer[index + 1][0], outer[index + 1][1], backZ];
+    const backInner = [inner[index][0], inner[index][1], backZ];
+    const backNextInner = [inner[index + 1][0], inner[index + 1][1], backZ];
+
+    const trim = index === 4 || index === 5
+      ? 'VEXFORGE_BRASS'
+      : 'VEXFORGE_IRON';
+    mesh.quad(
+      [frontOuter, frontNextOuter, frontNextInner, frontInner],
+      trim,
+      [0, 0, -1],
+    );
+    mesh.quad(
+      [backNextOuter, backOuter, backInner, backNextInner],
+      'VEXFORGE_OBSIDIAN',
+      [0, 0, 1],
+    );
+    mesh.quad(
+      [frontOuter, frontNextOuter, backNextOuter, backOuter],
+      'VEXFORGE_OBSIDIAN',
+      [0, 1, 0],
+    );
+    mesh.quad(
+      [frontInner, backInner, backNextInner, frontNextInner],
+      'VEXFORGE_CYAN',
+      [0, 0, -1],
+    );
+  }
+}
+
+function buildBattleArena() {
+  const mesh = new ObjBuilder('VF_BATTLE_CITADEL_ARENA');
+  const segments = 48;
+  const levels = [
+    { radiusX: 8.9, radiusZ: 7.35, y: -0.70, material: 'VEXFORGE_OBSIDIAN' },
+    { radiusX: 8.9, radiusZ: 7.35, y: -0.48, material: 'VEXFORGE_IRON' },
+    { radiusX: 8.64, radiusZ: 7.08, y: -0.34, material: 'VEXFORGE_BRASS' },
+    { radiusX: 8.38, radiusZ: 6.83, y: -0.24, material: 'VEXFORGE_IRON' },
+    { radiusX: 7.84, radiusZ: 6.34, y: -0.18, material: 'VEXFORGE_OBSIDIAN' },
+  ];
+
+  mesh.object('VF_BATTLE_TIERED_OVAL_DAIS');
+  for (let levelIndex = 0; levelIndex < levels.length - 1; levelIndex++) {
+    const current = levels[levelIndex];
+    const next = levels[levelIndex + 1];
+    for (let index = 0; index < segments; index++) {
+      const angle = (index / segments) * Math.PI * 2;
+      const nextAngle = ((index + 1) / segments) * Math.PI * 2;
+      const outward = [Math.cos(angle + Math.PI / segments), 0.12, Math.sin(angle + Math.PI / segments)];
+      mesh.quad(
+        [
+          battleOvalPoint(current.radiusX, current.radiusZ, angle, current.y),
+          battleOvalPoint(current.radiusX, current.radiusZ, nextAngle, current.y),
+          battleOvalPoint(next.radiusX, next.radiusZ, nextAngle, next.y),
+          battleOvalPoint(next.radiusX, next.radiusZ, angle, next.y),
+        ],
+        current.material,
+        outward,
+      );
+    }
+  }
+
+  const top = levels[levels.length - 1];
+  for (let index = 0; index < segments; index++) {
+    const angle = (index / segments) * Math.PI * 2;
+    const nextAngle = ((index + 1) / segments) * Math.PI * 2;
+    const material = index % 8 === 0 ? 'VEXFORGE_BRASS' : 'VEXFORGE_OBSIDIAN';
+    mesh.triangle(
+      [
+        [0, top.y, 0],
+        battleOvalPoint(top.radiusX, top.radiusZ, angle, top.y),
+        battleOvalPoint(top.radiusX, top.radiusZ, nextAngle, top.y),
+      ],
+      material,
+      [0, 1, 0],
+    );
+  }
+
+  mesh.object('VF_BATTLE_PLAYER_AND_RIVAL_WARD_INLAYS');
+  for (const side of [-1, 1]) {
+    const material = side < 0 ? 'VEXFORGE_CYAN' : 'VEXFORGE_ACCENT';
+    const zoneZ = side * 2.95;
+    for (const x of [-5.3, -3.4, 3.4, 5.3]) {
+      const halfWidth = 0.20;
+      const halfDepth = 0.34;
+      const y = -0.155;
+      mesh.quad(
+        [
+          [x, y, zoneZ - halfDepth],
+          [x + halfWidth, y, zoneZ],
+          [x, y, zoneZ + halfDepth],
+          [x - halfWidth, y, zoneZ],
+        ],
+        material,
+        [0, 1, 0],
+      );
+    }
+    for (const x of [-6.1, 6.1]) {
+      mesh.quad(
+        [
+          [x - 0.52, -0.15, zoneZ - 0.08],
+          [x + 0.52, -0.15, zoneZ - 0.08],
+          [x + 0.36, -0.15, zoneZ + 0.08],
+          [x - 0.36, -0.15, zoneZ + 0.08],
+        ],
+        'VEXFORGE_BRASS',
+        [0, 1, 0],
+      );
+    }
+  }
+
+  mesh.object('VF_BATTLE_GATEWAYS');
+  addBattleGate(mesh, -6.12, 'VF_BATTLE_GATEWAY_PLAYER');
+  addBattleGate(mesh, 6.12, 'VF_BATTLE_GATEWAY_RIVAL');
+
+  const pillarLevels = [
+    { y: -0.18, radius: 0.72, material: 'VEXFORGE_OBSIDIAN' },
+    { y: 0.08, radius: 0.72, material: 'VEXFORGE_IRON' },
+    { y: 0.34, radius: 0.52, material: 'VEXFORGE_BRASS' },
+    { y: 1.44, radius: 0.30, material: 'VEXFORGE_OBSIDIAN' },
+    { y: 1.68, radius: 0.45, material: 'VEXFORGE_BRASS' },
+    { y: 1.92, radius: 0.26, material: 'VEXFORGE_IRON' },
+    { y: 2.48, radius: 0.11, material: 'VEXFORGE_CYAN' },
+  ];
+  for (const x of [-7.0, 7.0]) {
+    for (const z of [-5.65, 5.65]) {
+      addBattleStack(
+        mesh,
+        `VF_BATTLE_SENTINEL_${x < 0 ? 'WEST' : 'EAST'}_${z < 0 ? 'PLAYER' : 'RIVAL'}`,
+        x,
+        z,
+        pillarLevels,
+      );
+    }
+  }
+
+  return mesh.write();
+}
+
+function buildBattleCore() {
+  const mesh = new ObjBuilder('VF_BATTLE_CITADEL_CORE');
+  addBattleStack(mesh, 'VF_BATTLE_CORE_RELIQUARY', 0, 0, [
+    { y: -0.12, radius: 0.96, material: 'VEXFORGE_OBSIDIAN' },
+    { y: 0.04, radius: 1.12, material: 'VEXFORGE_IRON' },
+    { y: 0.25, radius: 0.82, material: 'VEXFORGE_BRASS' },
+    { y: 0.46, radius: 0.55, material: 'VEXFORGE_OBSIDIAN' },
+    { y: 1.46, radius: 0.28, material: 'VEXFORGE_IRON' },
+    { y: 1.68, radius: 0.43, material: 'VEXFORGE_BRASS' },
+    { y: 1.94, radius: 0.06, material: 'VEXFORGE_CYAN' },
+  ], 12);
+
+  mesh.object('VF_BATTLE_CORE_SIGIL');
+  const coreAngles = [0, Math.PI / 2, Math.PI, Math.PI * 1.5];
+  for (let index = 0; index < coreAngles.length; index++) {
+    const angle = coreAngles[index];
+    const direction = [Math.cos(angle), 0, Math.sin(angle)];
+    const side = [-direction[2], 0, direction[0]];
+    const base = [
+      [direction[0] * 0.40 + side[0] * 0.12, 0.62, direction[2] * 0.40 + side[2] * 0.12],
+      [direction[0] * 0.88 + side[0] * 0.12, 0.86, direction[2] * 0.88 + side[2] * 0.12],
+      [direction[0] * 1.02, 1.15, direction[2] * 1.02],
+      [direction[0] * 0.88 - side[0] * 0.12, 0.86, direction[2] * 0.88 - side[2] * 0.12],
+    ];
+    mesh.quad(
+      base,
+      index % 2 === 0 ? 'VEXFORGE_CYAN' : 'VEXFORGE_ACCENT',
+      direction,
+    );
+  }
+  return mesh.write();
+}
+
 function writeMaterials() {
   const definitions = {
     VEXFORGE_OBSIDIAN: {
@@ -604,6 +853,22 @@ function writeManifest() {
         material_slots: materialNames,
         consumers: ['VexforgeAlphaWorldDirector', 'NexusPresentationRoot'],
       },
+      {
+        asset_id: 'VF_BATTLE_CITADEL_ARENA',
+        domain: 'world/environment',
+        resources_key: 'VexforgeTier1/Models/VF_BATTLE_CITADEL_ARENA',
+        source_file: 'VF_BATTLE_CITADEL_ARENA.obj',
+        material_slots: materialNames,
+        consumers: ['VexforgeBattlefieldStage'],
+      },
+      {
+        asset_id: 'VF_BATTLE_CITADEL_CORE',
+        domain: 'world/prop',
+        resources_key: 'VexforgeTier1/Models/VF_BATTLE_CITADEL_CORE',
+        source_file: 'VF_BATTLE_CITADEL_CORE.obj',
+        material_slots: materialNames,
+        consumers: ['VexforgeBattlefieldStage'],
+      },
     ],
   };
   fs.writeFileSync(
@@ -617,6 +882,8 @@ const faces = {
   VF_NEXUS_CITADEL_DAIS: buildSteppedDais(),
   VF_NEXUS_CITADEL_SPINE: buildCitadelSpine(),
   VF_NEXUS_PORTAL_GATE: buildPortalGate(),
+  VF_BATTLE_CITADEL_ARENA: buildBattleArena(),
+  VF_BATTLE_CITADEL_CORE: buildBattleCore(),
 };
 writeManifest();
 
