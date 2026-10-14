@@ -5,6 +5,6 @@ description: Workspace tooling may rewrite `.replit` with environment-generated 
 
 Python shell tooling or framework development/export commands can add modules to `.replit` and `[[ports]]` mappings. These generated changes can appear unrelated to the requested app work.
 
-**Why:** Both tool paths have modified the tracked Replit config during verification in this workspace.
+**Why:** Both tool paths have modified the tracked Replit config during verification in this workspace. A local environment-only commit can also make `HEAD` the wrong source of truth, so restoring from `HEAD` may preserve the unwanted rewrite.
 
-**How to apply:** After tooling or development workflow starts, compare `.replit` against the intended tracked version. If the diff is environment-generated, prepare the full trusted TOML in a temporary file and call `verifyAndReplaceDotReplit({tempFilePath: absolutePath})`; preserve the existing settings and normalize to one trailing newline. Then verify the file diff and `git status`. Do not commit generated mappings unless the user requested them or they are required project configuration.
+**How to apply:** After tooling or development workflow starts, compare `.replit` against the intended remote-tracking branch, not an unverified local `HEAD`. If the diff is environment-generated, prepare the full trusted TOML in a temporary file and call `verifyAndReplaceDotReplit({tempFilePath: absolutePath})`; preserve the existing settings and normalize to one trailing newline. Then verify the file diff and `git status`. Do not commit generated mappings unless the user requested them or they are required project configuration.
